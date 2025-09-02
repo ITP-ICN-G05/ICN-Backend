@@ -1,0 +1,130 @@
+## 📋 Pull Request Information
+
+### Summary
+Brief description of changes and the problem they solve.
+
+### Issue Reference
+- Closes #[issue-number]
+- Related to #[issue-number]
+- Part of Epic #[epic-number]
+
+### Type of Change
+- [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
+- [ ] ✨ New feature (non-breaking change which adds functionality)
+- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to change)
+- [ ] 📚 Documentation update
+- [ ] 🔧 Refactoring (no functional changes, no api changes)
+- [ ] ⚡ Performance improvement
+- [ ] 🧪 Test improvements
+
+### Component(s) Modified
+- [ ] Backend (Spring Boot)
+- [ ] Frontend (React Web)
+- [ ] Mobile (React Native)
+- [ ] DevOps/Infrastructure
+- [ ] Documentation
+- [ ] Database Schema
+
+### Breaking Changes
+If this is a breaking change, describe the impact and migration path:
+- [ ] No breaking changes
+- [ ] Breaking changes described below
+
+**Migration Notes:**
+[If applicable, describe how existing code/data needs to be migrated]
+
+### Testing Strategy
+- [ ] Unit tests added/updated
+- [ ] Integration tests added/updated
+- [ ] End-to-end tests added/updated
+- [ ] Manual testing completed
+- [ ] Performance testing completed (if applicable)
+
+**Test Coverage:**
+- Current coverage: [X]%
+- Target coverage: [Y]%
+- Coverage change: [+/-Z]%
+
+### Performance Impact
+- [ ] No performance impact expected
+- [ ] Performance improvement expected
+- [ ] Performance impact assessed and acceptable
+- [ ] Performance benchmarks included
+
+**Performance Notes:**
+[Describe any performance changes or benchmarks]
+
+### Security Considerations
+- [ ] No security implications
+- [ ] Security review completed
+- [ ] Authentication/authorization changes reviewed
+- [ ] Input validation implemented
+- [ ] No sensitive data exposed
+
+### Database Changes
+- [ ] No database changes
+- [ ] Schema migration included
+- [ ] Data migration included
+- [ ] Backward compatibility maintained
+- [ ] Migration tested on staging data
+
+**Migration Details:**
+[Describe database changes and migration strategy]
+
+### API Changes
+- [ ] No API changes
+- [ ] New endpoints added
+- [ ] Existing endpoints modified
+- [ ] Endpoints deprecated/removed
+- [ ] API documentation updated
+
+**API Change Summary:**
+[List new, modified, or removed endpoints]
+
+### UI/UX Changes
+- [ ] No UI changes
+- [ ] New components added
+- [ ] Existing components modified
+- [ ] Responsive design verified
+- [ ] Accessibility considered
+
+### Deployment Notes
+- [ ] No special deployment requirements
+- [ ] Environment variables added/changed
+- [ ] Configuration changes required
+- [ ] Service restart required
+- [ ] Zero-downtime deployment possible
+
+**Deployment Checklist:**
+[Special deployment instructions or configuration changes]
+
+### Quality Assurance
+- [ ] Code follows project style guidelines
+- [ ] Self-review completed
+- [ ] Code is well-commented where necessary
+- [ ] Documentation updated
+- [ ] Changelog updated (if applicable)
+- [ ] Error handling implemented
+- [ ] Logging added for debugging
+
+### Review Checklist for Reviewers
+- [ ] Code accomplishes the intended purpose
+- [ ] Code is readable and maintainable
+- [ ] No obvious bugs or edge cases missed
+- [ ] Performance considerations addressed
+- [ ] Security implications considered
+- [ ] Tests are comprehensive and meaningful
+- [ ] Documentation is accurate and complete
+
+### Screenshots/Demo
+[Add screenshots for UI changes or links to demo deployments]
+
+| Before | After |
+|--------|-------|
+| [Screenshot] | [Screenshot] |
+
+### Additional Context
+[Add any additional context about the PR that reviewers should know]
+
+### Reviewer Notes
+[Specific areas you want reviewers to focus on or questions you have]

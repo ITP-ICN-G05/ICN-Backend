@@ -68,7 +68,8 @@ db.createCollection("companies", {
 
 // Core indexes for optimal query performance
 db.companies.createIndex({ "location.geo": "2dsphere" });
-db.companies.createIndex({ "sectors": 1, "capabilities": 1 });
+db.companies.createIndex({ "sectors": 1 });
+db.companies.createIndex({ "capabilities": 1 });
 db.companies.createIndex({ "ownership.femaleOwned": 1, "ownership.firstNationsOwned": 1, "ownership.verified": 1 });
 db.companies.createIndex({ "size.category": 1 });
 db.companies.createIndex({ "name": 1, "location.address": 1 }, { unique: false, collation: { locale: "en", strength: 2 } });

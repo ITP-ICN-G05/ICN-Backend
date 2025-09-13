@@ -18,10 +18,33 @@ It is built with **Spring Boot 3**, packaged via **Maven**, and designed to run 
 - Java 18
 - Spring Boot 3.0.0
 - Maven build tool
-- HSQLDB (embedded database)
+- **MongoDB** (primary database)
+- HSQLDB (embedded database - legacy)
 - Pebble template engine
 - MongoDB Java Driver
 - Logback logging framework
+
+---
+
+## 🗄️ Database Setup
+
+This project uses **MongoDB** as the primary database. 
+
+### Quick Start with MongoDB
+```bash
+# Navigate to MongoDB setup
+cd infra/mongo
+
+# Start MongoDB and Mongo Express
+docker-compose up -d
+```
+
+- **MongoDB**: http://localhost:27017
+- **Mongo Express Web UI**: http://localhost:8081
+
+For detailed setup instructions, see:
+- [MongoDB Quick Start Guide](./infra/mongo/QUICKSTART.md)
+- [Complete MongoDB Documentation](./infra/mongo/README.md)
 
 ---
 
@@ -29,12 +52,34 @@ It is built with **Spring Boot 3**, packaged via **Maven**, and designed to run 
 
 ```
 ICN-Backend/
-├── src/main/java/com/gof/ICNBack/Application.java  # Spring Boot entry point
-├── src/main/resources/
-│   ├── application.yml                              # App + datasource config
-│   ├── logback-spring.xml                           # Logging configuration
+├── infra/
+│   └── mongo/
+│       ├── docker-compose.yml                      # MongoDB & Mongo Express setup
+│       ├── .env                                     # MongoDB environment variables
+│       ├── init/
+│       │   ├── 01-init.js                          # Database initialization script
+│       │   └── 02-seed.js                          # Sample data seeding script
+│       ├── MongoREADME.md                          # Complete MongoDB documentation
+│       └── QUICKSTART.md                           # Quick start guide
+├── src/
+│   └── main/
+│       ├── java/com/gof/ICNBack/
+│       │   ├── Application.java                    # Spring Boot entry point
+│       │   ├── controller/
+│       │   │   └── MongoTestController.java        # MongoDB test endpoints
+│       │   ├── model/
+│       │   │   └── Company.java                    # Company entity model
+│       │   └── repository/
+│       │       └── CompanyRepository.java          # MongoDB repository interface
+│       └── resources/
+│           ├── application.yml                      # App + datasource config
+│           └── logback-spring.xml                   # Logging configuration
 ├── pom.xml                                          # Maven dependencies & build
-└── README.md
+├── README.md                                        # Main project documentation
+├── MONGODB_STATUS.md                                # MongoDB setup status
+├── DEV_GUIDELINES.md                                # Development guidelines
+├── PR-template.md                                   # Pull request template
+└── universityofmelbourn-ICN-1.0.0-resolved.yaml   # API specification
 ```
 
 ---

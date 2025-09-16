@@ -14,6 +14,14 @@ public class UserRepository {
 
     public User loginUser(String email, String password) {
         //TODO: finish interactions with DAO
-        return new User();
+        return new User(0);
+    }
+
+    public int updateUser(User user) {
+        return 0;
+    }
+
+    public boolean createUser(User.InitialUser initialUser) {
+        return false;
     }
 }

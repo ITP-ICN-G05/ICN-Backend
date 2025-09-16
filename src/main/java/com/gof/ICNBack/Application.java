@@ -12,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class Application {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Application.class, args);
+
     }
     @Bean
     WebMvcConfigurer createWebMvcConfigurer(@Autowired HandlerInterceptor[] interceptors) {

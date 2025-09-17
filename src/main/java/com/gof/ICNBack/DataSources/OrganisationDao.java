@@ -16,4 +16,8 @@ public class OrganisationDao {
     public Organisation getOrganisationById(String organisationId) {
         return null;
     }
+
+    public List<Organisation.OrganisationCard> getOrgCardsByIds(List<String> orgIds) {
+        return null;
+    }
 }

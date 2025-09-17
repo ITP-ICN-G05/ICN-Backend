@@ -7,7 +7,6 @@ import com.gof.ICNBack.Entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ public class OrganisationRepository {
      * @param skip: default 0, number of result skipped
      * @return :searching result from Dao layer, list of organisation Cards
      * */
-    public List<Organisation.OrganisationCard> getOrganisationCards(String location, List<String> filterParameters, String searchString, Integer skip, Integer limit) {
+    public List<Organisation.OrganisationCard> getOrgCards(String location, List<String> filterParameters, String searchString, Integer skip, Integer limit) {
         List<Organisation> result = organisationDao.searchOrganisations(location, filterParameters, searchString, skip, limit);
         ArrayList<Organisation.OrganisationCard> cards = new ArrayList<>();
         for (Organisation org : result){
@@ -48,8 +47,9 @@ public class OrganisationRepository {
         User user1 = userDao.getUserById(user);
         Organisation org = organisationDao.getOrganisationById(organisationId);
         switch (user1.getVIP()){
+            case -1:
             case 0:
-                break;
+                return null; // free users/visitors are unable to access detailed information
             case 1:
                 break;
             case 2:
@@ -57,5 +57,9 @@ public class OrganisationRepository {
             default:
         }
         return org;
+    }
+
+    public List<Organisation.OrganisationCard> getOrgCardsByIds(List<String> ids) {
+        return organisationDao.getOrgCardsByIds(ids);
     }
 }

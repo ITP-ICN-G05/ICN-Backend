@@ -13,15 +13,15 @@ public class UserRepository {
     UserDao userDao;
 
     public User loginUser(String email, String password) {
-        //TODO: finish interactions with DAO
-        return new User(0);
+        return userDao.getUserByPair(email, password);
     }
 
-    public int updateUser(User user) {
-        return 0;
+    public boolean updateUser(User user) {
+        return userDao.update(user);
     }
 
     public boolean createUser(User.InitialUser initialUser) {
-        return false;
+        User user = initialUser.completeWithEmptyValues();
+        return userDao.create(user);
     }
 }

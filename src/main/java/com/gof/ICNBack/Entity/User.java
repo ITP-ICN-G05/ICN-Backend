@@ -1,18 +1,23 @@
 package com.gof.ICNBack.Entity;
 
+import com.gof.ICNBack.DataSources.Entity.UserEntity;
+import org.springframework.data.annotation.Id;
+
 import java.util.List;
 
 public class User {
 
-    private final int VIP;
+    private String id;
+    private int VIP;
+    public String email;
+    public String name;
+    public String password;
+    public List<String> cards;
 
-    public final String email;
-    public final String name;
-    public final String password;
-    public final List<String> cards;
+    public User(){}
 
-
-    public User(int vip, String email, String name, String password, List<String> cards) {
+    public User(String id, int vip, String email, String name, String password, List<String> cards) {
+        this.id = id;
         VIP = vip;
         this.email = email;
         this.name = name;
@@ -63,8 +68,16 @@ public class User {
             this.code = code;
         }
 
-        public User completeWithEmptyValues(){
-            return new User(0, email, name, password, List.of());
+        public User toUser(){
+            return new User(
+                    null, 0, email, name, password, List.of()
+            );
         }
+
+
+    }
+
+    public UserEntity toEntity(){
+        return new UserEntity(id, VIP, email, name, password, cards);
     }
 }

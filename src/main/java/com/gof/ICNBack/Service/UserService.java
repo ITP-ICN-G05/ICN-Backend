@@ -1,6 +1,7 @@
-package com.gof.ICNBack.Repositories;
+package com.gof.ICNBack.Service;
 
-import com.gof.ICNBack.DataSources.UserDao;
+import com.gof.ICNBack.DataSources.Entity.UserEntity;
+import com.gof.ICNBack.DataSources.User.UserDao;
 import com.gof.ICNBack.Entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Transactional
-public class UserRepository {
+public class UserService {
     @Autowired
     UserDao userDao;
 
@@ -17,11 +18,11 @@ public class UserRepository {
     }
 
     public boolean updateUser(User user) {
-        return userDao.update(user);
+        return userDao.update(user.toEntity());
     }
 
     public boolean createUser(User.InitialUser initialUser) {
-        User user = initialUser.completeWithEmptyValues();
+        UserEntity user = initialUser.toUser().toEntity();
         return userDao.create(user);
     }
 }

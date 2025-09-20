@@ -1,34 +1,33 @@
-package com.gof.ICNBack.DataSources;
+package com.gof.ICNBack.DataSources.User;
 
+import com.gof.ICNBack.DataSources.Entity.UserEntity;
 import com.gof.ICNBack.Entity.User;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
-//TODO: build functions to query user table
-
-@Component
-@Transactional
-public class UserDao {
+public class JdbcUserDao extends UserDao {
+    @Override
     public User getUserById(String user) {
         return null;
     }
 
+    @Override
     public User getUserByPair(String email, String password) {
         return null;
     }
 
+    @Override
     public List<String> getOrgIdByUser(String email) {
         return null;
     }
 
-    public boolean update(User user) {
+    @Override
+    public boolean update(UserEntity user) {
         return false;
     }
 
-    public boolean create(User user) {
+    @Override
+    public boolean create(UserEntity user) {
         return false;
     }
 }

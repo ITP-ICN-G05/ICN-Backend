@@ -1,26 +1,26 @@
 package com.gof.ICNBack.Web;
 
 import com.gof.ICNBack.Entity.Organisation;
-import com.gof.ICNBack.Repositories.OrganisationRepository;
+import com.gof.ICNBack.Service.OrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/organisation")
 public class OrganisationController {
 
     @Autowired
-    OrganisationRepository orgRepo;
+    OrganisationService orgRepo;
 
     @GetMapping("/general")
     public List<Organisation.OrganisationCard> searchOrganisation(
             @RequestParam(required = true) String location,
-            @RequestParam(required = true) List<String> filterParameters,
+            @RequestParam(required = true) Map<String, String> filterParameters,
             @RequestParam(required = false) String searchString,
             @RequestParam(required = false) Integer skip,
             @RequestParam(required = false) Integer limit

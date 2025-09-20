@@ -1,7 +1,7 @@
-package com.gof.ICNBack.Repositories;
+package com.gof.ICNBack.Service;
 
-import com.gof.ICNBack.DataSources.OrganisationDao;
-import com.gof.ICNBack.DataSources.UserDao;
+import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
+import com.gof.ICNBack.DataSources.User.UserDao;
 import com.gof.ICNBack.Entity.Organisation;
 import com.gof.ICNBack.Entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Transactional
-public class OrganisationRepository {
+public class OrganisationService {
 
     @Autowired
     OrganisationDao organisationDao;
@@ -29,7 +30,7 @@ public class OrganisationRepository {
      * @param skip: default 0, number of result skipped
      * @return :searching result from Dao layer, list of organisation Cards
      * */
-    public List<Organisation.OrganisationCard> getOrgCards(String location, List<String> filterParameters, String searchString, Integer skip, Integer limit) {
+    public List<Organisation.OrganisationCard> getOrgCards(String location, Map<String, String> filterParameters, String searchString, Integer skip, Integer limit) {
         List<Organisation> result = organisationDao.searchOrganisations(location, filterParameters, searchString, skip, limit);
         ArrayList<Organisation.OrganisationCard> cards = new ArrayList<>();
         for (Organisation org : result){

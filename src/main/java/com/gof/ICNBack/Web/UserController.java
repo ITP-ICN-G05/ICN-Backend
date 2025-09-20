@@ -2,8 +2,8 @@ package com.gof.ICNBack.Web;
 
 import com.gof.ICNBack.Entity.User;
 import com.gof.ICNBack.Entity.UserPayment;
-import com.gof.ICNBack.Repositories.OrganisationRepository;
-import com.gof.ICNBack.Repositories.UserRepository;
+import com.gof.ICNBack.Service.OrganisationService;
+import com.gof.ICNBack.Service.UserService;
 import com.gof.ICNBack.Service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @Autowired
-    UserRepository repo;
+    UserService repo;
 
     @Autowired
     EmailService email;
 
     @Autowired
-    OrganisationRepository orgRepo;
+    OrganisationService orgRepo;
 
     @GetMapping
     public ResponseEntity<User.UserFull> UserLogin(

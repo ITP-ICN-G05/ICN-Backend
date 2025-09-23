@@ -8,8 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
-//TODO: build functions to query user table
-
 public abstract class UserDao {
     public abstract User getUserById(String user);
 

@@ -26,7 +26,7 @@ public class MongoUserDao extends UserDao {
 
     @Override
     public List<String> getOrgIdByUser(String email) {
-        return repo.findOrganisationsByEmail(email);
+        return repo.findCardsByEmail(email);
     }
 
     @Override

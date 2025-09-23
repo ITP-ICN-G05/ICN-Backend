@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class OrganisationDao {
-    public abstract List<Organisation> searchOrganisations(String location, Map<String, String> filterParameters, String searchString, Integer skip, Integer limit);
+    public abstract List<Organisation> searchOrganisations(int locationX, int locationY, int lenX, int lenY, Map<String, String> filterParameters, String searchString, Integer skip, Integer limit);
 
     public abstract Organisation getOrganisationById(String organisationId);
 

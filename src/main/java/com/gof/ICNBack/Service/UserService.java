@@ -21,8 +21,7 @@ public class UserService {
         return userDao.update(user.toEntity());
     }
 
-    public boolean createUser(User.InitialUser initialUser) {
-        UserEntity user = initialUser.toUser().toEntity();
+    public boolean createUser(UserEntity user) {
         return userDao.create(user);
     }
 }

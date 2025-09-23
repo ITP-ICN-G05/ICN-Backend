@@ -26,60 +26,59 @@ public class Organisation {
     @Field("Sector Name")
     private String sectorName;
 
+    @Field("Organisation: Billing Street")
+    private String street;
+    @Field("Organisation: Billing City")
+    private String city;
+
+    @Field("Organisation: Billing State/Province")
+    private String state;
+
+    @Field("Organisation: Billing Zip/Postal Code")
+    private String zip;
+
     private int Subtotal;
 
     public Organisation(){}
 
-    public Organisation(String id, String detailedItemID, String itemName, String itemID, String detailedItemName, String sectorMappingID, String sectorName, int subtotal) {
-        _id = id;
+    public Organisation(String _id,
+                        String detailedItemID,
+                        String itemName,
+                        String itemID,
+                        String detailedItemName,
+                        String sectorMappingID,
+                        String sectorName,
+                        String street,
+                        String city,
+                        String state,
+                        String zip,
+                        int subtotal) {
+        this._id = _id;
         this.detailedItemID = detailedItemID;
         this.itemName = itemName;
         this.itemID = itemID;
         this.detailedItemName = detailedItemName;
         this.sectorMappingID = sectorMappingID;
         this.sectorName = sectorName;
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
         Subtotal = subtotal;
     }
-
 
     public OrganisationCard toCard(){
         return new OrganisationCard();
     }
+
+    public String getAddress() {
+        return city + street + state + zip;
+    }
+
     public static class OrganisationCard{
 
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
-    }
-
-    public void setDetailedItemID(String detailedItemID) {
-        this.detailedItemID = detailedItemID;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public void setItemID(String itemID) {
-        this.itemID = itemID;
-    }
-
-    public void setDetailedItemName(String detailedItemName) {
-        this.detailedItemName = detailedItemName;
-    }
-
-    public void setSectorMappingID(String sectorMappingID) {
-        this.sectorMappingID = sectorMappingID;
-    }
-
-    public void setSectorName(String sectorName) {
-        this.sectorName = sectorName;
-    }
-
-    public void setSubtotal(int subtotal) {
-        Subtotal = subtotal;
-    }
 
     public String get_id() {
         return _id;

@@ -9,10 +9,27 @@ public class User {
 
     private String id;
     private int VIP;
-    public String email;
-    public String name;
-    public String password;
-    public List<String> cards;
+    private String email;
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public List<String> getCards() {
+        return cards;
+    }
+
+    private String name;
+    private String password;
+    private List<String> cards;
 
     public User(){}
 

@@ -9,6 +9,6 @@ import java.util.List;
 public interface MongoUserRepository extends MongoRepository<UserEntity, String> {
     UserEntity findByEmailAndPassword(String email, String password);
     UserEntity findByEmail(String email);
-    List<String> findOrganisationsByEmail(String email);
+    List<String> findCardsByEmail(String email);
 
 }

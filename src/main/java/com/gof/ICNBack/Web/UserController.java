@@ -33,7 +33,7 @@ public class UserController {
         if (user == null){
             return ResponseEntity.status(409).header("invalid user account").build();
         }
-        User.UserFull userF = user.getFullUser(orgRepo.getOrgCardsByIds(user.cards));
+        User.UserFull userF = user.getFullUser(orgRepo.getOrgCardsByIds(user.getCards()));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(userF);
     }
 
@@ -67,7 +67,7 @@ public class UserController {
     ) {
         try {
             if (email.getValidationCode(initialUser.email).equals(initialUser.code)) {
-                if (repo.createUser(initialUser)){
+                if (repo.createUser(initialUser.toUser().toEntity())){
                     return ResponseEntity.status(HttpStatus.CREATED).build();
                 }
                 //TODO: handle errors in creating user, might related to database layer

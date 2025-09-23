@@ -23,15 +23,15 @@ public class OrganisationService {
     UserDao userDao;
 
     /**
-     * @param location: map scale for searching, needs to be transfer to address
+     * locations: map scale for searching
      * @param filterParameters: optional parameters for further restriction.
      * @param searchString: optional keywords
      * @param limit: result length
      * @param skip: default 0, number of result skipped
      * @return :searching result from Dao layer, list of organisation Cards
      * */
-    public List<Organisation.OrganisationCard> getOrgCards(String location, Map<String, String> filterParameters, String searchString, Integer skip, Integer limit) {
-        List<Organisation> result = organisationDao.searchOrganisations(location, filterParameters, searchString, skip, limit);
+    public List<Organisation.OrganisationCard> getOrgCards(int locationX, int locationY, int lenX, int lenY, Map<String, String> filterParameters, String searchString, Integer skip, Integer limit) {
+        List<Organisation> result = organisationDao.searchOrganisations(locationX,locationY,lenX,lenY, filterParameters, searchString, skip, limit);
         ArrayList<Organisation.OrganisationCard> cards = new ArrayList<>();
         for (Organisation org : result){
             cards.add(org.toCard());

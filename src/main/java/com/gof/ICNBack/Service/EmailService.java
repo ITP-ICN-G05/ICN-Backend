@@ -31,7 +31,6 @@ public class EmailService {
                                             env.getProperty(
                                                     "app.service.email.codeLength"))));
             boolean result = emailDao.createRecipe(email, code);
-            // @TODO: implements email sender
             if (result) {
                 return code;
             }

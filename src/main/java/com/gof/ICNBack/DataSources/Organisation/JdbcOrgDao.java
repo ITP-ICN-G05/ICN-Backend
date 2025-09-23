@@ -9,7 +9,7 @@ public class JdbcOrgDao extends OrganisationDao {
 
 
     @Override
-    public List<Organisation> searchOrganisations(String location, Map<String, String> filterParameters, String searchString, Integer skip, Integer limit) {
+    public List<Organisation> searchOrganisations(int locationX, int locationY, int lenX, int lenY, Map<String, String> filterParameters, String searchString, Integer skip, Integer limit) {
         return null;
     }
 

@@ -19,13 +19,16 @@ public class OrganisationController {
 
     @GetMapping("/general")
     public List<Organisation.OrganisationCard> searchOrganisation(
-            @RequestParam(required = true) String location,
+            @RequestParam(required = true) int locationX,
+            @RequestParam(required = true) int locationY,
+            @RequestParam(required = true) int lenX,
+            @RequestParam(required = true) int lenY,
             @RequestParam(required = true) Map<String, String> filterParameters,
             @RequestParam(required = false) String searchString,
             @RequestParam(required = false) Integer skip,
             @RequestParam(required = false) Integer limit
     ) {
-        return orgRepo.getOrgCards(location, filterParameters, searchString, skip, limit);
+        return orgRepo.getOrgCards(locationX,locationY,lenX,lenY, filterParameters, searchString, skip, limit);
     }
 
     @GetMapping("/generalByIds")

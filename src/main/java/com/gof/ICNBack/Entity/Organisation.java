@@ -2,7 +2,6 @@ package com.gof.ICNBack.Entity;
 
 import com.gof.ICNBack.DataSources.Entity.OrganisationEntity;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +44,14 @@ public class Organisation {
     }
 
     public OrganisationCard toCard(){
-        return new OrganisationCard();
+        return new OrganisationCard(
+                this.name,
+                this.items,
+                this.street,
+                this.city,
+                this.state,
+                this.zip
+                );
     }
 
     public String getAddress() {
@@ -53,6 +59,22 @@ public class Organisation {
     }
 
     public static class OrganisationCard{
+        private String name;
+        private ArrayList<Item> items;
+        private String street;
+        private String city;
+        private String state;
+        private String zip;
+
+
+        public OrganisationCard(String name, ArrayList<Item> items, String street, String city, String state, String zip) {
+            this.name = name;
+            this.items = items;
+            this.street = street;
+            this.city = city;
+            this.state = state;
+            this.zip = zip;
+        }
     }
 
     public static class OrganisationEntityBuilder{

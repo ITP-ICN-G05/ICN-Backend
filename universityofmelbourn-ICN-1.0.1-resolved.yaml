@@ -91,8 +91,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/OrganisationCard"
-        "400":
-          description: bad input parameter
+        "404":
+          description: organisations not found
   /organisation/specific:
     get:
       tags:
@@ -124,8 +124,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Organisation"
-        "400":
-          description: bad input parameter
+        "404":
+          description: organisations not found
   /user:
     get:
       tags:

@@ -8,10 +8,6 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/ICN_Navigator_Test
-      host: localhost
-      port: 27017
-      database: ICN_Navigator
-
 
 app:
   google-map-geocode:
@@ -20,6 +16,11 @@ app:
     geocoding-url: https://maps.googleapis.com/maps/api/geocode/json
     batch-size: 10
     delay-between-requests: 100
+
+logging:
+  level:
+    org.springframework.data.mongodb.core: DEBUG
+    com.gof.ICNBack.Repositories: DEBUG
 
 server:
   port: 8082

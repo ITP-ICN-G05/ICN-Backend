@@ -5,6 +5,9 @@ import com.gof.ICNBack.DataSources.Entity.UserEntity;
 import com.gof.ICNBack.Entity.User;
 import com.gof.ICNBack.Repositories.MongoUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,6 +16,9 @@ import java.util.List;
 public class MongoUserDao extends UserDao {
     @Autowired
     MongoUserRepository repo;
+
+    @Autowired
+    MongoTemplate mongoTemplate;
 
     @Override
     public User getUserById(String id) {
@@ -26,7 +32,10 @@ public class MongoUserDao extends UserDao {
 
     @Override
     public List<String> getOrgIdByUser(String email) {
-        return repo.findCardsByEmail(email);
+        Query query = new Query(Criteria.where("email").is(email));
+        query.fields().include("cards").exclude("_id");
+        UserEntity user = mongoTemplate.findOne(query, UserEntity.class);
+        return user != null ? user.getCards() : null;
     }
 
     @Override

@@ -30,6 +30,4 @@ public class MongoConnectionTest {
             fail("MongoDB ping failed: " + e.getMessage());
         }
     }
-
-
 }

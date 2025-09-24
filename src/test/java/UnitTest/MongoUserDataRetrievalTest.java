@@ -1,18 +1,15 @@
-package Unitest;
+package UnitTest;
 
 import com.gof.ICNBack.Application;
 import com.gof.ICNBack.DataSources.Entity.UserEntity;
 import com.gof.ICNBack.DataSources.User.UserDao;
 import com.gof.ICNBack.Entity.User;
-import com.gof.ICNBack.Service.UserService;
-import org.junit.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,8 +17,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = Application.class)
-@TestPropertySource(locations = "classpath:application-test.yml")
-public class MongoDataRetrievalTest {
+@ActiveProfiles("test")
+public class MongoUserDataRetrievalTest {
     @Autowired
     private UserDao userDao;
 
@@ -30,7 +27,7 @@ public class MongoDataRetrievalTest {
 
     private static final String TEST_COLLECTION = "User";
 
-    @Before
+    @BeforeEach
     public void initData() {
         // 清空测试数据
         mongoTemplate.dropCollection(TEST_COLLECTION);

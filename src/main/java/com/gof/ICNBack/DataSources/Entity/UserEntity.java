@@ -2,9 +2,11 @@ package com.gof.ICNBack.DataSources.Entity;
 
 import com.gof.ICNBack.Entity.User;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
+@Document(collection = "User")
 public class UserEntity {
     @Id
     private String _id;

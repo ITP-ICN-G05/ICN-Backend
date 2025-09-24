@@ -45,7 +45,7 @@ public class OrganisationController {
     ) {
         Organisation result = orgRepo.getOrg(organisationId, user);
         return result == null ?
-                ResponseEntity.status(409)
+                ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .header("unable to get company details")
                         .build():
                 ResponseEntity.status(HttpStatus.ACCEPTED)

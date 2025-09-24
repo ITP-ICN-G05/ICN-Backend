@@ -1,31 +1,44 @@
 package com.gof.ICNBack.DataSources.Organisation;
 
+import com.gof.ICNBack.DataSources.Entity.ItemEntity;
+import com.gof.ICNBack.DataSources.Entity.OrganisationEntity;
 import com.gof.ICNBack.Entity.Organisation;
+import com.gof.ICNBack.Repositories.MongoOrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
+import static com.gof.ICNBack.DataSources.Utils.MongoUtils.*;
 
 public class MongoOrgDao extends OrganisationDao {
 
     @Autowired
     MongoTemplate template;
 
+    @Autowired
+    MongoOrganisationRepository repo;
+
 
     @Override
-    public List<Organisation> searchOrganisations(int locationX, int locationY, int lenX, int lenY, Map<String, String> filterParameters, String searchString, Integer skip, Integer limit) {
+    public List<Organisation> searchOrganisations(
+            double locationX,
+            double locationY,
+            double endX,
+            double endY,
+            Map<String, String> filterParameters,
+            String searchString,
+            Integer skip,
+            Integer limit) {
+
         Query query = new Query();
         List<Criteria> criteriaList = new ArrayList<>();
 
         // process locations
-
+        criteriaList.add(createBoundingBoxCriteria("Coord", locationX, locationY, endX, endY));
 
         // dynamic filter
         if (filterParameters != null && !filterParameters.isEmpty()) {
@@ -81,8 +94,10 @@ public class MongoOrgDao extends OrganisationDao {
         // sorting
         query.with(Sort.by(Sort.Direction.ASC, "name"));
 
-        // 7. 执行查询
-        return template.find(query, Organisation.class);
+        // join backward
+        List<ItemEntity> items = template.find(query, ItemEntity.class);
+
+        return processToOrganisations(items);
     }
 
     private boolean isNumericField(String fieldName) {
@@ -97,11 +112,46 @@ public class MongoOrgDao extends OrganisationDao {
 
     @Override
     public Organisation getOrganisationById(String organisationId) {
-        return null;
+        List<ItemEntity> items = repo.findByOrganisationId(organisationId);
+        if (items.isEmpty()) return null;
+        Organisation organisation = null;
+        for (OrganisationEntity o : items.get(0).getOrganizations()){
+            if (o.getOrganisationId().equals(organisationId)){
+                organisation = o.toDomain();
+                Organisation finalOrganisation = organisation;
+                items.forEach(i -> {
+                    finalOrganisation.getItems().add(
+                            i.domainBuilder()
+                                    .setCapabilityType(o.getCapabilityType())
+                                    .setValidationDate(o.getValidationDate())
+                                    .setOrganisationCapability(o.getOrganisationCapability())
+                                    .build());
+                });
+            }
+        }
+        return organisation;
     }
 
     @Override
     public List<Organisation.OrganisationCard> getOrgCardsByIds(List<String> orgIds) {
-        return null;
+        List<Organisation.OrganisationCard> org = new ArrayList<>();
+        for (String id : orgIds){
+            Organisation o = getOrganisationById(id);
+            if (o != null){
+                org.add(o.toCard());
+            }
+        }
+        return org;
+    }
+
+    @Override
+    public List<Organisation> getOrganisationsWithoutGeocode() {
+        return processToOrganisations(repo.findByGeocoded(false));
+    }
+
+    @Override
+    public void updateGeocode(List<Organisation> orgs) {
+        List<ItemEntity> entity = processToItemEntity(orgs);
+        repo.saveAll(entity);
     }
 }

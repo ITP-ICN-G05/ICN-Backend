@@ -9,7 +9,7 @@ public class JdbcOrgDao extends OrganisationDao {
 
 
     @Override
-    public List<Organisation> searchOrganisations(int locationX, int locationY, int lenX, int lenY, Map<String, String> filterParameters, String searchString, Integer skip, Integer limit) {
+    public List<Organisation> searchOrganisations(double locationX, double locationY, double endX, double endY, Map<String, String> filterParameters, String searchString, Integer skip, Integer limit) {
         return null;
     }
 
@@ -21,5 +21,15 @@ public class JdbcOrgDao extends OrganisationDao {
     @Override
     public List<Organisation.OrganisationCard> getOrgCardsByIds(List<String> orgIds) {
         return null;
+    }
+
+    @Override
+    public List<Organisation> getOrganisationsWithoutGeocode() {
+        return null;
+    }
+
+    @Override
+    public void updateGeocode(List<Organisation> orgs) {
+
     }
 }

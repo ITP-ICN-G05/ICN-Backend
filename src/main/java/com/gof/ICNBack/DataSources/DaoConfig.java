@@ -10,7 +10,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.convert.DbRefResolver;
+import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
+import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
 @Configuration
 public class DaoConfig {
@@ -39,5 +45,16 @@ public class DaoConfig {
             default:
                 return new JdbcOrgDao();
         }
+    }
+
+    @Bean
+    public MongoTemplate mongoTemplate(MongoDatabaseFactory mongoDbFactory, MongoMappingContext context) {
+        DbRefResolver dbRefResolver = new DefaultDbRefResolver(mongoDbFactory);
+        MappingMongoConverter converter = new MappingMongoConverter(dbRefResolver, context);
+
+        // remove _class column
+        converter.setTypeMapper(new DefaultMongoTypeMapper(null));
+
+        return new MongoTemplate(mongoDbFactory, converter);
     }
 }

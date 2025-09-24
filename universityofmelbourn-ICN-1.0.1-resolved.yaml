@@ -1,0 +1,330 @@
+openapi: 3.0.0
+info:
+  title: ICN Navigator API
+  description: ICN Navigator Backend Api
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.1
+servers:
+- url: https://virtserver.swaggerhub.com/universityofmelbourn/ICN/1.0.1
+  description: ICN Navigator server api
+tags:
+- name: client
+  description: Secured Client calls
+- name: admin
+  description: Operations available to admins
+paths:
+  /organisation/general:
+    get:
+      tags:
+      - client
+      summary: searches organisation
+      description: |
+        By passing in the appropriate options, you can search for
+        available organisations in the system
+      operationId: searchOrganisation
+      parameters:
+      - name: searchString
+        in: query
+        description: pass an optional search string for looking up organisation
+        required: false
+        schema:
+          type: string
+      - name: startLatitude
+        in: query
+        description: start x-coord
+        required: true
+        schema:
+          type: number
+      - name: startLongitude
+        in: query
+        description: start y-coord
+        required: true
+        schema:
+          type: number
+      - name: endLatitude
+        in: query
+        description: end x-coord
+        required: true
+        schema:
+          type: number
+      - name: endLongitude
+        in: query
+        description: end y-coord
+        required: true
+        schema:
+          type: number
+      - name: filterParameters
+        in: query
+        description: pass parameters for looking up organisations
+        required: true
+        schema:
+          type: object
+          additionalProperties:
+            type: string
+      - name: skip
+        in: query
+        description: number of records to skip for pagination
+        required: false
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: maximum number of records to return
+        required: false
+        schema:
+          maximum: 50
+          minimum: 0
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrganisationCard"
+        "400":
+          description: bad input parameter
+  /organisation/specific:
+    get:
+      tags:
+      - client
+      summary: searches organisation details
+      description: |
+        By passing in the appropriate options, you can search for
+        sepecific organisation informations in the system
+      operationId: searchOrganisationDetail
+      parameters:
+      - name: organisationId
+        in: query
+        description: pass an id for looking up organisation detail
+        required: true
+        schema:
+          type: string
+      - name: user
+        in: query
+        description: pass an user id for type verification
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Organisation"
+        "400":
+          description: bad input parameter
+  /user:
+    get:
+      tags:
+      - client
+      summary: login event
+      description: |
+        By passing in the appropriate options, you can get user account information in the system
+      operationId: UserLogin
+      parameters:
+      - name: email
+        in: query
+        description: pass an user email
+        required: true
+        schema:
+          type: string
+      - name: password
+        in: query
+        description: pass an hashed password
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserFull"
+        "400":
+          description: bad input parameter
+    put:
+      tags:
+      - client
+      summary: update an user account
+      description: update an account in the system
+      operationId: updateUserInformation
+      requestBody:
+        description: user account to update
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: item updated
+        "400":
+          description: "invalid input, object invalid"
+        "409":
+          description: item update failed
+  /user/create:
+    post:
+      tags:
+      - client
+      summary: add an user account
+      description: Adds an account to the system
+      operationId: addUserAccount
+      requestBody:
+        description: user account to add
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InitialUser"
+      responses:
+        "201":
+          description: item created
+        "400":
+          description: "invalid input, object invalid"
+        "409":
+          description: an existing item already exists
+  /user/payment:
+    post:
+      tags:
+      - client
+      summary: payment event
+      description: Assign a payment event to the system
+      operationId: userPayment
+      requestBody:
+        description: user account to add
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserPayment"
+      responses:
+        "201":
+          description: payment successed
+        "400":
+          description: "invalid input, object invalid"
+        "409":
+          description: payment canceled
+components:
+  schemas:
+    UserFull:
+      required:
+      - VIP
+      - name
+      - organisationCards
+      type: object
+      properties:
+        name:
+          type: string
+          example: Steve L
+        organisationCards:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganisationCard"
+        VIP:
+          type: string
+          format: date
+    User:
+      required:
+      - email
+      - name
+      - organisationIds
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+          example: this.is.email@example.com
+        name:
+          type: string
+          example: Steve L
+        password:
+          type: string
+          example: asdfwecdxcfsd
+        organisationIds:
+          type: array
+          items:
+            type: string
+            example: 0017F00001ueIkz
+    InitialUser:
+      required:
+      - email
+      - name
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+          example: this.is.email@example.com
+        name:
+          type: string
+          example: Steve L
+        password:
+          type: string
+          example: asdfwecdxcfsd
+    UserPayment:
+      required:
+      - amount
+      - paymentMethod
+      - user
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/InitialUser"
+        paymentMethod:
+          type: string
+          example: PaypalWeb
+        amount:
+          type: number
+          example: 9.99
+    OrganisationCard:
+      required:
+      - billingAddress
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          example: 0017F00001ueIkz
+        name:
+          type: string
+          example: example company name
+        billingAddress:
+          type: string
+          format: address
+          example: "885 Mountain Highway,Bayswater VIC 3153"
+    Organisation:
+      required:
+      - billingAddress
+      - id
+      - items
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          example: 0017F00001ueIkz
+        name:
+          type: string
+          example: example company name
+        billingAddress:
+          type: string
+          format: address
+          example: "885 Mountain Highway,Bayswater VIC 3153"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Item"
+    Item:
+      type: object

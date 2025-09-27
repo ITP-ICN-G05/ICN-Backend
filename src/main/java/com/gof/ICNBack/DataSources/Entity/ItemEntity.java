@@ -42,7 +42,6 @@ public class ItemEntity {
     @Field("Geocoded")
     private boolean geocoded;
 
-    // 构造方法
     public ItemEntity() {}
 
     public ItemEntity(String id, String detailedItemId, String itemName, String itemId,
@@ -59,7 +58,7 @@ public class ItemEntity {
         this.organizations = organizations;
     }
 
-    // Getter 和 Setter 方法
+    // Getter & Setter
     public String getId() {
         return id;
     }

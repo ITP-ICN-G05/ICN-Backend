@@ -39,7 +39,6 @@ public class OrganisationEntity {
     private GeoJsonPoint coord;
 
 
-    // 构造方法
     public OrganisationEntity() {}
 
     public OrganisationEntity(String organisationCapability,

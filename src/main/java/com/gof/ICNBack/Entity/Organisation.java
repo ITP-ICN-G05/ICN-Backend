@@ -16,8 +16,6 @@ public class Organisation {
     private String state;
     private String zip;
 
-
-
     private GeoJsonPoint coord;
 
     public Organisation(){}
@@ -77,6 +75,30 @@ public class Organisation {
             this.state = state;
             this.zip = zip;
         }
+
+        public String getName() {
+            return name;
+        }
+
+        public ArrayList<Item> getItems() {
+            return items;
+        }
+
+        public String getStreet() {
+            return street;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        public String getZip() {
+            return zip;
+        }
     }
 
     public static class OrganisationEntityBuilder{
@@ -132,6 +154,25 @@ public class Organisation {
         }
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public String getZip() {
+        return zip;
+    }
 
     public String get_id() {
         return _id;

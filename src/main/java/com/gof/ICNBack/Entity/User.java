@@ -72,11 +72,13 @@ public class User {
     }
 
     public static class InitialUser{
-        public final String email;
-        public final String name;
-        public final String password;
+        private String email;
+        private String name;
+        private String password;
 
-        public final String code;
+        private String code;
+
+        public InitialUser(){}
 
         public InitialUser(String email, String name, String password, String code) {
             this.email = email;
@@ -91,10 +93,48 @@ public class User {
             );
         }
 
+        public String getEmail() {
+            return this.email;
+        }
 
+        public String getCode() {
+            return code;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getPassword() {
+            return password;
+        }
     }
 
     public UserEntity toEntity(){
         return new UserEntity(id, VIP, email, name, password, cards);
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setVIP(int VIP) {
+        this.VIP = VIP;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setCards(List<String> cards) {
+        this.cards = cards;
     }
 }

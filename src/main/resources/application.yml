@@ -8,9 +8,6 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/ICN_Navigator
-      host: localhost
-      port: 27017
-      database: ICN_Navigator
 
 
 app:

@@ -23,7 +23,7 @@ public class OrganisationController {
             @RequestParam(required = true) int locationY,
             @RequestParam(required = true) int lenX,
             @RequestParam(required = true) int lenY,
-            @RequestParam(required = true) Map<String, String> filterParameters,
+            @RequestParam(required = false) Map<String, String> filterParameters,
             @RequestParam(required = false) String searchString,
             @RequestParam(required = false) Integer skip,
             @RequestParam(required = false) Integer limit

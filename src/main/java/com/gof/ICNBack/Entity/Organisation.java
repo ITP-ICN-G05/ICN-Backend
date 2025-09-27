@@ -16,6 +16,8 @@ public class Organisation {
     private String state;
     private String zip;
 
+
+
     private GeoJsonPoint coord;
 
     public Organisation(){}
@@ -139,5 +141,8 @@ public class Organisation {
     }
     public void setCoord(GeoJsonPoint coord) {
         this.coord = coord;
+    }
+    public GeoJsonPoint getCoord() {
+        return coord;
     }
 }

@@ -19,7 +19,7 @@ import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
 @Configuration
-public class DaoConfig {
+public class DataConfig {
 
     @Bean
     @Primary

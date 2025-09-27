@@ -1,11 +1,9 @@
-package UnitTest;
+package IntergrationTest;
 
 import com.gof.ICNBack.Application;
 import com.gof.ICNBack.DataSources.Entity.ItemEntity;
 import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
-import com.gof.ICNBack.DataSources.User.UserDao;
 import com.gof.ICNBack.Entity.Organisation;
-import com.gof.ICNBack.Entity.User;
 import com.gof.ICNBack.Repositories.MongoOrganisationRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +47,16 @@ public class MongoOrganisationDataRetrievalTest {
 
         System.out.println("find org: " + org);
         System.out.println("find items: " + org.getItems());
+    }
+
+    @Test
+    public void testGetOrganisationsWithoutGeocode() {
+        List<Organisation> org = orgDao.getOrganisationsWithoutGeocode();
+
+        assertNotNull(org, "org should not be null");
+
+        assertNull(org.get(0).getCoord(), "Coord should be null");
+
+        System.out.println("find  orgs: " + org.size());
     }
 }

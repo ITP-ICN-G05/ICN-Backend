@@ -1,4 +1,4 @@
-package com.gof.ICNBack.Test.ComponentTest;
+package IntergrationTest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

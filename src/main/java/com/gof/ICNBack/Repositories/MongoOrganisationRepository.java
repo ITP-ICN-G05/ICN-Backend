@@ -11,6 +11,7 @@ public interface MongoOrganisationRepository extends MongoRepository<ItemEntity,
     @Query("{'Organizations.Organisation: Organisation ID' : ?0 }")
     List<ItemEntity> findByOrganisationId(String organisationId);
 
+    @Query("{Geocoded: {\"$exists\": ?0}}")
     List<ItemEntity> findByGeocoded(boolean geoCoded);
 
 }

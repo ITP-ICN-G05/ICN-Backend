@@ -1,4 +1,4 @@
-package UnitTest;
+package IntergrationTest;
 
 import com.gof.ICNBack.Application;
 import com.gof.ICNBack.DataSources.Entity.UserEntity;
@@ -29,10 +29,10 @@ public class MongoUserDataRetrievalTest {
 
     @BeforeEach
     public void initData() {
-        // 清空测试数据
+        // clean
         mongoTemplate.dropCollection(TEST_COLLECTION);
 
-        // 插入测试数据
+        // testing data
         List<UserEntity> testUsers = Arrays.asList(
                 new UserEntity(null, 0, "steve@example.com", "Steve", "pass", List.of("id_1", "id2")),
                 new UserEntity(null, 1, "qie@example.com", "QiE", "pasdassw", List.of()),
@@ -50,12 +50,12 @@ public class MongoUserDataRetrievalTest {
 
     @Test
     public void testFindUserByPair() {
-        // 测试获取所有用户
+        // get record
         User user = userDao.getUserByPair("qie@example.com", "pasdassw");
 
         assertNotNull(user, "用户列表不应为null");
 
-        // 验证用户数据完整性
+        // validate record
         assertNotNull(user.getId(), "用户ID不应为null");
         assertNotNull(user.getName(), "用户名不应为null");
         assertNotNull(user.getEmail(), "邮箱不应为null");
@@ -64,7 +64,6 @@ public class MongoUserDataRetrievalTest {
 
     @Test
     public void testFindOrgIdByEmail() {
-        // 测试通过邮箱查找用户
         String testEmail = "steve@example.com";
         List<String> orgs = userDao.getOrgIdByUser(testEmail);
 
@@ -75,19 +74,17 @@ public class MongoUserDataRetrievalTest {
 
     @Test
     public void testDataConsistency() {
-        // 测试数据一致性
         User userBefore = userDao.getUserByPair("qie@example.com", "pasdassw");
 
-        // 插入新用户
         UserEntity newUser =  new UserEntity(userBefore.getId(), 2, "qie@example.com", "Qie", "pasdassw", List.of("id_1", "id2"));
         userDao.update(newUser);
 
-        // 验证数据已更新
+        // validate updated
         User userAfter = userDao.getUserByPair("qie@example.com", "pasdassw");
 
         assertEquals(userAfter.getVIP(), 2);
 
-        // 验证新用户存在
+        // validate exist
         assertNotNull(userAfter, "should find the user");
         assertEquals(userAfter.getId(), userBefore.getId());
     }

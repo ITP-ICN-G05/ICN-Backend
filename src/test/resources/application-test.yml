@@ -8,19 +8,33 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/ICN_Navigator_Test
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+
+# 日志配置
+logging:
+  level:
+    com.gof.ICNBack.Controller: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.springframework.data.mongodb.core: DEBUG
+    com.gof.ICNBack.Repositories: DEBUG
+
+
+test:
+  security:
+    enabled: false
 
 app:
   google-map-geocode:
     enable: 0
-    api-key: ${GOOGLE_MAPS_API_KEY:}
+    api-key: NA
     geocoding-url: https://maps.googleapis.com/maps/api/geocode/json
     batch-size: 10
     delay-between-requests: 100
-
-logging:
-  level:
-    org.springframework.data.mongodb.core: DEBUG
-    com.gof.ICNBack.Repositories: DEBUG
 
 server:
   port: 8082

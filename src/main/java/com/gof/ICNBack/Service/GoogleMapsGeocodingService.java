@@ -34,7 +34,7 @@ public class GoogleMapsGeocodingService {
     }
 
     /**
-     * 通过地址获取经纬度信息
+     * return geocode from google geocoding service
      */
     public Optional<GeocodingResult> geocodeAddress(String address) {
         if (address == null || address.trim().isEmpty()) {

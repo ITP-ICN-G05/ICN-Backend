@@ -22,7 +22,8 @@ public class MongoUserDao extends UserDao {
 
     @Override
     public User getUserById(String id) {
-        return repo.findById(id).orElse(null).toDomain();
+        UserEntity user = repo.findById(id).orElse(null);
+        return user == null ? null : user.toDomain();
     }
 
     @Override
@@ -40,7 +41,7 @@ public class MongoUserDao extends UserDao {
 
     @Override
     public boolean update(UserEntity user) {
-        if (repo.findByEmailAndPassword(user.email, user.password) != null) {
+        if (repo.findByEmailAndPassword(user.getEmail(), user.getPassword()) != null) {
             repo.save(user);
             return true;
         }
@@ -49,7 +50,7 @@ public class MongoUserDao extends UserDao {
 
     @Override
     public boolean create(UserEntity user) {
-        if (repo.findByEmailAndPassword(user.email, user.password) == null) {
+        if (repo.findByEmailAndPassword(user.getEmail(), user.getPassword()) == null) {
             repo.save(user);
             return true;
         }

@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Organisation {
     private String _id;
@@ -15,7 +16,6 @@ public class Organisation {
     private String city;
     private String state;
     private String zip;
-
     private GeoJsonPoint coord;
 
     public Organisation(){}
@@ -55,7 +55,7 @@ public class Organisation {
     }
 
     public String getAddress() {
-        return city + street + state + zip;
+        return street + " " + city + " " + state + " " + zip;
     }
 
     public static class OrganisationCard{

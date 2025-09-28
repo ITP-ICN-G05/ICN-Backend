@@ -1,0 +1,168 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > OrganisationController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gof.ICNBack.Web</a>
+</div>
+
+<h1>Coverage Summary for Class: OrganisationController (com.gof.ICNBack.Web)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OrganisationController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (12/16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gof.ICNBack.Web;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.core.JsonProcessingException;
+&nbsp;import com.gof.ICNBack.Entity.Organisation;
+&nbsp;import com.gof.ICNBack.Service.OrganisationService;
+&nbsp;import com.gof.ICNBack.Web.Utils.Parser;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/organisation&quot;)
+<b class="fc">&nbsp;public class OrganisationController {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    OrganisationService orgRepo;
+&nbsp;
+&nbsp;    @GetMapping(&quot;/general&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;Organisation.OrganisationCard&gt;&gt; searchOrganisation(
+&nbsp;            @RequestParam(required = true) int locationX,
+&nbsp;            @RequestParam(required = true) int locationY,
+&nbsp;            @RequestParam(required = true) int lenX,
+&nbsp;            @RequestParam(required = true) int lenY,
+&nbsp;            @RequestParam(value = &quot;filterParameters&quot;, required = false) String filterParameters,
+&nbsp;            @RequestParam(required = false) String searchString,
+&nbsp;            @RequestParam(required = false) Integer skip,
+&nbsp;            @RequestParam(required = false) Integer limit
+&nbsp;    ) {
+&nbsp;        try {
+<b class="fc">&nbsp;            Map&lt;String, String&gt; json = Parser.parseFilterParameters(filterParameters);</b>
+<b class="fc">&nbsp;            List&lt;Organisation.OrganisationCard&gt; result = orgRepo.getOrgCards(locationX, locationY, lenX, lenY, json, searchString, skip, limit);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.OK).body(result);</b>
+<b class="nc">&nbsp;        } catch (JsonProcessingException e) {</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.BAD_REQUEST)</b>
+<b class="nc">&nbsp;                    .header(&quot;X-Error&quot;,&quot;Invalid input&quot;)</b>
+<b class="nc">&nbsp;                    .build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/generalByIds&quot;)
+&nbsp;    public List&lt;Organisation.OrganisationCard&gt; searchOrgByIds(
+&nbsp;            @RequestParam(required = true) List&lt;String&gt; ids
+&nbsp;    ) {
+<b class="fc">&nbsp;        return orgRepo.getOrgCardsByIds(ids);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/specific&quot;)
+&nbsp;    public ResponseEntity&lt;Organisation&gt; searchOrganisationDetail(
+&nbsp;            @RequestParam(required = true) String organisationId,
+&nbsp;            @RequestParam(required = true) String user
+&nbsp;    ) {
+<b class="fc">&nbsp;        Organisation result = orgRepo.getOrg(organisationId, user);</b>
+<b class="fc">&nbsp;        return result == null ?</b>
+<b class="fc">&nbsp;                ResponseEntity.status(HttpStatus.NOT_FOUND)</b>
+<b class="fc">&nbsp;                        .header(&quot;X-Error&quot;, &quot;unable to get company details&quot;)</b>
+<b class="fc">&nbsp;                        .build():</b>
+<b class="fc">&nbsp;                ResponseEntity.status(HttpStatus.OK)</b>
+<b class="fc">&nbsp;                        .body(result);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-09-28 12:54</div>
+</div>
+</body>
+</html>

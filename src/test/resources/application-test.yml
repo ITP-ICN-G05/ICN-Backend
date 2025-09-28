@@ -8,6 +8,8 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/ICN_Navigator_Test
+  main:
+    allow-bean-definition-overriding: true
   mvc:
     throw-exception-if-no-handler-found: true
   web:
@@ -31,7 +33,7 @@ test:
 app:
   google-map-geocode:
     enable: 0
-    api-key: NA
+    api-key: N/A
     geocoding-url: https://maps.googleapis.com/maps/api/geocode/json
     batch-size: 10
     delay-between-requests: 100

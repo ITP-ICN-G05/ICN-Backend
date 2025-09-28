@@ -2,35 +2,31 @@ package com.gof.ICNBack.DataSources.Utils;
 
 import com.gof.ICNBack.DataSources.Entity.ItemEntity;
 import com.gof.ICNBack.Entity.Organisation;
-import org.springframework.data.geo.Box;
-import org.springframework.data.geo.Point;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
+import org.bson.Document;
 import org.springframework.data.mongodb.core.query.Criteria;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class MongoUtils {
-    public static Criteria createBoundingBoxCriteria(String fieldName,
-                                                     Double minX, Double minY,
-                                                     Double maxX, Double maxY) {
-        // validation
-        if (minX == null || minY == null || maxX == null || maxY == null) {
-            throw new IllegalArgumentException("all coords should not be null");
-        }
-
-        // rearrange
-        double lowerLeftX = Math.min(minX, maxX);
-        double lowerLeftY = Math.min(minY, maxY);
-        double upperRightX = Math.max(minX, maxX);
-        double upperRightY = Math.max(minY, maxY);
-
-        Box boundingBox = new Box(
-                new Point(lowerLeftX, lowerLeftY),
-                new Point(upperRightX, upperRightY)
+    public static AggregationOperation geoWithinBoxMatch(String fieldName,
+                                                         double lowerLeftX, double lowerLeftY,
+                                                         double upperRightX, double upperRightY) {
+        return context -> new Document("$match",
+                new Document(fieldName,
+                        new Document("$geoWithin",
+                                new Document("$box", Arrays.asList(
+                                        Arrays.asList(lowerLeftX, lowerLeftY),
+                                        Arrays.asList(upperRightX, upperRightY)
+                                ))
+                        )
+                )
         );
-
-        return Criteria.where(fieldName).within(boundingBox);
     }
 
     public static List<Organisation> processToOrganisations(List<ItemEntity> items){

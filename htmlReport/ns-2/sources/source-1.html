@@ -1,0 +1,178 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > DataConfig</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gof.ICNBack.DataSources</a>
+</div>
+
+<h1>Coverage Summary for Class: DataConfig (com.gof.ICNBack.DataSources)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DataConfig</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81.8%
+  </span>
+  <span class="absValue">
+    (9/11)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DataConfig$$SpringCGLIB$$0</td>
+  </tr>
+  <tr>
+    <td class="name">DataConfig$$SpringCGLIB$$1</td>
+  </tr>
+  <tr>
+    <td class="name">DataConfig$$SpringCGLIB$$2</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81.8%
+  </span>
+  <span class="absValue">
+    (9/11)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gof.ICNBack.DataSources;
+&nbsp;
+&nbsp;import com.gof.ICNBack.DataSources.Organisation.JdbcOrgDao;
+&nbsp;import com.gof.ICNBack.DataSources.Organisation.MongoOrgDao;
+&nbsp;import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
+&nbsp;import com.gof.ICNBack.DataSources.User.JdbcUserDao;
+&nbsp;import com.gof.ICNBack.DataSources.User.MongoUserDao;
+&nbsp;import com.gof.ICNBack.DataSources.User.UserDao;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.context.annotation.Bean;
+&nbsp;import org.springframework.context.annotation.Configuration;
+&nbsp;import org.springframework.context.annotation.Primary;
+&nbsp;import org.springframework.data.mongodb.MongoDatabaseFactory;
+&nbsp;import org.springframework.data.mongodb.core.MongoTemplate;
+&nbsp;import org.springframework.data.mongodb.core.convert.DbRefResolver;
+&nbsp;import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
+&nbsp;import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
+&nbsp;import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+&nbsp;import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
+&nbsp;
+&nbsp;@Configuration
+<b class="fc">&nbsp;public class DataConfig {</b>
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public UserDao userDao(@Value(&quot;${app.database.type:mongo}&quot;) String databaseType) {
+&nbsp;
+<b class="fc">&nbsp;        switch (databaseType.toLowerCase()) {</b>
+&nbsp;            case &quot;mongo&quot;:
+<b class="fc">&nbsp;                return new MongoUserDao();</b>
+&nbsp;            case &quot;jdbc&quot;:
+&nbsp;            default:
+<b class="nc">&nbsp;                return new JdbcUserDao();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public OrganisationDao organisationDao(@Value(&quot;${app.database.type:mongo}&quot;) String databaseType) {
+&nbsp;
+<b class="fc">&nbsp;        switch (databaseType.toLowerCase()) {</b>
+&nbsp;            case &quot;mongo&quot;:
+<b class="fc">&nbsp;                return new MongoOrgDao();</b>
+&nbsp;            case &quot;jdbc&quot;:
+&nbsp;            default:
+<b class="nc">&nbsp;                return new JdbcOrgDao();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public MongoTemplate mongoTemplate(MongoDatabaseFactory mongoDbFactory, MongoMappingContext context) {
+<b class="fc">&nbsp;        DbRefResolver dbRefResolver = new DefaultDbRefResolver(mongoDbFactory);</b>
+<b class="fc">&nbsp;        MappingMongoConverter converter = new MappingMongoConverter(dbRefResolver, context);</b>
+&nbsp;
+&nbsp;        // remove _class column
+<b class="fc">&nbsp;        converter.setTypeMapper(new DefaultMongoTypeMapper(null));</b>
+&nbsp;
+<b class="fc">&nbsp;        return new MongoTemplate(mongoDbFactory, converter);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-09-28 12:54</div>
+</div>
+</body>
+</html>

@@ -59,7 +59,7 @@ public class UserController {
         }
 
         if (repo.updateUser(user)) {
-            return ResponseEntity.status(200).build();
+            return ResponseEntity.status(HttpStatus.OK).build();
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).header("X-Error", "item update failed").build();
     }

@@ -1,11 +1,13 @@
 package com.gof.ICNBack.DataSources.Entity;
 
 import com.gof.ICNBack.Entity.Organisation;
+import org.bson.Document;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class OrganisationEntity {
     @Field("Organisation Capability")
@@ -36,7 +38,7 @@ public class OrganisationEntity {
     private String billingZipPostalCode;
 
     @Field("Organisation: Coord")
-    private GeoJsonPoint coord;
+    private Object coord;
 
 
     public OrganisationEntity() {}
@@ -60,7 +62,39 @@ public class OrganisationEntity {
         this.billingCity = billingCity;
         this.billingStateProvince = billingStateProvince;
         this.billingZipPostalCode = billingZipPostalCode;
-        this.coord = coord;
+        this.setGeoJsonPoint(coord);
+    }
+
+    public void setGeoJsonPoint(org.springframework.data.mongodb.core.geo.GeoJsonPoint point) {
+        if (point != null) {
+            java.util.Map<String, Object> geoJson = new java.util.HashMap<>();
+            geoJson.put("type", "Point");
+            geoJson.put("coordinates", java.util.Arrays.asList(point.getX(), point.getY()));
+            this.coord = geoJson;
+        } else {
+            this.coord = null;
+        }
+    }
+
+    public GeoJsonPoint getGeoJsonPoint() {
+        if (coord instanceof java.util.Map) {
+            java.util.Map<String, Object> geoJson = (java.util.Map<String, Object>) coord;
+            java.util.List<Double> coordinates = (java.util.List<Double>) geoJson.get("coordinates");
+            if (coordinates != null && coordinates.size() == 2) {
+                return new org.springframework.data.mongodb.core.geo.GeoJsonPoint(
+                        coordinates.get(0), coordinates.get(1)
+                );
+            }
+        }
+        return null;
+    }
+
+    public GeoJsonPoint getCoord() {
+        return getGeoJsonPoint();
+    }
+
+    public void setCoord(GeoJsonPoint point) {
+        setGeoJsonPoint(point);
     }
 
     public String getOrganisationCapability() {
@@ -137,14 +171,14 @@ public class OrganisationEntity {
 
     public Organisation toDomain(){
         return new Organisation(
-                this.organisationName,
                 this.organisationId,
+                this.organisationName,
                 new ArrayList<>(),
                 this.billingStreet,
                 this.billingCity,
                 this.billingStateProvince,
                 this.billingZipPostalCode,
-                this.coord
+                this.getCoord()
         );
     }
 

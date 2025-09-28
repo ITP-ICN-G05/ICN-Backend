@@ -36,7 +36,7 @@ public class OrganisationController {
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (JsonProcessingException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .header("X-Error","unable to get company details")
+                    .header("X-Error","Invalid input")
                     .build();
         }
     }
@@ -58,7 +58,7 @@ public class OrganisationController {
                 ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .header("X-Error", "unable to get company details")
                         .build():
-                ResponseEntity.status(HttpStatus.ACCEPTED)
+                ResponseEntity.status(HttpStatus.OK)
                         .body(result);
     }
 }

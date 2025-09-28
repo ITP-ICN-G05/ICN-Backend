@@ -22,7 +22,6 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 public class DataConfig {
 
     @Bean
-    @Primary
     public UserDao userDao(@Value("${app.database.type:mongo}") String databaseType) {
 
         switch (databaseType.toLowerCase()) {
@@ -35,7 +34,6 @@ public class DataConfig {
     }
 
     @Bean
-    @Primary
     public OrganisationDao organisationDao(@Value("${app.database.type:mongo}") String databaseType) {
 
         switch (databaseType.toLowerCase()) {

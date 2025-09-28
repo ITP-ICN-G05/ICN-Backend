@@ -7,12 +7,16 @@ import com.gof.ICNBack.Repositories.MongoOrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 
 import java.util.*;
 
 import static com.gof.ICNBack.DataSources.Utils.MongoUtils.*;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 public class MongoOrgDao extends OrganisationDao {
 
@@ -21,7 +25,6 @@ public class MongoOrgDao extends OrganisationDao {
 
     @Autowired
     MongoOrganisationRepository repo;
-
 
     @Override
     public List<Organisation> searchOrganisations(
@@ -34,69 +37,78 @@ public class MongoOrgDao extends OrganisationDao {
             Integer skip,
             Integer limit) {
 
-        Query query = new Query();
         List<Criteria> criteriaList = new ArrayList<>();
 
-        // process locations
-        criteriaList.add(createBoundingBoxCriteria("Coord", locationX, locationY, endX, endY));
-
-        // dynamic filter
         if (filterParameters != null && !filterParameters.isEmpty()) {
             for (Map.Entry<String, String> entry : filterParameters.entrySet()) {
                 String key = entry.getKey();
                 String value = entry.getValue();
 
                 if (value != null && !value.trim().isEmpty()) {
-                    // construction basing in type of params
                     if (isNumericField(key)) {
-                        // numeric
                         try {
                             criteriaList.add(Criteria.where(key).is(Integer.parseInt(value)));
                         } catch (NumberFormatException e) {
-                            // turn to string matching
                             criteriaList.add(Criteria.where(key).is(value));
                         }
                     } else if (isBooleanField(value)) {
-                        // boolean
                         criteriaList.add(Criteria.where(key).is(Boolean.parseBoolean(value)));
                     } else {
-                        // string
                         criteriaList.add(Criteria.where(key).is(value));
                     }
                 }
             }
         }
 
-        // process keywords
         if (searchString != null && !searchString.trim().isEmpty()) {
             Criteria textSearchCriteria = new Criteria().orOperator(
-                    Criteria.where("name").regex(searchString, "i"),
-                    Criteria.where("description").regex(searchString, "i"),
-                    Criteria.where("tags").regex(searchString, "i"),
-                    Criteria.where("address").regex(searchString, "i")
+                    Criteria.where("Item Name").regex(searchString, "i"),
+                    Criteria.where("Detailed Item Name").regex(searchString, "i"),
+                    Criteria.where("Sector Name").regex(searchString, "i"),
+                    Criteria.where("Organisation: Organisation Name").regex(searchString, "i")
             );
             criteriaList.add(textSearchCriteria);
         }
 
+        // combine criteria
+        Criteria combinedCriteria = null;
         if (!criteriaList.isEmpty()) {
-            query.addCriteria(new Criteria().andOperator(criteriaList.toArray(new Criteria[0])));
+            combinedCriteria = new Criteria().andOperator(criteriaList.toArray(new Criteria[0]));
         }
 
-        // process page
-        if (skip != null && skip > 0) {
-            query.skip(skip);
-        }
+        // 2. reorder box
+        double lowerLeftX = Math.min(locationX, endX);
+        double lowerLeftY = Math.min(locationY, endY);
+        double upperRightX = Math.max(locationX, endX);
+        double upperRightY = Math.max(locationY, endY);
 
-        if (limit != null && limit > 0) {
-            query.limit(limit);
+        // 3. geo match +match(Criteria) -> sort/skip/limit
+        List<AggregationOperation> ops = new ArrayList<>();
+        ops.add(geoWithinBoxMatch("Organizations.Organisation: Coord.coordinates", lowerLeftX, lowerLeftY, upperRightX, upperRightY));
+
+        if (combinedCriteria != null) {
+            ops.add(Aggregation.match(combinedCriteria));
         }
 
         // sorting
-        query.with(Sort.by(Sort.Direction.ASC, "name"));
+        ops.add(Aggregation.sort(Sort.by(Sort.Direction.ASC, "Item Name")));
 
-        // join backward
-        List<ItemEntity> items = template.find(query, ItemEntity.class);
+        // paging
+        if (skip != null && skip > 0) {
+            ops.add(Aggregation.skip(skip.longValue()));
+        }
+        if (limit != null && limit > 0) {
+            ops.add(Aggregation.limit(limit.longValue()));
+        }
 
+        Aggregation agg = Aggregation.newAggregation(ops);
+
+        // 4. query
+        String collectionName = template.getCollectionName(ItemEntity.class);
+        AggregationResults<ItemEntity> aggResults = template.aggregate(agg, collectionName, ItemEntity.class);
+        List<ItemEntity> items = aggResults.getMappedResults();
+
+        // 5. return organisation
         return processToOrganisations(items);
     }
 
@@ -146,7 +158,8 @@ public class MongoOrgDao extends OrganisationDao {
 
     @Override
     public List<Organisation> getOrganisationsWithoutGeocode() {
-        return processToOrganisations(repo.findByGeocoded(false));
+        Query query = new Query((new Criteria().orOperator(where("Geocoded").exists(false), where("Geocoded").is(false))));
+        return processToOrganisations(template.find(query, ItemEntity.class));
     }
 
     @Override

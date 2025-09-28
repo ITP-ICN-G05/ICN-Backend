@@ -2,6 +2,7 @@ package com.gof.ICNBack.Service;
 
 import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
 import com.gof.ICNBack.Entity.Organisation;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +16,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-//TODO: refactor to meet data type
 @Service
 public class LocationUpdateService {
 
     private static final Logger logger = LoggerFactory.getLogger(LocationUpdateService.class);
 
     @Value("${app.google-map-geocode.batch-size:10}")
-    private int batchSize;
+    private int batchSize = 10;
 
     @Value("${app.google-map-geocode.delay-between-requests:100}")
     private long delayBetweenRequests;
@@ -51,6 +51,10 @@ public class LocationUpdateService {
 
         for (Organisation org : organisations) {
             try {
+                if (org.getCoord() != null) {
+                    logger.info("skip org with geocoding {}", org.getCoord());
+                    continue;
+                }
                 processedCount++;
 
                 // get geocode

@@ -1,0 +1,124 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > OrganisationDao</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gof.ICNBack.DataSources.Organisation</a>
+</div>
+
+<h1>Coverage Summary for Class: OrganisationDao (com.gof.ICNBack.DataSources.Organisation)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OrganisationDao</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gof.ICNBack.DataSources.Organisation;
+&nbsp;
+&nbsp;import com.gof.ICNBack.Entity.Organisation;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+<b class="fc">&nbsp;public abstract class OrganisationDao {</b>
+&nbsp;    public abstract List&lt;Organisation&gt; searchOrganisations(double locationX, double locationY, double endX, double endY, Map&lt;String, String&gt; filterParameters, String searchString, Integer skip, Integer limit);
+&nbsp;
+&nbsp;    public abstract Organisation getOrganisationById(String organisationId);
+&nbsp;
+&nbsp;    public abstract List&lt;Organisation.OrganisationCard&gt; getOrgCardsByIds(List&lt;String&gt; orgIds);
+&nbsp;
+&nbsp;    public abstract List&lt;Organisation&gt; getOrganisationsWithoutGeocode();
+&nbsp;
+&nbsp;    public abstract void updateGeocode(List&lt;Organisation&gt; orgs);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-09-28 12:54</div>
+</div>
+</body>
+</html>

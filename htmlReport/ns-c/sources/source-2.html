@@ -1,0 +1,153 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > Validator</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gof.ICNBack.Web.Utils</a>
+</div>
+
+<h1>Coverage Summary for Class: Validator (com.gof.ICNBack.Web.Utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Validator</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (6/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85.7%
+  </span>
+  <span class="absValue">
+    (18/21)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gof.ICNBack.Web.Utils;
+&nbsp;
+&nbsp;import com.gof.ICNBack.Entity.User;
+&nbsp;import com.gof.ICNBack.Entity.UserPayment;
+&nbsp;
+&nbsp;import java.util.regex.Pattern;
+&nbsp;
+<b class="nc">&nbsp;public class Validator {</b>
+<b class="fc">&nbsp;    private static final Pattern EMAIL_PATTERN = Pattern.compile(&quot;^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$&quot;);</b>
+<b class="fc">&nbsp;    private static final Pattern PASSWORD_PATTERN = Pattern.compile(&quot;^[a-zA-Z0-9_]{6,20}$&quot;);</b>
+<b class="fc">&nbsp;    private static final Pattern NAME_PATTERN = Pattern.compile(&quot;^[a-zA-Z0-9\\s]{1,50}$&quot;);</b>
+&nbsp;
+&nbsp;    public static boolean isValidEmail(String email) {
+<b class="fc">&nbsp;        return !(email == null || !EMAIL_PATTERN.matcher(email).matches() || email.length() &gt; 100);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static boolean isValidPassword(String password) {
+<b class="fc">&nbsp;        return password != null &amp;&amp; PASSWORD_PATTERN.matcher(password).matches();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static boolean isValidUserData(User user) {
+<b class="fc">&nbsp;        if (user == null) return false;</b>
+<b class="fc">&nbsp;        if (user.getName() == null || !NAME_PATTERN.matcher(user.getName()).matches()) return false;</b>
+<b class="fc">&nbsp;        if (!isValidPassword(user.getPassword())) return false;</b>
+<b class="fc">&nbsp;        return isValidEmail(user.getEmail());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static boolean isValidInitialUser(User.InitialUser initialUser, int codeLen) {
+<b class="fc">&nbsp;        if (initialUser == null) return false;</b>
+<b class="fc">&nbsp;        if (initialUser.getName() == null || !NAME_PATTERN.matcher(initialUser.getName()).matches()) return false;</b>
+<b class="fc">&nbsp;        if (!isValidEmail(initialUser.getEmail())) return false;</b>
+<b class="fc">&nbsp;        if (!isValidPassword(initialUser.toUser().getPassword())) return false;</b>
+&nbsp;
+<b class="fc">&nbsp;        return initialUser.getCode() != null &amp;&amp; initialUser.getCode().length() == codeLen;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static boolean isValidPayment(UserPayment payment) {
+<b class="fc">&nbsp;        if (payment == null) return false;</b>
+<b class="fc">&nbsp;        if (!isValidEmail(payment.getEmail())) return false;</b>
+<b class="fc">&nbsp;        if (!isValidPassword(payment.getPassword())) return false;</b>
+&nbsp;        // TODO: add payment validation
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static String sanitizeInput(String input) {
+<b class="nc">&nbsp;        if (input == null) return null;</b>
+<b class="nc">&nbsp;        return input.replaceAll(&quot;[&lt;&gt;\&quot;&#39;]&quot;, &quot;&quot;).trim();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-09-28 12:54</div>
+</div>
+</body>
+</html>

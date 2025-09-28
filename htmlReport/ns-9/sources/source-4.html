@@ -1,0 +1,194 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > OrganisationService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gof.ICNBack.Service</a>
+</div>
+
+<h1>Coverage Summary for Class: OrganisationService (com.gof.ICNBack.Service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OrganisationService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    86.7%
+  </span>
+  <span class="absValue">
+    (13/15)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">OrganisationService$MockitoMock$UUZ8sKD5</td>
+  </tr>
+  <tr>
+    <td class="name">OrganisationService$MockitoMock$UUZ8sKD5$auxiliary$aTRwPof8</td>
+  </tr>
+  <tr>
+    <td class="name">OrganisationService$MockitoMock$UUZ8sKD5$auxiliary$ezxWKzPx</td>
+  </tr>
+  <tr>
+    <td class="name">OrganisationService$MockitoMock$UUZ8sKD5$auxiliary$F4pQajJA</td>
+  </tr>
+  <tr>
+    <td class="name">OrganisationService$MockitoMock$UUZ8sKD5$auxiliary$r4BxXpLR</td>
+  </tr>
+  <tr>
+    <td class="name">OrganisationService$MockitoMock$UUZ8sKD5$auxiliary$TxIkPGmO</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    86.7%
+  </span>
+  <span class="absValue">
+    (13/15)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gof.ICNBack.Service;
+&nbsp;
+&nbsp;import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
+&nbsp;import com.gof.ICNBack.DataSources.User.UserDao;
+&nbsp;import com.gof.ICNBack.Entity.Organisation;
+&nbsp;import com.gof.ICNBack.Entity.User;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;@Component
+<b class="fc">&nbsp;public class OrganisationService {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    OrganisationDao organisationDao;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    UserDao userDao;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * locations: map scale for searching
+&nbsp;     * @param filterParameters: optional parameters for further restriction.
+&nbsp;     * @param searchString: optional keywords
+&nbsp;     * @param limit: result length
+&nbsp;     * @param skip: default 0, number of result skipped
+&nbsp;     * @return :searching result from Dao layer, list of organisation Cards
+&nbsp;     * */
+&nbsp;    public List&lt;Organisation.OrganisationCard&gt; getOrgCards(int locationX, int locationY, int lenX, int lenY, Map&lt;String, String&gt; filterParameters, String searchString, Integer skip, Integer limit) {
+<b class="fc">&nbsp;        List&lt;Organisation&gt; result = organisationDao.searchOrganisations(locationX,locationY,lenX,lenY, filterParameters, searchString, skip, limit);</b>
+<b class="fc">&nbsp;        ArrayList&lt;Organisation.OrganisationCard&gt; cards = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (Organisation org : result){</b>
+<b class="nc">&nbsp;            cards.add(org.toCard());</b>
+<b class="nc">&nbsp;        }</b>
+<b class="fc">&nbsp;        return cards;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @param organisationId: specific id for unique organisation
+&nbsp;     * @param user: used to restrict searching result.
+&nbsp;     * @return :searching result from Dao layer, a full or residual organisation object
+&nbsp;     * &amp;#064;TODO:  complete the switch section basing on feature list.  */
+&nbsp;    public Organisation getOrg(String organisationId, String user){
+<b class="fc">&nbsp;        User user1 = userDao.getUserById(user);</b>
+<b class="fc">&nbsp;        Organisation org = organisationDao.getOrganisationById(organisationId);</b>
+<b class="fc">&nbsp;        switch (user1.getVIP()){</b>
+&nbsp;            case -1:
+&nbsp;            case 0:
+<b class="fc">&nbsp;                return null; // free users/visitors are unable to access detailed information</b>
+&nbsp;            case 1:
+<b class="fc">&nbsp;                break;</b>
+&nbsp;            case 2:
+<b class="fc">&nbsp;                break;</b>
+&nbsp;            default:
+&nbsp;        }
+<b class="fc">&nbsp;        return org;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Organisation.OrganisationCard&gt; getOrgCardsByIds(List&lt;String&gt; ids) {
+<b class="fc">&nbsp;        return organisationDao.getOrgCardsByIds(ids);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-09-28 12:54</div>
+</div>
+</body>
+</html>

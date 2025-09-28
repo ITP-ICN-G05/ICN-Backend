@@ -1,115 +1,189 @@
 package com.gof.ICNBack.Entity;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Field;
+import com.gof.ICNBack.DataSources.Entity.OrganisationEntity;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class Organisation {
-
-    @Id
     private String _id;
 
-    @Field("Detailed Item ID")
-    private String detailedItemID;
-
-    @Field("Item Name")
-    private String itemName;
-
-    @Field("Item ID")
-    private String itemID;
-
-    @Field("Detailed Item Name")
-    private String detailedItemName;
-
-    @Field("Sector Mapping ID")
-    private String sectorMappingID;
-
-    @Field("Sector Name")
-    private String sectorName;
-
-    private int Subtotal;
+    private String name;
+    private ArrayList<Item> items;
+    private String street;
+    private String city;
+    private String state;
+    private String zip;
+    private GeoJsonPoint coord;
 
     public Organisation(){}
 
-    public Organisation(String id, String detailedItemID, String itemName, String itemID, String detailedItemName, String sectorMappingID, String sectorName, int subtotal) {
-        _id = id;
-        this.detailedItemID = detailedItemID;
-        this.itemName = itemName;
-        this.itemID = itemID;
-        this.detailedItemName = detailedItemName;
-        this.sectorMappingID = sectorMappingID;
-        this.sectorName = sectorName;
-        Subtotal = subtotal;
+    public Organisation(String _id, String name, ArrayList<Item> items, String street, String city, String state, String zip, GeoJsonPoint coord) {
+        this._id = _id;
+        this.name = name;
+        this.items = items;
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
+        this.coord = coord;
     }
 
+    public OrganisationEntityBuilder entityBuilder(){
+        return new OrganisationEntityBuilder(
+                name,
+                _id,
+                street,
+                city,
+                state,
+                zip,
+                coord
+        );
+    }
 
     public OrganisationCard toCard(){
-        return new OrganisationCard();
+        return new OrganisationCard(
+                this.name,
+                this.items,
+                this.street,
+                this.city,
+                this.state,
+                this.zip
+                );
     }
+
+    public String getAddress() {
+        return street + " " + city + " " + state + " " + zip;
+    }
+
     public static class OrganisationCard{
+        private String name;
+        private ArrayList<Item> items;
+        private String street;
+        private String city;
+        private String state;
+        private String zip;
 
+
+        public OrganisationCard(String name, ArrayList<Item> items, String street, String city, String state, String zip) {
+            this.name = name;
+            this.items = items;
+            this.street = street;
+            this.city = city;
+            this.state = state;
+            this.zip = zip;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public ArrayList<Item> getItems() {
+            return items;
+        }
+
+        public String getStreet() {
+            return street;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        public String getZip() {
+            return zip;
+        }
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public static class OrganisationEntityBuilder{
+        private String organisationCapability;
+        private String organisationName;
+        private String organisationId;
+        private String capabilityType;
+        private String validationDate;
+        private String billingStreet;
+        private String billingCity;
+        private String billingStateProvince;
+        private String billingZipPostalCode;
+        private GeoJsonPoint coord;
+
+        public OrganisationEntityBuilder(String organisationName, String organisationId, String billingStreet, String billingCity, String billingStateProvince, String billingZipPostalCode, GeoJsonPoint coord) {
+            this.organisationName = organisationName;
+            this.organisationId = organisationId;
+            this.billingStreet = billingStreet;
+            this.billingCity = billingCity;
+            this.billingStateProvince = billingStateProvince;
+            this.billingZipPostalCode = billingZipPostalCode;
+            this.coord = coord;
+        }
+
+        public OrganisationEntityBuilder setOrganisationCapability(String organisationCapability) {
+            this.organisationCapability = organisationCapability;
+            return this;
+        }
+
+        public OrganisationEntityBuilder setCapabilityType(String capabilityType) {
+            this.capabilityType = capabilityType;
+            return this;
+        }
+
+        public OrganisationEntityBuilder setValidationDate(String validationDate) {
+            this.validationDate = validationDate;
+            return this;
+        }
+
+        public OrganisationEntity build(){
+            return new OrganisationEntity(
+                    organisationCapability,
+                    organisationName,
+                    organisationId,
+                    capabilityType,
+                    validationDate,
+                    billingStreet,
+                    billingCity,
+                    billingStateProvince,
+                    billingZipPostalCode,
+                    coord
+            );
+        }
     }
 
-    public void setDetailedItemID(String detailedItemID) {
-        this.detailedItemID = detailedItemID;
+    public String getName() {
+        return name;
     }
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public String getStreet() {
+        return street;
     }
 
-    public void setItemID(String itemID) {
-        this.itemID = itemID;
+    public String getCity() {
+        return city;
     }
 
-    public void setDetailedItemName(String detailedItemName) {
-        this.detailedItemName = detailedItemName;
+    public String getState() {
+        return state;
     }
 
-    public void setSectorMappingID(String sectorMappingID) {
-        this.sectorMappingID = sectorMappingID;
-    }
-
-    public void setSectorName(String sectorName) {
-        this.sectorName = sectorName;
-    }
-
-    public void setSubtotal(int subtotal) {
-        Subtotal = subtotal;
+    public String getZip() {
+        return zip;
     }
 
     public String get_id() {
         return _id;
     }
-
-    public String getDetailedItemID() {
-        return detailedItemID;
+    public List<Item> getItems() {
+        return items;
     }
-
-    public String getItemName() {
-        return itemName;
+    public void setCoord(GeoJsonPoint coord) {
+        this.coord = coord;
     }
-
-    public String getItemID() {
-        return itemID;
-    }
-
-    public String getDetailedItemName() {
-        return detailedItemName;
-    }
-
-    public String getSectorMappingID() {
-        return sectorMappingID;
-    }
-
-    public String getSectorName() {
-        return sectorName;
-    }
-
-    public int getSubtotal() {
-        return Subtotal;
+    public GeoJsonPoint getCoord() {
+        return coord;
     }
 }

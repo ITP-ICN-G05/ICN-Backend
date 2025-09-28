@@ -1,9 +1,11 @@
 package com.gof.ICNBack;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -24,5 +26,15 @@ public class Application {
                         .addResourceLocations("classpath:/static/");
             }
         };
+    }
+
+    @Bean
+    RestTemplate createRestTemplate(){
+        return new RestTemplate();
+    }
+
+    @Bean
+    ObjectMapper createObjectMapper(){
+        return new ObjectMapper();
     }
 }

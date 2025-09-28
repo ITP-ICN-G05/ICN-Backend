@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 //@TODO: not implemented yet
 @Component
 @Transactional
-public abstract class EmailDao {
+public class EmailDao {
     public boolean createRecipe(String email, String code) {
         return false;
     }

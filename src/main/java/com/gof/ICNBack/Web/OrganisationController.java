@@ -1,7 +1,9 @@
 package com.gof.ICNBack.Web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gof.ICNBack.Entity.Organisation;
 import com.gof.ICNBack.Service.OrganisationService;
+import com.gof.ICNBack.Web.Utils.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +20,25 @@ public class OrganisationController {
     OrganisationService orgRepo;
 
     @GetMapping("/general")
-    public List<Organisation.OrganisationCard> searchOrganisation(
-            @RequestParam(required = true) String location,
-            @RequestParam(required = true) Map<String, String> filterParameters,
+    public ResponseEntity<List<Organisation.OrganisationCard>> searchOrganisation(
+            @RequestParam(required = true) int locationX,
+            @RequestParam(required = true) int locationY,
+            @RequestParam(required = true) int lenX,
+            @RequestParam(required = true) int lenY,
+            @RequestParam(value = "filterParameters", required = false) String filterParameters,
             @RequestParam(required = false) String searchString,
             @RequestParam(required = false) Integer skip,
             @RequestParam(required = false) Integer limit
     ) {
-        return orgRepo.getOrgCards(location, filterParameters, searchString, skip, limit);
+        try {
+            Map<String, String> json = Parser.parseFilterParameters(filterParameters);
+            List<Organisation.OrganisationCard> result = orgRepo.getOrgCards(locationX, locationY, lenX, lenY, json, searchString, skip, limit);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .header("X-Error","Invalid input")
+                    .build();
+        }
     }
 
     @GetMapping("/generalByIds")
@@ -42,10 +55,10 @@ public class OrganisationController {
     ) {
         Organisation result = orgRepo.getOrg(organisationId, user);
         return result == null ?
-                ResponseEntity.status(409)
-                        .header("unable to get company details")
+                ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .header("X-Error", "unable to get company details")
                         .build():
-                ResponseEntity.status(HttpStatus.ACCEPTED)
+                ResponseEntity.status(HttpStatus.OK)
                         .body(result);
     }
 }

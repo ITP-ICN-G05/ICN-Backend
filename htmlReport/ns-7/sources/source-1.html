@@ -1,0 +1,208 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > Item</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gof.ICNBack.Entity</a>
+</div>
+
+<h1>Coverage Summary for Class: Item (com.gof.ICNBack.Entity)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Item</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (25/25)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gof.ICNBack.Entity;
+&nbsp;
+&nbsp;import com.gof.ICNBack.DataSources.Entity.ItemEntity;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;
+&nbsp;public class Item {
+&nbsp;    private String id;
+&nbsp;    private String detailedItemId;
+&nbsp;    private String itemName;
+&nbsp;    private String itemId;
+&nbsp;    private String detailedItemName;
+&nbsp;    private String sectorMappingId;
+&nbsp;    private String sectorName;
+&nbsp;    private Integer subtotal;
+&nbsp;    private String capabilityType;
+&nbsp;    private String validationDate;
+&nbsp;    private String organisationCapability;
+&nbsp;
+&nbsp;
+&nbsp;    public Item(String id,
+&nbsp;                String detailedItemId,
+&nbsp;                String itemName,
+&nbsp;                String itemId,
+&nbsp;                String detailedItemName,
+&nbsp;                String sectorMappingId,
+&nbsp;                String sectorName,
+&nbsp;                Integer subtotal,
+&nbsp;                String capabilityType,
+&nbsp;                String validationDate,
+<b class="fc">&nbsp;                String organisationCapability) {</b>
+<b class="fc">&nbsp;        this.id = id;</b>
+<b class="fc">&nbsp;        this.detailedItemId = detailedItemId;</b>
+<b class="fc">&nbsp;        this.itemName = itemName;</b>
+<b class="fc">&nbsp;        this.itemId = itemId;</b>
+<b class="fc">&nbsp;        this.detailedItemName = detailedItemName;</b>
+<b class="fc">&nbsp;        this.sectorMappingId = sectorMappingId;</b>
+<b class="fc">&nbsp;        this.sectorName = sectorName;</b>
+<b class="fc">&nbsp;        this.subtotal = subtotal;</b>
+<b class="fc">&nbsp;        this.capabilityType = capabilityType;</b>
+<b class="fc">&nbsp;        this.validationDate = validationDate;</b>
+<b class="fc">&nbsp;        this.organisationCapability = organisationCapability;</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public Item(){}</b>
+&nbsp;
+&nbsp;    public ItemEntity toEntity(){
+<b class="fc">&nbsp;        return new ItemEntity(</b>
+&nbsp;                id,
+&nbsp;                detailedItemId,
+&nbsp;                itemName,
+&nbsp;                itemId,
+&nbsp;                detailedItemName,
+&nbsp;                sectorMappingId,
+&nbsp;                sectorName,
+&nbsp;                subtotal,
+&nbsp;                new ArrayList&lt;&gt;()
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getId() {
+<b class="fc">&nbsp;        return id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getDetailedItemId() {
+<b class="fc">&nbsp;        return detailedItemId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getItemName() {
+<b class="fc">&nbsp;        return itemName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getItemId() {
+<b class="fc">&nbsp;        return itemId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getDetailedItemName() {
+<b class="fc">&nbsp;        return detailedItemName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getSectorMappingId() {
+<b class="fc">&nbsp;        return sectorMappingId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getSectorName() {
+<b class="fc">&nbsp;        return sectorName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Integer getSubtotal() {
+<b class="fc">&nbsp;        return subtotal;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getCapabilityType() {
+<b class="fc">&nbsp;        return capabilityType;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getValidationDate() {
+<b class="fc">&nbsp;        return validationDate;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getOrganisationCapability() {
+<b class="fc">&nbsp;        return organisationCapability;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-09-28 12:54</div>
+</div>
+</body>
+</html>

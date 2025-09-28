@@ -1,0 +1,338 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > Organisation</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gof.ICNBack.Entity</a>
+</div>
+
+<h1>Coverage Summary for Class: Organisation (com.gof.ICNBack.Entity)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Organisation</td>
+<td class="coverageStat">
+  <span class="percent">
+    92.9%
+  </span>
+  <span class="absValue">
+    (13/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95.5%
+  </span>
+  <span class="absValue">
+    (21/22)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Organisation$OrganisationCard</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/13)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Organisation$OrganisationEntityBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (15/15)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    96.2%
+  </span>
+  <span class="absValue">
+    (25/26)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98%
+  </span>
+  <span class="absValue">
+    (49/50)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gof.ICNBack.Entity;
+&nbsp;
+&nbsp;import com.gof.ICNBack.DataSources.Entity.OrganisationEntity;
+&nbsp;import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Objects;
+&nbsp;
+&nbsp;public class Organisation {
+&nbsp;    private String _id;
+&nbsp;
+&nbsp;    private String name;
+&nbsp;    private ArrayList&lt;Item&gt; items;
+&nbsp;    private String street;
+&nbsp;    private String city;
+&nbsp;    private String state;
+&nbsp;    private String zip;
+&nbsp;    private GeoJsonPoint coord;
+&nbsp;
+<b class="nc">&nbsp;    public Organisation(){}</b>
+&nbsp;
+<b class="fc">&nbsp;    public Organisation(String _id, String name, ArrayList&lt;Item&gt; items, String street, String city, String state, String zip, GeoJsonPoint coord) {</b>
+<b class="fc">&nbsp;        this._id = _id;</b>
+<b class="fc">&nbsp;        this.name = name;</b>
+<b class="fc">&nbsp;        this.items = items;</b>
+<b class="fc">&nbsp;        this.street = street;</b>
+<b class="fc">&nbsp;        this.city = city;</b>
+<b class="fc">&nbsp;        this.state = state;</b>
+<b class="fc">&nbsp;        this.zip = zip;</b>
+<b class="fc">&nbsp;        this.coord = coord;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public OrganisationEntityBuilder entityBuilder(){
+<b class="fc">&nbsp;        return new OrganisationEntityBuilder(</b>
+&nbsp;                name,
+&nbsp;                _id,
+&nbsp;                street,
+&nbsp;                city,
+&nbsp;                state,
+&nbsp;                zip,
+&nbsp;                coord
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    public OrganisationCard toCard(){
+<b class="fc">&nbsp;        return new OrganisationCard(</b>
+&nbsp;                this.name,
+&nbsp;                this.items,
+&nbsp;                this.street,
+&nbsp;                this.city,
+&nbsp;                this.state,
+&nbsp;                this.zip
+&nbsp;                );
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getAddress() {
+<b class="fc">&nbsp;        return street + &quot; &quot; + city + &quot; &quot; + state + &quot; &quot; + zip;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static class OrganisationCard{
+&nbsp;        private String name;
+&nbsp;        private ArrayList&lt;Item&gt; items;
+&nbsp;        private String street;
+&nbsp;        private String city;
+&nbsp;        private String state;
+&nbsp;        private String zip;
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;        public OrganisationCard(String name, ArrayList&lt;Item&gt; items, String street, String city, String state, String zip) {</b>
+<b class="fc">&nbsp;            this.name = name;</b>
+<b class="fc">&nbsp;            this.items = items;</b>
+<b class="fc">&nbsp;            this.street = street;</b>
+<b class="fc">&nbsp;            this.city = city;</b>
+<b class="fc">&nbsp;            this.state = state;</b>
+<b class="fc">&nbsp;            this.zip = zip;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public String getName() {
+<b class="fc">&nbsp;            return name;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public ArrayList&lt;Item&gt; getItems() {
+<b class="fc">&nbsp;            return items;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public String getStreet() {
+<b class="fc">&nbsp;            return street;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public String getCity() {
+<b class="fc">&nbsp;            return city;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public String getState() {
+<b class="fc">&nbsp;            return state;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public String getZip() {
+<b class="fc">&nbsp;            return zip;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public static class OrganisationEntityBuilder{
+&nbsp;        private String organisationCapability;
+&nbsp;        private String organisationName;
+&nbsp;        private String organisationId;
+&nbsp;        private String capabilityType;
+&nbsp;        private String validationDate;
+&nbsp;        private String billingStreet;
+&nbsp;        private String billingCity;
+&nbsp;        private String billingStateProvince;
+&nbsp;        private String billingZipPostalCode;
+&nbsp;        private GeoJsonPoint coord;
+&nbsp;
+<b class="fc">&nbsp;        public OrganisationEntityBuilder(String organisationName, String organisationId, String billingStreet, String billingCity, String billingStateProvince, String billingZipPostalCode, GeoJsonPoint coord) {</b>
+<b class="fc">&nbsp;            this.organisationName = organisationName;</b>
+<b class="fc">&nbsp;            this.organisationId = organisationId;</b>
+<b class="fc">&nbsp;            this.billingStreet = billingStreet;</b>
+<b class="fc">&nbsp;            this.billingCity = billingCity;</b>
+<b class="fc">&nbsp;            this.billingStateProvince = billingStateProvince;</b>
+<b class="fc">&nbsp;            this.billingZipPostalCode = billingZipPostalCode;</b>
+<b class="fc">&nbsp;            this.coord = coord;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public OrganisationEntityBuilder setOrganisationCapability(String organisationCapability) {
+<b class="fc">&nbsp;            this.organisationCapability = organisationCapability;</b>
+<b class="fc">&nbsp;            return this;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public OrganisationEntityBuilder setCapabilityType(String capabilityType) {
+<b class="fc">&nbsp;            this.capabilityType = capabilityType;</b>
+<b class="fc">&nbsp;            return this;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public OrganisationEntityBuilder setValidationDate(String validationDate) {
+<b class="fc">&nbsp;            this.validationDate = validationDate;</b>
+<b class="fc">&nbsp;            return this;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public OrganisationEntity build(){
+<b class="fc">&nbsp;            return new OrganisationEntity(</b>
+&nbsp;                    organisationCapability,
+&nbsp;                    organisationName,
+&nbsp;                    organisationId,
+&nbsp;                    capabilityType,
+&nbsp;                    validationDate,
+&nbsp;                    billingStreet,
+&nbsp;                    billingCity,
+&nbsp;                    billingStateProvince,
+&nbsp;                    billingZipPostalCode,
+&nbsp;                    coord
+&nbsp;            );
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getName() {
+<b class="fc">&nbsp;        return name;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getStreet() {
+<b class="fc">&nbsp;        return street;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getCity() {
+<b class="fc">&nbsp;        return city;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getState() {
+<b class="fc">&nbsp;        return state;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getZip() {
+<b class="fc">&nbsp;        return zip;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String get_id() {
+<b class="fc">&nbsp;        return _id;</b>
+&nbsp;    }
+&nbsp;    public List&lt;Item&gt; getItems() {
+<b class="fc">&nbsp;        return items;</b>
+&nbsp;    }
+&nbsp;    public void setCoord(GeoJsonPoint coord) {
+<b class="fc">&nbsp;        this.coord = coord;</b>
+&nbsp;    }
+&nbsp;    public GeoJsonPoint getCoord() {
+<b class="fc">&nbsp;        return coord;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-09-28 12:54</div>
+</div>
+</body>
+</html>

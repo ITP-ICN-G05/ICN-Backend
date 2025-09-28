@@ -1,0 +1,155 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > UserService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gof.ICNBack.Service</a>
+</div>
+
+<h1>Coverage Summary for Class: UserService (com.gof.ICNBack.Service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserService</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/4)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$AyFj8iYf</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$AyFj8iYf$auxiliary$5XqcT1Rp</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$AyFj8iYf$auxiliary$cPrBbepC</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$AyFj8iYf$auxiliary$qHrWUg6B</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$AyFj8iYf$auxiliary$wUeh1rOC</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$AyFj8iYf$auxiliary$YtT2vzM8</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/4)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gof.ICNBack.Service;
+&nbsp;
+&nbsp;import com.gof.ICNBack.DataSources.Entity.UserEntity;
+&nbsp;import com.gof.ICNBack.DataSources.User.UserDao;
+&nbsp;import com.gof.ICNBack.Entity.User;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;
+&nbsp;@Component
+<b class="fc">&nbsp;public class UserService {</b>
+&nbsp;    @Autowired
+&nbsp;    UserDao userDao;
+&nbsp;
+&nbsp;    public User loginUser(String email, String password) {
+<b class="nc">&nbsp;        return userDao.getUserByPair(email, password);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean updateUser(User user) {
+<b class="nc">&nbsp;        return userDao.update(user.toEntity());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean createUser(UserEntity user) {
+<b class="nc">&nbsp;        return userDao.create(user);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-09-28 12:54</div>
+</div>
+</body>
+</html>

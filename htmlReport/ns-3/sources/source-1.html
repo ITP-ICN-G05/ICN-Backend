@@ -1,0 +1,345 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > ItemEntity</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gof.ICNBack.DataSources.Entity</a>
+</div>
+
+<h1>Coverage Summary for Class: ItemEntity (com.gof.ICNBack.DataSources.Entity)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ItemEntity</td>
+<td class="coverageStat">
+  <span class="percent">
+    18.2%
+  </span>
+  <span class="absValue">
+    (4/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    41.9%
+  </span>
+  <span class="absValue">
+    (13/31)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ItemEntity$ItemBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (16/16)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (9/27)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    61.7%
+  </span>
+  <span class="absValue">
+    (29/47)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gof.ICNBack.DataSources.Entity;
+&nbsp;
+&nbsp;import com.gof.ICNBack.Entity.Item;
+&nbsp;import org.springframework.data.mongodb.core.mapping.Document;
+&nbsp;
+&nbsp;
+&nbsp;import org.springframework.data.annotation.Id;
+&nbsp;import org.springframework.data.mongodb.core.mapping.Field;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Document(collection = &quot;Organisation&quot;)
+&nbsp;public class ItemEntity {
+&nbsp;
+&nbsp;    @Id
+&nbsp;    private String id;
+&nbsp;
+&nbsp;    @Field(&quot;Detailed Item ID&quot;)
+&nbsp;    private String detailedItemId;
+&nbsp;
+&nbsp;    @Field(&quot;Item Name&quot;)
+&nbsp;    private String itemName;
+&nbsp;
+&nbsp;    @Field(&quot;Item ID&quot;)
+&nbsp;    private String itemId;
+&nbsp;
+&nbsp;    @Field(&quot;Detailed Item Name&quot;)
+&nbsp;    private String detailedItemName;
+&nbsp;
+&nbsp;    @Field(&quot;Sector Mapping ID&quot;)
+&nbsp;    private String sectorMappingId;
+&nbsp;
+&nbsp;    @Field(&quot;Sector Name&quot;)
+&nbsp;    private String sectorName;
+&nbsp;
+&nbsp;    @Field(&quot;Subtotal&quot;)
+&nbsp;    private Integer subtotal;
+&nbsp;
+&nbsp;    @Field(&quot;Organizations&quot;)
+&nbsp;    private List&lt;OrganisationEntity&gt; organizations;
+&nbsp;
+&nbsp;    @Field(&quot;Geocoded&quot;)
+&nbsp;    private boolean geocoded;
+&nbsp;
+<b class="fc">&nbsp;    public ItemEntity() {}</b>
+&nbsp;
+&nbsp;    public ItemEntity(String id, String detailedItemId, String itemName, String itemId,
+&nbsp;                String detailedItemName, String sectorMappingId, String sectorName,
+<b class="fc">&nbsp;                Integer subtotal, List&lt;OrganisationEntity&gt; organizations) {</b>
+<b class="fc">&nbsp;        this.id = id;</b>
+<b class="fc">&nbsp;        this.detailedItemId = detailedItemId;</b>
+<b class="fc">&nbsp;        this.itemName = itemName;</b>
+<b class="fc">&nbsp;        this.itemId = itemId;</b>
+<b class="fc">&nbsp;        this.detailedItemName = detailedItemName;</b>
+<b class="fc">&nbsp;        this.sectorMappingId = sectorMappingId;</b>
+<b class="fc">&nbsp;        this.sectorName = sectorName;</b>
+<b class="fc">&nbsp;        this.subtotal = subtotal;</b>
+<b class="fc">&nbsp;        this.organizations = organizations;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Getter &amp; Setter
+&nbsp;    public String getId() {
+<b class="nc">&nbsp;        return id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setId(String id) {
+<b class="nc">&nbsp;        this.id = id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getDetailedItemId() {
+<b class="nc">&nbsp;        return detailedItemId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setDetailedItemId(String detailedItemId) {
+<b class="nc">&nbsp;        this.detailedItemId = detailedItemId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getItemName() {
+<b class="nc">&nbsp;        return itemName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setItemName(String itemName) {
+<b class="nc">&nbsp;        this.itemName = itemName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getItemId() {
+<b class="nc">&nbsp;        return itemId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setItemId(String itemId) {
+<b class="nc">&nbsp;        this.itemId = itemId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getDetailedItemName() {
+<b class="nc">&nbsp;        return detailedItemName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setDetailedItemName(String detailedItemName) {
+<b class="nc">&nbsp;        this.detailedItemName = detailedItemName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getSectorMappingId() {
+<b class="nc">&nbsp;        return sectorMappingId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setSectorMappingId(String sectorMappingId) {
+<b class="nc">&nbsp;        this.sectorMappingId = sectorMappingId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getSectorName() {
+<b class="nc">&nbsp;        return sectorName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setSectorName(String sectorName) {
+<b class="nc">&nbsp;        this.sectorName = sectorName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Integer getSubtotal() {
+<b class="nc">&nbsp;        return subtotal;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setSubtotal(Integer subtotal) {
+<b class="nc">&nbsp;        this.subtotal = subtotal;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;OrganisationEntity&gt; getOrganizations() {
+<b class="fc">&nbsp;        return organizations;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setOrganizations(List&lt;OrganisationEntity&gt; organizations) {
+<b class="nc">&nbsp;        this.organizations = organizations;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ItemBuilder domainBuilder(){
+<b class="fc">&nbsp;        return new ItemBuilder(</b>
+&nbsp;            id,
+&nbsp;            detailedItemId,
+&nbsp;            itemName,
+&nbsp;            itemId,
+&nbsp;            detailedItemName,
+&nbsp;            sectorMappingId,
+&nbsp;            sectorName,
+&nbsp;            subtotal);
+&nbsp;    }
+&nbsp;
+&nbsp;    public static class ItemBuilder{
+&nbsp;        private String id;
+&nbsp;        private String detailedItemId;
+&nbsp;        private String itemName;
+&nbsp;        private String itemId;
+&nbsp;        private String detailedItemName;
+&nbsp;        private String sectorMappingId;
+&nbsp;        private String sectorName;
+&nbsp;        private Integer subtotal;
+&nbsp;        private String capabilityType;
+&nbsp;        private String validationDate;
+&nbsp;        private String organisationCapability;
+&nbsp;
+<b class="fc">&nbsp;        public ItemBuilder(String id, String detailedItemId, String itemName, String itemId, String detailedItemName, String sectorMappingId, String sectorName, Integer subtotal) {</b>
+<b class="fc">&nbsp;            this.id = id;</b>
+<b class="fc">&nbsp;            this.detailedItemId = detailedItemId;</b>
+<b class="fc">&nbsp;            this.itemName = itemName;</b>
+<b class="fc">&nbsp;            this.itemId = itemId;</b>
+<b class="fc">&nbsp;            this.detailedItemName = detailedItemName;</b>
+<b class="fc">&nbsp;            this.sectorMappingId = sectorMappingId;</b>
+<b class="fc">&nbsp;            this.sectorName = sectorName;</b>
+<b class="fc">&nbsp;            this.subtotal = subtotal;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public ItemBuilder setCapabilityType(String capabilityType) {
+<b class="fc">&nbsp;            this.capabilityType = capabilityType;</b>
+<b class="fc">&nbsp;            return this;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public ItemBuilder setValidationDate(String validationDate) {
+<b class="fc">&nbsp;            this.validationDate = validationDate;</b>
+<b class="fc">&nbsp;            return this;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public ItemBuilder setOrganisationCapability(String organisationCapability) {
+<b class="fc">&nbsp;            this.organisationCapability = organisationCapability;</b>
+<b class="fc">&nbsp;            return this;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public Item build(){
+<b class="fc">&nbsp;            return new Item(</b>
+&nbsp;                    id,
+&nbsp;                    detailedItemId,
+&nbsp;                    itemName,
+&nbsp;                    itemId,
+&nbsp;                    detailedItemName,
+&nbsp;                    sectorMappingId,
+&nbsp;                    sectorName,
+&nbsp;                    subtotal,
+&nbsp;                    capabilityType,
+&nbsp;                    validationDate,
+&nbsp;                    organisationCapability);
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="nc">&nbsp;        return &quot;Item{&quot; +</b>
+&nbsp;                &quot;id=&#39;&quot; + id + &#39;\&#39;&#39; +
+&nbsp;                &quot;, detailedItemId=&#39;&quot; + detailedItemId + &#39;\&#39;&#39; +
+&nbsp;                &quot;, itemName=&#39;&quot; + itemName + &#39;\&#39;&#39; +
+&nbsp;                &quot;, itemId=&#39;&quot; + itemId + &#39;\&#39;&#39; +
+&nbsp;                &quot;, detailedItemName=&#39;&quot; + detailedItemName + &#39;\&#39;&#39; +
+&nbsp;                &quot;, sectorMappingId=&#39;&quot; + sectorMappingId + &#39;\&#39;&#39; +
+&nbsp;                &quot;, sectorName=&#39;&quot; + sectorName + &#39;\&#39;&#39; +
+&nbsp;                &quot;, subtotal=&quot; + subtotal +
+&nbsp;                &quot;, organizations=&quot; + organizations +
+&nbsp;                &#39;}&#39;;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-09-28 12:54</div>
+</div>
+</body>
+</html>

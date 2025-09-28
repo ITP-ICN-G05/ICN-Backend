@@ -7,7 +7,16 @@ spring:
     name: ICN_Back
   data:
     mongodb:
-      uri: mongodb://localhost:27017/mydatabase
+      uri: mongodb://localhost:27017/ICN_Navigator
+
+
+app:
+  google-map-geocode:
+    enable: 1
+    api-key: ${GOOGLE_MAPS_API_KEY:}
+    geocoding-url: https://maps.googleapis.com/maps/api/geocode/json
+    batch-size: 10
+    delay-between-requests: 100
 
 server:
   port: 8082

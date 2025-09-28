@@ -1,0 +1,196 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > LocationUpdateService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gof.ICNBack.Service</a>
+</div>
+
+<h1>Coverage Summary for Class: LocationUpdateService (com.gof.ICNBack.Service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LocationUpdateService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88.2%
+  </span>
+  <span class="absValue">
+    (30/34)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gof.ICNBack.Service;
+&nbsp;
+&nbsp;import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
+&nbsp;import com.gof.ICNBack.Entity.Organisation;
+&nbsp;import jakarta.annotation.PostConstruct;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.data.mongodb.core.MongoTemplate;
+&nbsp;import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+&nbsp;import org.springframework.data.mongodb.core.query.Criteria;
+&nbsp;import org.springframework.data.mongodb.core.query.Query;
+&nbsp;import org.springframework.data.mongodb.core.query.Update;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class LocationUpdateService {
+&nbsp;
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(LocationUpdateService.class);</b>
+&nbsp;
+<b class="fc">&nbsp;    @Value(&quot;${app.google-map-geocode.batch-size:10}&quot;)</b>
+&nbsp;    private int batchSize = 10;
+&nbsp;
+&nbsp;    @Value(&quot;${app.google-map-geocode.delay-between-requests:100}&quot;)
+&nbsp;    private long delayBetweenRequests;
+&nbsp;
+&nbsp;    private final GoogleMapsGeocodingService geocodingService;
+&nbsp;    private final OrganisationDao organisationDao;
+&nbsp;
+&nbsp;    @Autowired
+<b class="fc">&nbsp;    public LocationUpdateService(GoogleMapsGeocodingService geocodingService, OrganisationDao organisationDao) {</b>
+<b class="fc">&nbsp;        this.geocodingService = geocodingService;</b>
+<b class="fc">&nbsp;        this.organisationDao = organisationDao;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * update geocode for every company who haven&#39;t got one
+&nbsp;     */
+&nbsp;    public void updateLocationsWithGeocoding() {
+<b class="fc">&nbsp;        logger.info(&quot;Starting geocoding process...&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        int processedCount = 0;</b>
+<b class="fc">&nbsp;        int successCount = 0;</b>
+&nbsp;
+<b class="fc">&nbsp;        List&lt;Organisation&gt; organisations = organisationDao.getOrganisationsWithoutGeocode();</b>
+&nbsp;
+<b class="fc">&nbsp;        logger.info(&quot;Found {} locations to geocode&quot;, organisations.size());</b>
+&nbsp;
+<b class="fc">&nbsp;        for (Organisation org : organisations) {</b>
+&nbsp;            try {
+<b class="fc">&nbsp;                if (org.getCoord() != null) {</b>
+<b class="nc">&nbsp;                    logger.info(&quot;skip org with geocoding {}&quot;, org.getCoord());</b>
+<b class="nc">&nbsp;                    continue;</b>
+&nbsp;                }
+<b class="fc">&nbsp;                processedCount++;</b>
+&nbsp;
+&nbsp;                // get geocode
+<b class="fc">&nbsp;                GoogleMapsGeocodingService.GeocodingResult result =</b>
+<b class="fc">&nbsp;                        geocodingService.geocodeAddress(org.getAddress())</b>
+<b class="fc">&nbsp;                                .orElse(null);</b>
+&nbsp;
+<b class="fc">&nbsp;                if (result != null) {</b>
+<b class="fc">&nbsp;                    org.setCoord(new GeoJsonPoint(result.getLatitude(), result.getLongitude()));</b>
+&nbsp;
+<b class="fc">&nbsp;                    successCount++;</b>
+<b class="fc">&nbsp;                    logger.info(&quot;Successfully updated location: {}&quot;, org.getAddress());</b>
+&nbsp;                } else {
+<b class="fc">&nbsp;                    logger.warn(&quot;Failed to geocode address: {}&quot;, org.getAddress());</b>
+&nbsp;                }
+&nbsp;
+<b class="fc">&nbsp;                if (processedCount &lt; organisations.size()) {</b>
+<b class="fc">&nbsp;                    Thread.sleep(delayBetweenRequests);</b>
+&nbsp;                }
+&nbsp;
+<b class="fc">&nbsp;                if (processedCount % batchSize == 0) {</b>
+<b class="fc">&nbsp;                    logger.info(&quot;Processed {}/{} locations&quot;, processedCount, organisations.size());</b>
+&nbsp;                }
+&nbsp;
+<b class="nc">&nbsp;            } catch (Exception e) {</b>
+<b class="nc">&nbsp;                logger.error(&quot;Error processing location: {}&quot;, org.getAddress(), e);</b>
+<b class="fc">&nbsp;            }</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        organisationDao.updateGeocode(organisations);</b>
+&nbsp;
+<b class="fc">&nbsp;        logger.info(&quot;Geocoding completed. Processed: {}, Success: {}, Failed: {}&quot;,</b>
+<b class="fc">&nbsp;                processedCount, successCount, processedCount - successCount);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-09-28 12:54</div>
+</div>
+</body>
+</html>

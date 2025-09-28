@@ -1,7 +1,6 @@
 package com.gof.ICNBack.Entity;
 
 import com.gof.ICNBack.DataSources.Entity.UserEntity;
-import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
@@ -9,20 +8,40 @@ public class User {
 
     private String id;
     private int VIP;
-    public String email;
-    public String name;
-    public String password;
-    public List<String> cards;
+    private String email;
+
+    private String dueDate;
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public List<String> getCards() {
+        return cards;
+    }
+
+    private String name;
+    private String password;
+    private List<String> cards;
 
     public User(){}
 
-    public User(String id, int vip, String email, String name, String password, List<String> cards) {
+    public User(String id, int vip, String email, String name, String password, List<String> cards, String dueDate) {
         this.id = id;
         VIP = vip;
         this.email = email;
         this.name = name;
         this.password = password;
         this.cards = cards;
+        this.dueDate = dueDate;
     }
 
     public int getVIP() {
@@ -30,7 +49,8 @@ public class User {
     }
 
     public UserFull getFullUser(List<Organisation.OrganisationCard> cards){
-        return new UserFull(cards, name, VIP);
+        String endDate = this.getVIP() <= 0 ? "N/A" : dueDate;
+        return new UserFull(id, cards, name, VIP, endDate);
     }
 
     public InitialUser getInitialUser(String code){
@@ -42,24 +62,29 @@ public class User {
     }
 
     public static class UserFull {
+        public final String id;
         public final String name;
         public final List<Organisation.OrganisationCard> cards;
-
         public final int VIP;
+        public final String endDate;
 
-        public UserFull(List<Organisation.OrganisationCard> cards, String name, int vip) {
+        public UserFull(String id, List<Organisation.OrganisationCard> cards, String name, int vip, String endDate) {
+            this.id = id;
             this.name = name;
             this.cards = cards;
             VIP = vip;
+            this.endDate = endDate;
         }
     }
 
     public static class InitialUser{
-        public final String email;
-        public final String name;
-        public final String password;
+        private String email;
+        private String name;
+        private String password;
 
-        public final String code;
+        private String code;
+
+        public InitialUser(){}
 
         public InitialUser(String email, String name, String password, String code) {
             this.email = email;
@@ -70,14 +95,52 @@ public class User {
 
         public User toUser(){
             return new User(
-                    null, 0, email, name, password, List.of()
+                    null, 0, email, name, password, List.of(), null
             );
         }
 
+        public String getEmail() {
+            return this.email;
+        }
 
+        public String getCode() {
+            return code;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getPassword() {
+            return password;
+        }
     }
 
     public UserEntity toEntity(){
         return new UserEntity(id, VIP, email, name, password, cards);
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setVIP(int VIP) {
+        this.VIP = VIP;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setCards(List<String> cards) {
+        this.cards = cards;
     }
 }

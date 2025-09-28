@@ -1,0 +1,303 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > OrganisationEntity</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gof.ICNBack.DataSources.Entity</a>
+</div>
+
+<h1>Coverage Summary for Class: OrganisationEntity (com.gof.ICNBack.DataSources.Entity)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OrganisationEntity</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    38.5%
+  </span>
+  <span class="absValue">
+    (10/26)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    57.1%
+  </span>
+  <span class="absValue">
+    (28/49)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gof.ICNBack.DataSources.Entity;
+&nbsp;
+&nbsp;import com.gof.ICNBack.Entity.Organisation;
+&nbsp;import org.bson.Document;
+&nbsp;import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+&nbsp;import org.springframework.data.mongodb.core.mapping.Field;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Objects;
+&nbsp;
+&nbsp;public class OrganisationEntity {
+&nbsp;    @Field(&quot;Organisation Capability&quot;)
+&nbsp;    private String organisationCapability;
+&nbsp;
+&nbsp;    @Field(&quot;Organisation: Organisation Name&quot;)
+&nbsp;    private String organisationName;
+&nbsp;
+&nbsp;    @Field(&quot;Organisation: Organisation ID&quot;)
+&nbsp;    private String organisationId;
+&nbsp;
+&nbsp;    @Field(&quot;Capability Type&quot;)
+&nbsp;    private String capabilityType;
+&nbsp;
+&nbsp;    @Field(&quot;Validation Date&quot;)
+&nbsp;    private String validationDate;
+&nbsp;
+&nbsp;    @Field(&quot;Organisation: Billing Street&quot;)
+&nbsp;    private String billingStreet;
+&nbsp;
+&nbsp;    @Field(&quot;Organisation: Billing City&quot;)
+&nbsp;    private String billingCity;
+&nbsp;
+&nbsp;    @Field(&quot;Organisation: Billing State/Province&quot;)
+&nbsp;    private String billingStateProvince;
+&nbsp;
+&nbsp;    @Field(&quot;Organisation: Billing Zip/Postal Code&quot;)
+&nbsp;    private String billingZipPostalCode;
+&nbsp;
+&nbsp;    @Field(&quot;Organisation: Coord&quot;)
+&nbsp;    private Object coord;
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;    public OrganisationEntity() {}</b>
+&nbsp;
+&nbsp;    public OrganisationEntity(String organisationCapability,
+&nbsp;                              String organisationName,
+&nbsp;                              String organisationId,
+&nbsp;                              String capabilityType,
+&nbsp;                              String validationDate,
+&nbsp;                              String billingStreet,
+&nbsp;                              String billingCity,
+&nbsp;                              String billingStateProvince,
+&nbsp;                              String billingZipPostalCode,
+<b class="fc">&nbsp;                              GeoJsonPoint coord) {</b>
+<b class="fc">&nbsp;        this.organisationCapability = organisationCapability;</b>
+<b class="fc">&nbsp;        this.organisationName = organisationName;</b>
+<b class="fc">&nbsp;        this.organisationId = organisationId;</b>
+<b class="fc">&nbsp;        this.capabilityType = capabilityType;</b>
+<b class="fc">&nbsp;        this.validationDate = validationDate;</b>
+<b class="fc">&nbsp;        this.billingStreet = billingStreet;</b>
+<b class="fc">&nbsp;        this.billingCity = billingCity;</b>
+<b class="fc">&nbsp;        this.billingStateProvince = billingStateProvince;</b>
+<b class="fc">&nbsp;        this.billingZipPostalCode = billingZipPostalCode;</b>
+<b class="fc">&nbsp;        this.setGeoJsonPoint(coord);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setGeoJsonPoint(org.springframework.data.mongodb.core.geo.GeoJsonPoint point) {
+<b class="fc">&nbsp;        if (point != null) {</b>
+<b class="fc">&nbsp;            java.util.Map&lt;String, Object&gt; geoJson = new java.util.HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;            geoJson.put(&quot;type&quot;, &quot;Point&quot;);</b>
+<b class="fc">&nbsp;            geoJson.put(&quot;coordinates&quot;, java.util.Arrays.asList(point.getX(), point.getY()));</b>
+<b class="fc">&nbsp;            this.coord = geoJson;</b>
+<b class="fc">&nbsp;        } else {</b>
+<b class="fc">&nbsp;            this.coord = null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public GeoJsonPoint getGeoJsonPoint() {
+<b class="fc">&nbsp;        if (coord instanceof java.util.Map) {</b>
+<b class="nc">&nbsp;            java.util.Map&lt;String, Object&gt; geoJson = (java.util.Map&lt;String, Object&gt;) coord;</b>
+<b class="nc">&nbsp;            java.util.List&lt;Double&gt; coordinates = (java.util.List&lt;Double&gt;) geoJson.get(&quot;coordinates&quot;);</b>
+<b class="nc">&nbsp;            if (coordinates != null &amp;&amp; coordinates.size() == 2) {</b>
+<b class="nc">&nbsp;                return new org.springframework.data.mongodb.core.geo.GeoJsonPoint(</b>
+<b class="nc">&nbsp;                        coordinates.get(0), coordinates.get(1)</b>
+&nbsp;                );
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public GeoJsonPoint getCoord() {
+<b class="fc">&nbsp;        return getGeoJsonPoint();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setCoord(GeoJsonPoint point) {
+<b class="nc">&nbsp;        setGeoJsonPoint(point);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getOrganisationCapability() {
+<b class="fc">&nbsp;        return organisationCapability;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setOrganisationCapability(String organisationCapability) {
+<b class="nc">&nbsp;        this.organisationCapability = organisationCapability;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getOrganisationName() {
+<b class="nc">&nbsp;        return organisationName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setOrganisationName(String organisationName) {
+<b class="nc">&nbsp;        this.organisationName = organisationName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getOrganisationId() {
+<b class="fc">&nbsp;        return organisationId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setOrganisationId(String organisationId) {
+<b class="nc">&nbsp;        this.organisationId = organisationId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getCapabilityType() {
+<b class="fc">&nbsp;        return capabilityType;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setCapabilityType(String capabilityType) {
+<b class="nc">&nbsp;        this.capabilityType = capabilityType;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getValidationDate() {
+<b class="fc">&nbsp;        return validationDate;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setValidationDate(String validationDate) {
+<b class="nc">&nbsp;        this.validationDate = validationDate;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getBillingStreet() {
+<b class="nc">&nbsp;        return billingStreet;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setBillingStreet(String billingStreet) {
+<b class="nc">&nbsp;        this.billingStreet = billingStreet;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getBillingCity() {
+<b class="nc">&nbsp;        return billingCity;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setBillingCity(String billingCity) {
+<b class="nc">&nbsp;        this.billingCity = billingCity;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getBillingStateProvince() {
+<b class="nc">&nbsp;        return billingStateProvince;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setBillingStateProvince(String billingStateProvince) {
+<b class="nc">&nbsp;        this.billingStateProvince = billingStateProvince;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getBillingZipPostalCode() {
+<b class="nc">&nbsp;        return billingZipPostalCode;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setBillingZipPostalCode(String billingZipPostalCode) {
+<b class="nc">&nbsp;        this.billingZipPostalCode = billingZipPostalCode;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Organisation toDomain(){
+<b class="fc">&nbsp;        return new Organisation(</b>
+&nbsp;                this.organisationId,
+&nbsp;                this.organisationName,
+&nbsp;                new ArrayList&lt;&gt;(),
+&nbsp;                this.billingStreet,
+&nbsp;                this.billingCity,
+&nbsp;                this.billingStateProvince,
+&nbsp;                this.billingZipPostalCode,
+<b class="fc">&nbsp;                this.getCoord()</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="nc">&nbsp;        return &quot;Organization{&quot; +</b>
+&nbsp;                &quot;organisationCapability=&#39;&quot; + organisationCapability + &#39;\&#39;&#39; +
+&nbsp;                &quot;, organisationName=&#39;&quot; + organisationName + &#39;\&#39;&#39; +
+&nbsp;                &quot;, organisationId=&#39;&quot; + organisationId + &#39;\&#39;&#39; +
+&nbsp;                &quot;, capabilityType=&#39;&quot; + capabilityType + &#39;\&#39;&#39; +
+&nbsp;                &quot;, validationDate=&#39;&quot; + validationDate + &#39;\&#39;&#39; +
+&nbsp;                &quot;, billingStreet=&#39;&quot; + billingStreet + &#39;\&#39;&#39; +
+&nbsp;                &quot;, billingCity=&#39;&quot; + billingCity + &#39;\&#39;&#39; +
+&nbsp;                &quot;, billingStateProvince=&#39;&quot; + billingStateProvince + &#39;\&#39;&#39; +
+&nbsp;                &quot;, billingZipPostalCode=&#39;&quot; + billingZipPostalCode + &#39;\&#39;&#39; +
+&nbsp;                &#39;}&#39;;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-09-28 12:54</div>
+</div>
+</body>
+</html>

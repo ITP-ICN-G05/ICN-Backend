@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-@Transactional
 public class UserService {
     @Autowired
     UserDao userDao;
@@ -21,8 +20,7 @@ public class UserService {
         return userDao.update(user.toEntity());
     }
 
-    public boolean createUser(User.InitialUser initialUser) {
-        UserEntity user = initialUser.toUser().toEntity();
+    public boolean createUser(UserEntity user) {
         return userDao.create(user);
     }
 }

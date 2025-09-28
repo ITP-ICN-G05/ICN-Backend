@@ -2,19 +2,21 @@ package com.gof.ICNBack.DataSources.Entity;
 
 import com.gof.ICNBack.Entity.User;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
 import java.util.List;
 
+@Document(collection = "User")
 public class UserEntity {
     @Id
     private String _id;
-
     private int VIP;
-
-    public String email;
-    public String name;
-    public String password;
-    public List<String> cards;
+    private String email;
+    private String name;
+    private String password;
+    private List<String> cards;
+    private Date endDate;
 
     public UserEntity(){}
 
@@ -34,7 +36,8 @@ public class UserEntity {
                 getEmail(),
                 getName(),
                 getPassword(),
-                getCards()
+                getCards(),
+                this.endDate == null ? null : getEndDate().toString()
         );
     }
 
@@ -84,5 +87,13 @@ public class UserEntity {
 
     public void setCards(List<String> cards) {
         this.cards = cards;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }

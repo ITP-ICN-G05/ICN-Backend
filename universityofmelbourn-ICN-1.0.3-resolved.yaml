@@ -224,7 +224,7 @@ components:
       - id
       - name
       - organisationCards
-      - primitive
+      - premium
       - subscribeDueDate
       type: object
       properties:
@@ -238,7 +238,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/OrganisationCard"
-        primitive:
+        premium:
           type: integer
           example: 1
         subscribeDueDate:

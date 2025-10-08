@@ -1,3 +1,7 @@
+GOOGLE_MAPS_API_KEY: placeholder
+EMAIL: email@example.com
+EMAIL_PASS: notapassword
+
 pebble:
   # default ".peb" to "":
   suffix:
@@ -9,14 +13,44 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/ICN_Navigator
 
+  ## email settings
+  mail:
+    ## address
+    host: smtp.gmail.com
+    ## email server port（465||587）
+    port: 465
+    ## email account
+    username: ${EMAIL}
+    ## pass
+    password: ${EMAIL_PASS}
+    # encoding
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            ## SSL connection
+            class: javax.net.ssl.SSLSocketFactory
+        ## enable debug
+        debug: false
+
+
 
 app:
   google-map-geocode:
-    enable: 1
-    api-key: ${GOOGLE_MAPS_API_KEY:}
+    enable: 0
+    api-key: ${GOOGLE_MAPS_API_KEY}
     geocoding-url: https://maps.googleapis.com/maps/api/geocode/json
     batch-size: 10
     delay-between-requests: 100
+  mail:
+    code:
+      length: 4
+    mail: email@example.com
+    name: ICN navigator
+    website: ICN.au
+    timeout: 300
+    ftl-path: templates/email.ftl
 
 server:
   port: 8082

@@ -4,16 +4,11 @@ import com.gof.ICNBack.DataSources.Entity.ItemEntity;
 import com.gof.ICNBack.DataSources.Organisation.MongoOrgDao;
 import com.gof.ICNBack.Entity.Organisation;
 import com.gof.ICNBack.Repositories.MongoOrganisationRepository;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import javax.swing.text.html.parser.Entity;
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +32,7 @@ public class Utils {
         public TestOrganisationDao(MongoTemplate template, MongoOrganisationRepository repo){
             super();
             this.mongoTemplate = Mockito.spy(template);
-            setField(this, "template", mongoTemplate);
+            setField(this, "templates", mongoTemplate);
             setField(this, "repo", repo);
             when(mongoTemplate.getCollectionName(ItemEntity.class)).thenReturn(TEST_COLLECTION);
         }

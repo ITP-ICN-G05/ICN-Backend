@@ -213,7 +213,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testAddUserAccount_Success() throws Exception {
-        when(emailService.getValidationCode("newuser@example.com")).thenReturn("1256");
+        when(emailService.getValidationCode("newuser@example.com")).thenReturn(List.of("1256"));
         when(userService.createUser(any(UserEntity.class))).thenReturn(true);
 
         mockMvc.perform(post("/user/create")
@@ -228,7 +228,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testAddUserAccount_InvalidCode() throws Exception {
-        when(emailService.getValidationCode("newuser@example.com")).thenReturn("654321"); // 错误的验证码
+        when(emailService.getValidationCode("newuser@example.com")).thenReturn(List.of("654321")); // 错误的验证码
 
         mockMvc.perform(post("/user/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -242,7 +242,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testAddUserAccount_UserCreationFailed() throws Exception {
-        when(emailService.getValidationCode("newuser@example.com")).thenReturn("1256");
+        when(emailService.getValidationCode("newuser@example.com")).thenReturn(List.of("1256"));
         when(userService.createUser(any(UserEntity.class))).thenReturn(false);
 
         mockMvc.perform(post("/user/create")

@@ -1,5 +1,7 @@
 package com.gof.ICNBack.DataSources;
 
+import com.gof.ICNBack.DataSources.Email.EmailDao;
+import com.gof.ICNBack.DataSources.Email.MongoEmailDao;
 import com.gof.ICNBack.DataSources.Organisation.JdbcOrgDao;
 import com.gof.ICNBack.DataSources.Organisation.MongoOrgDao;
 import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
@@ -42,6 +44,18 @@ public class DataConfig {
             case "jdbc":
             default:
                 return new JdbcOrgDao();
+        }
+    }
+
+    @Bean
+    public EmailDao emailDao(@Value("${app.database.type:mongo}") String databaseType) {
+
+        switch (databaseType.toLowerCase()) {
+            case "mongo":
+                return new MongoEmailDao();
+            case "jdbc":
+            default:
+                return null;
         }
     }
 

@@ -65,7 +65,7 @@ public class UserController {
     }
 
     @GetMapping("/getCode")
-    public ResponseEntity<User.UserFull> validateEmail(
+    public ResponseEntity<Void> validateEmail(
             @RequestParam(required = true) String email
     ) {
         if (!isValidEmail(email)) {
@@ -75,7 +75,11 @@ public class UserController {
         }
 
         String code = this.email.generateValidationCode(email);
-        return code == null ?
+        Boolean result = false;
+        if(code != null){
+            result = this.email.sendCode(code, email);
+        }
+        return result ?
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .header("X-Error", "something wrong with the server")
                         .build()
@@ -95,7 +99,7 @@ public class UserController {
         }
 
         try {
-            if (email.getValidationCode(initialUser.getEmail()).equals(initialUser.getCode())) {
+            if (email.getValidationCode(initialUser.getEmail()).contains(initialUser.getCode())) {
                 if (repo.createUser(initialUser.toUser().toEntity())){
                     return ResponseEntity.status(HttpStatus.CREATED).build();
                 }

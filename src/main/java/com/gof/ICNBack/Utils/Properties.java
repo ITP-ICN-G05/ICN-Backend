@@ -6,6 +6,8 @@ public class Properties{
     public static final String EMAIL_TIMEOUT = "app.mail.timeout";
     public static final String EMAIL_SEND_CODE_FTL_PATH = "app.mail.ftl-path";
     public static final String EMAIL = "app.mail.mail";
+
+    public static final String GEOCODING_DEBUG = "app.google-map-geocode.debug";
 }
 
 

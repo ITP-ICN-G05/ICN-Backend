@@ -165,7 +165,14 @@ public class MongoOrgDao extends OrganisationDao {
     @Override
     public void updateGeocode(List<Organisation> orgs) {
         List<ItemEntity> entity = processToItemEntity(orgs);
+        entity.forEach(a -> {
+            for (OrganisationEntity o : a.getOrganizations()){
+                if(o.getCoord() == null){
+                    return;
+                }
+            }
+            a.setGeocoded(true);
+        });
         repo.saveAll(entity);
     }
-
 }

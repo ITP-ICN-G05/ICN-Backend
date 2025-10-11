@@ -48,7 +48,7 @@ public class EmailService {
         return emailDao.getCodeByEmail(email);
     }
 
-    private void cacheValidationCode(String email, String code){
+    public void cacheValidationCode(String email, String code){
         emailDao.createRecipe(email, code);
     }
 
@@ -59,7 +59,7 @@ public class EmailService {
         values.put("validTime", String.valueOf((env.getProperty(Properties.EMAIL_TIMEOUT, int.class, 300) / 60)));
         values.put("verifyCode", code);
 
-        CompletableFuture.runAsync(() -> {
+        CompletableFuture.supplyAsync(() -> {
             try (StringWriter stringWriter = new StringWriter()) {
                 Template template = configuration.getTemplate(env.getProperty(Properties.EMAIL_SEND_CODE_FTL_PATH));
                 template.process(values, stringWriter);
@@ -72,12 +72,15 @@ public class EmailService {
                 mimeMessageHelper.setText(stringWriter.toString(), true);
 
                 sender.send(mimeMessage);
+                return true;
             } catch (Exception e) {
                 logger.error("failed on sending email because: ", e);
                 throw new RuntimeException(e);
             }
-        }, ioIntensiveExecutor).thenRunAsync(() -> {
-            cacheValidationCode(email, code);
+        }, ioIntensiveExecutor).thenAcceptAsync(success -> {
+            if (success) {
+                cacheValidationCode(email, code);
+            }
         }, ioIntensiveExecutor);
         return true;
     }

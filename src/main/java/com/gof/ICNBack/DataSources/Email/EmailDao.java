@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-//@TODO: not implemented yet
 @Component
 @Transactional
 public abstract class EmailDao {

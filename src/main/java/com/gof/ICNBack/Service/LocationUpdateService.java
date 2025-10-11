@@ -2,11 +2,13 @@ package com.gof.ICNBack.Service;
 
 import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
 import com.gof.ICNBack.Entity.Organisation;
+import com.gof.ICNBack.Utils.Properties;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -31,6 +33,9 @@ public class LocationUpdateService {
     private final OrganisationDao organisationDao;
 
     @Autowired
+    private Environment env;
+
+    @Autowired
     public LocationUpdateService(GoogleMapsGeocodingService geocodingService, OrganisationDao organisationDao) {
         this.geocodingService = geocodingService;
         this.organisationDao = organisationDao;
@@ -42,6 +47,8 @@ public class LocationUpdateService {
     public void updateLocationsWithGeocoding() {
         logger.info("Starting geocoding process...");
 
+        boolean debug = env.getProperty(Properties.GEOCODING_DEBUG, Boolean.class, false);
+
         int processedCount = 0;
         int successCount = 0;
 
@@ -52,7 +59,7 @@ public class LocationUpdateService {
         for (Organisation org : organisations) {
             try {
                 if (org.getCoord() != null) {
-                    logger.info("skip org with geocoding {}", org.getCoord());
+                    if (debug) logger.info("skip org with geocoding {}", org.getCoord());
                     continue;
                 }
                 processedCount++;
@@ -66,9 +73,10 @@ public class LocationUpdateService {
                     org.setCoord(new GeoJsonPoint(result.getLatitude(), result.getLongitude()));
 
                     successCount++;
-                    logger.info("Successfully updated location: {}", org.getAddress());
+
+                    if (debug) logger.info("Successfully updated location: {}", org.getAddress());
                 } else {
-                    logger.warn("Failed to geocode address: {}", org.getAddress());
+                    if (debug) logger.warn("Failed to geocode address: {}", org.getAddress());
                 }
 
                 if (processedCount < organisations.size()) {

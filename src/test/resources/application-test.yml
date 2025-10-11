@@ -1,3 +1,5 @@
+
+
 pebble:
   # default ".peb" to "":
   suffix:
@@ -18,23 +20,17 @@ spring:
 
   ## email settings
   mail:
-    ## address
     host: smtp.gmail.com
-    ## email server port（465||587）
-    port: 465
-    ## email account
+    port: 587
     username: ${EMAIL}
-    ## pass
     password: ${EMAIL_PASS}
-    # encoding
-    default-encoding: UTF-8
     properties:
       mail:
         smtp:
-          socketFactory:
-            ## SSL connection
-            class: javax.net.ssl.SSLSocketFactory
-        ## enable debug
+          auth: true
+          starttls:
+            enable: true
+            required: true
         debug: true
 
 # 日志配置
@@ -54,10 +50,11 @@ test:
 app:
   google-map-geocode:
     enable: 0
-    api-key:
+    api-key: ${GOOGLE_MAPS_API_KEY}
     geocoding-url: https://maps.googleapis.com/maps/api/geocode/json
     batch-size: 10
     delay-between-requests: 100
+    debug: true
   mail:
     code:
       length: 4
@@ -65,7 +62,7 @@ app:
     name: ICN navigator
     website: ICN.au
     timeout: 300
-    ftl-path: templates/email.ftl
+    ftl-path: email.ftl
 
 
 server:

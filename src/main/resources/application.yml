@@ -1,6 +1,3 @@
-GOOGLE_MAPS_API_KEY: placeholder
-EMAIL: email@example.com
-EMAIL_PASS: notapassword
 
 pebble:
   # default ".peb" to "":
@@ -38,11 +35,12 @@ spring:
 
 app:
   google-map-geocode:
-    enable: 0
+    enable: 1
     api-key: ${GOOGLE_MAPS_API_KEY}
     geocoding-url: https://maps.googleapis.com/maps/api/geocode/json
     batch-size: 10
     delay-between-requests: 100
+    debug: false
   mail:
     code:
       length: 4
@@ -51,6 +49,7 @@ app:
     website: ICN.au
     timeout: 300
     ftl-path: templates/email.ftl
+
 
 server:
   port: 8082

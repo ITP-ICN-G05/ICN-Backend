@@ -131,6 +131,14 @@ public class ItemEntity {
         this.organizations = organizations;
     }
 
+    public boolean isGeocoded() {
+        return geocoded;
+    }
+
+    public void setGeocoded(boolean geocoded) {
+        this.geocoded = geocoded;
+    }
+
     public ItemBuilder domainBuilder(){
         return new ItemBuilder(
             id,

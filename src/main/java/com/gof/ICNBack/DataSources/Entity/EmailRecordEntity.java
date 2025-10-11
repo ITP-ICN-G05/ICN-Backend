@@ -1,5 +1,6 @@
 package com.gof.ICNBack.DataSources.Entity;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,16 +12,17 @@ public class EmailRecordEntity {
     private String _id;
     private String code;
     private String email;
-    private Date createdTime;
+    @CreatedDate
+    private Date createdDate;
 
     public EmailRecordEntity() {
     }
 
-    public EmailRecordEntity(String _id, String code, String email, Date createdTime) {
+    public EmailRecordEntity(String _id, String code, String email, Date createdDate) {
         this._id = _id;
         this.code = code;
         this.email = email;
-        this.createdTime = createdTime;
+        this.createdDate = createdDate;
     }
 
     public String get_id() {
@@ -48,6 +50,6 @@ public class EmailRecordEntity {
     }
 
     public Date getCreatedTime() {
-        return createdTime;
+        return createdDate;
     }
 }

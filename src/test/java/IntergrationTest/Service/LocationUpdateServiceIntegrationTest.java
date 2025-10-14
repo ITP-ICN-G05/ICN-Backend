@@ -2,11 +2,8 @@ package IntergrationTest.Service;
 
 import Utils.Utils;
 import com.gof.ICNBack.Application;
-import com.gof.ICNBack.DataSources.Entity.ItemEntity;
-import com.gof.ICNBack.DataSources.Organisation.MongoOrgDao;
 import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
-import com.gof.ICNBack.Entity.Organisation;
-import com.gof.ICNBack.Repositories.MongoOrganisationRepository;
+import com.gof.ICNBack.Repositories.MongoItemRepository;
 import com.gof.ICNBack.Service.GoogleMapsGeocodingService;
 import com.gof.ICNBack.Service.LocationUpdateService;
 import org.bson.Document;
@@ -14,22 +11,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import static com.gof.ICNBack.DataSources.Utils.MongoUtils.processToItemEntity;
-import static com.gof.ICNBack.DataSources.Utils.MongoUtils.processToOrganisations;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -47,7 +35,7 @@ public class LocationUpdateServiceIntegrationTest {
     @Autowired
     private MongoTemplate mongoTemplate;
     @Autowired
-    private MongoOrganisationRepository repo;
+    private MongoItemRepository repo;
     @Autowired
     private GoogleMapsGeocodingService geocodingService;
 
@@ -57,7 +45,7 @@ public class LocationUpdateServiceIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        organisationDao = new Utils.TestOrganisationDao(mongoTemplate, repo);
+        organisationDao = new Utils.Utils.TestOrganisationDao(mongoTemplate, repo);
         locationUpdateService = new LocationUpdateService(geocodingService, organisationDao);
         // clean data
         mongoTemplate.dropCollection(TEST_COLLECTION);

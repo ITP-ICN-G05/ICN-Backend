@@ -4,14 +4,12 @@ import Utils.Utils;
 import com.gof.ICNBack.Application;
 import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
 import com.gof.ICNBack.DataSources.User.UserDao;
-import com.gof.ICNBack.Entity.Item;
 import com.gof.ICNBack.Entity.Organisation;
 import com.gof.ICNBack.Entity.User;
 
-import com.gof.ICNBack.Repositories.MongoOrganisationRepository;
+import com.gof.ICNBack.Repositories.MongoItemRepository;
 import com.gof.ICNBack.Repositories.MongoUserRepository;
 import com.gof.ICNBack.Service.OrganisationService;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +43,7 @@ public class OrganisationServiceExistingDataTest {
     @Autowired
     private MongoTemplate mongoTemplate;
     @Autowired
-    private MongoOrganisationRepository orgRepo;
+    private MongoItemRepository orgRepo;
 
     // 使用您提供的真实组织ID
     private static final List<String> EXISTING_ORGANISATION_IDS = Arrays.asList(
@@ -57,7 +55,7 @@ public class OrganisationServiceExistingDataTest {
 
     @BeforeEach
     void setUp() {
-        organisationDao = new Utils.TestOrganisationDao(mongoTemplate, orgRepo);
+        organisationDao = new Utils.Utils.TestOrganisationDao(mongoTemplate, orgRepo);
         setField(organisationService, "organisationDao", organisationDao);
     }
 

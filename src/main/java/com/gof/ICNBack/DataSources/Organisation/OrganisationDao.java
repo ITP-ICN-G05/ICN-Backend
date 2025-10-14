@@ -1,8 +1,6 @@
 package com.gof.ICNBack.DataSources.Organisation;
 
 import com.gof.ICNBack.Entity.Organisation;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;

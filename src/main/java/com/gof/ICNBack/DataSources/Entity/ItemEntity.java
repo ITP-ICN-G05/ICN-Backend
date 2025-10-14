@@ -9,8 +9,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
-@Document(collection = "Organisation")
-public class ItemEntity {
+@Document(collection = "Item")
+public class
+ItemEntity {
 
     @Id
     private String id;
@@ -37,7 +38,7 @@ public class ItemEntity {
     private Integer subtotal;
 
     @Field("Organizations")
-    private List<OrganisationEntity> organizations;
+    private List<String> organizations;
 
     @Field("Geocoded")
     private boolean geocoded;
@@ -46,7 +47,7 @@ public class ItemEntity {
 
     public ItemEntity(String id, String detailedItemId, String itemName, String itemId,
                 String detailedItemName, String sectorMappingId, String sectorName,
-                Integer subtotal, List<OrganisationEntity> organizations) {
+                Integer subtotal, List<String> organizations) {
         this.id = id;
         this.detailedItemId = detailedItemId;
         this.itemName = itemName;
@@ -123,11 +124,11 @@ public class ItemEntity {
         this.subtotal = subtotal;
     }
 
-    public List<OrganisationEntity> getOrganizations() {
+    public List<String> getOrganizations() {
         return organizations;
     }
 
-    public void setOrganizations(List<OrganisationEntity> organizations) {
+    public void setOrganizations(List<String> organizations) {
         this.organizations = organizations;
     }
 

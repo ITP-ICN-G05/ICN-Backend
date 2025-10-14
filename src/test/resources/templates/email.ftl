@@ -66,7 +66,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>Dear customer，</h1>
+    <h1>Dear customer</h1>
 
     <p>you have recived a email from <a href="${companyWebsite! 'ICN.Navigator.au'}" class="company-link">${companyName! 'ICN Navigator'}</a>
         , for the validation of your email address.</p>
@@ -75,7 +75,7 @@
         <p class="code">${verifyCode}</p>
     </div>
 
-    <p>please user the above code for your validation ( ${validTime} min before expire ).</p>
+    <p>please user the above code for your validation ( ${validTime} mins before expire ).</p>
 
     <p>If you did not requested this code, please ignore it</p>
 

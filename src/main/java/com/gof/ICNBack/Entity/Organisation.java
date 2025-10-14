@@ -5,7 +5,6 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Organisation {
     private String _id;

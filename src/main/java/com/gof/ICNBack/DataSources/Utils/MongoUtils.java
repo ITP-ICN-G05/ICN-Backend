@@ -3,10 +3,7 @@ package com.gof.ICNBack.DataSources.Utils;
 import com.gof.ICNBack.DataSources.Entity.ItemEntity;
 import com.gof.ICNBack.Entity.Organisation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
-import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
 import org.bson.Document;
-import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.util.Arrays;
 import java.util.HashMap;

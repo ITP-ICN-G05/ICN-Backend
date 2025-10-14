@@ -1,14 +1,14 @@
 package com.gof.ICNBack.DataSources.Entity;
 
 import com.gof.ICNBack.Entity.Organisation;
-import org.bson.Document;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+@Document(collection = "Organisation")
 public class OrganisationEntity {
     @Field("Organisation Capability")
     private String organisationCapability;
@@ -39,6 +39,12 @@ public class OrganisationEntity {
 
     @Field("Organisation: Coord")
     private Object coord;
+
+    @Field("Associated Item Count")
+    private Integer count;
+
+    @Field("Associated Detailed Item IDs")
+    private List<String> itemIds;
 
 
     public OrganisationEntity() {}

@@ -2,7 +2,6 @@ package IntergrationTest.Controller;
 
 import com.gof.ICNBack.Application;
 import com.gof.ICNBack.Entity.Organisation;
-import com.gof.ICNBack.Entity.Item; // 假设Item类存在
 import com.gof.ICNBack.Service.OrganisationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,9 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;

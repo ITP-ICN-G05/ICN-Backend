@@ -1,9 +1,9 @@
 package Utils;
 
 import com.gof.ICNBack.DataSources.Entity.ItemEntity;
-import com.gof.ICNBack.DataSources.Organisation.MongoOrgDao;
+import com.gof.ICNBack.DataSources.Organisation.MongoOrganisationDao;
 import com.gof.ICNBack.Entity.Organisation;
-import com.gof.ICNBack.Repositories.MongoOrganisationRepository;
+import com.gof.ICNBack.Repositories.MongoItemRepository;
 import org.mockito.Mockito;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -24,12 +24,12 @@ public class Utils {
     /**
      * Spacial DAO, only modifies Test_Collection
      */
-    public static class TestOrganisationDao extends MongoOrgDao {
+    public static class TestOrganisationDao extends MongoOrganisationDao {
 
         private MongoTemplate mongoTemplate;
         private static final String TEST_COLLECTION = "Organisation_Test";
 
-        public TestOrganisationDao(MongoTemplate template, MongoOrganisationRepository repo){
+        public TestOrganisationDao(MongoTemplate template, MongoItemRepository repo){
             super();
             this.mongoTemplate = Mockito.spy(template);
             setField(this, "templates", mongoTemplate);

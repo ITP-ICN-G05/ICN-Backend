@@ -2,8 +2,8 @@ package com.gof.ICNBack.DataSources;
 
 import com.gof.ICNBack.DataSources.Email.EmailDao;
 import com.gof.ICNBack.DataSources.Email.MongoEmailDao;
-import com.gof.ICNBack.DataSources.Organisation.JdbcOrgDao;
-import com.gof.ICNBack.DataSources.Organisation.MongoOrgDao;
+import com.gof.ICNBack.DataSources.Organisation.JdbcOrganisationDao;
+import com.gof.ICNBack.DataSources.Organisation.MongoOrganisationDao;
 import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
 import com.gof.ICNBack.DataSources.User.JdbcUserDao;
 import com.gof.ICNBack.DataSources.User.MongoUserDao;
@@ -11,7 +11,6 @@ import com.gof.ICNBack.DataSources.User.UserDao;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.DbRefResolver;
@@ -40,10 +39,10 @@ public class DataConfig {
 
         switch (databaseType.toLowerCase()) {
             case "mongo":
-                return new MongoOrgDao();
+                return new MongoOrganisationDao();
             case "jdbc":
             default:
-                return new JdbcOrgDao();
+                return new JdbcOrganisationDao();
         }
     }
 

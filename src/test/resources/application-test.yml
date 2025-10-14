@@ -1,4 +1,6 @@
-
+GOOGLE_MAPS_API_KEY: AIzaSyBsJb-fpJij7dFzZC9QbO4DsGXlw1c2-n0
+EMAIL: lys.2026485907@gmail.com
+EMAIL_PASS: xeqbzbnzvvutvryo
 
 pebble:
   # default ".peb" to "":
@@ -60,7 +62,7 @@ app:
       length: 4
     mail: email@example.com
     name: ICN navigator
-    website: ICN.au
+    website: ICN.navigator.au
     timeout: 300
     ftl-path: email.ftl
 

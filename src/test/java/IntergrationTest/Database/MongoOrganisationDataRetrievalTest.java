@@ -4,7 +4,7 @@ import com.gof.ICNBack.Application;
 import com.gof.ICNBack.DataSources.Entity.ItemEntity;
 import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
 import com.gof.ICNBack.Entity.Organisation;
-import com.gof.ICNBack.Repositories.MongoOrganisationRepository;
+import com.gof.ICNBack.Repositories.MongoItemRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +22,7 @@ public class MongoOrganisationDataRetrievalTest {
     private OrganisationDao orgDao;
 
     @Autowired
-    private MongoOrganisationRepository repo;
+    private MongoItemRepository repo;
 
     @Autowired
     private MongoTemplate mongoTemplate;

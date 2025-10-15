@@ -1,26 +1,27 @@
 import csv
 import json
 from collections import defaultdict
-import os
 
 
 def csv_to_json(csv_filename, items_json_filename, orgs_json_filename):
-    items_list = []
-    organisations_dict = defaultdict(dict)
+    # 初始化数据结构
+    items_list = []  # 存储所有项目
+    organisations_dict = defaultdict(dict)  # 存储所有组织，以组织ID为键
     current_item_id = None
     current_item = None
 
+    # 读取CSV文件
     with open(csv_filename, 'r', encoding='utf-8-sig') as csvfile:
         reader = csv.DictReader(csvfile)
 
         for row in reader:
-            # check new Detailed Item 
+            # 检查是否是新的Detailed Item
             if row['Detailed Item ID  ↓'] and row['Detailed Item ID  ↓'].startswith('DITM-'):
-                # stop last item
+                # 如果当前有正在处理的项目，先保存
                 if current_item:
                     items_list.append(current_item)
 
-                # create new
+                # 创建新的项目
                 current_item_id = row['Detailed Item ID  ↓']
                 current_item = {
                     "Detailed Item ID": current_item_id,
@@ -29,74 +30,82 @@ def csv_to_json(csv_filename, items_json_filename, orgs_json_filename):
                     "Detailed Item Name": row['Detailed Item Name'],
                     "Sector Mapping ID": row['Sector Mapping ID'],
                     "Sector Name": row['Sector Name'],
-                    "Subtotal": 0, 
-                    "Organisation IDs": [] 
+                    "Subtotal": 0,  # 初始化为0
+                    "Organisation IDs": []  # 只存储组织ID，不存储完整组织信息
                 }
 
-            # process subtotals
+            # 处理小计行
             elif row['Detailed Item ID  ↓'] == 'Subtotal':
                 if current_item:
-                    # read from Item Name column
+                    # 从Item Name列获取计数
                     try:
                         current_item["Subtotal"] = int(row['Item Name'])
                     except (ValueError, TypeError):
                         current_item["Subtotal"] = 0
 
-            # process organisations
+            # 处理组织行
             elif current_item_id and row['Detailed Item ID  ↓'] == '':
-                org_info = {}
-                org_id = None
+                # 提取组织信息
+                org_id = row['Organisation: Organisation ID']
                 
-                for key, value in row.items():
-                    if key and key not in ['', 'Detailed Item ID  ↓', 'Item Name', 'Item ID',
-                                          'Detailed Item Name', 'Sector Mapping ID', 'Sector Name']:
-                        org_info[key] = value
-                        
-                        # extract ID
-                        if 'Organisation ID' in key and value:
-                            org_id = value
-                
+                # 如果有有效的组织ID
                 if org_id:
-                    # add is not exist
+                    # 创建组织与项目关联的详细信息
+                    item_org_relationship = {
+                        "Detailed Item ID": current_item_id,
+                        "Organisation Capability": row['Organisation Capability'],
+                        "Capability Type": row['Capability Type'],
+                        "Validation Date": row['Validation Date']
+                    }
+                    
+                    # 如果该组织尚未在字典中，则添加基本信息
                     if org_id not in organisations_dict:
-                        organisations_dict[org_id] = org_info
-                        organisations_dict[org_id]['Associated Detailed Item IDs'] = []
+                        organisations_dict[org_id] = {
+                            "Organisation ID": org_id,
+                            "Organisation Name": row['Organisation: Organisation Name'],
+                            "Billing Street": row['Organisation: Billing Street'],
+                            "Billing City": row['Organisation: Billing City'],
+                            "Billing State/Province": row['Organisation: Billing State/Province'],
+                            "Billing Zip/Postal Code": row['Organisation: Billing Zip/Postal Code'],
+                            "Associated Items": []  # 存储与每个项目关联的详细信息
+                        }
                     
-                    if current_item_id not in organisations_dict[org_id]['Associated Detailed Item IDs']:
-                        organisations_dict[org_id]['Associated Detailed Item IDs'].append(current_item_id)
+                    # 将项目关联信息添加到组织的关联项目列表中
+                    organisations_dict[org_id]["Associated Items"].append(item_org_relationship)
                     
+                    # 将组织ID添加到当前项目的组织ID列表中（如果尚未存在）
                     if org_id not in current_item["Organisation IDs"]:
                         current_item["Organisation IDs"].append(org_id)
 
-    # add last
+    # 添加最后一个项目
     if current_item:
         items_list.append(current_item)
 
-    # write item file
+    # 写入项目JSON文件
     with open(items_json_filename, 'w', encoding='utf-8') as jsonfile:
         json.dump(items_list, jsonfile, indent=2, ensure_ascii=False)
 
-    # organisation
+    # 准备组织数据列表
     organisations_list = []
     for org_id, org_data in organisations_dict.items():
-        # calculate count
-        org_data['Associated Item Count'] = len(org_data['Associated Detailed Item IDs'])
+        # 计算每个组织关联的项目数量
+        org_data['Associated Item Count'] = len(org_data['Associated Items'])
         organisations_list.append(org_data)
 
-    # write organisation file
+    # 写入组织JSON文件
     with open(orgs_json_filename, 'w', encoding='utf-8') as org_jsonfile:
         json.dump(organisations_list, org_jsonfile, indent=2, ensure_ascii=False)
 
     return items_list, organisations_list
 
 
-# main
+# 主程序
 if __name__ == "__main__":
-    # CSV files，compatible with csv exported from Excel
+    # CSV文件名，兼容直接从Excel导出的.csv文件
     csv_filename = "20250827 - Capability Data Extract for Navigator.csv"
     items_json_filename = "items.json"
     orgs_json_filename = "organisations.json"
 
     items, organisations = csv_to_json(csv_filename, items_json_filename, orgs_json_filename)
-    print(f"Transformation finished! {len(items)} Detailed Item IDs processed")
-    print(f"Organisations file created! {len(organisations)} unique organisations found")
+    print(f"转换完成！处理了 {len(items)} 个详细项目")
+    print(f"组织文件已创建！找到 {len(organisations)} 个独立组织")

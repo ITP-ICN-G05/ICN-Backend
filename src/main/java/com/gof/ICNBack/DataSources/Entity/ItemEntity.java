@@ -40,9 +40,6 @@ ItemEntity {
     @Field("Organizations")
     private List<String> organizations;
 
-    @Field("Geocoded")
-    private boolean geocoded;
-
     public ItemEntity() {}
 
     public ItemEntity(String id, String detailedItemId, String itemName, String itemId,
@@ -130,14 +127,6 @@ ItemEntity {
 
     public void setOrganizations(List<String> organizations) {
         this.organizations = organizations;
-    }
-
-    public boolean isGeocoded() {
-        return geocoded;
-    }
-
-    public void setGeocoded(boolean geocoded) {
-        this.geocoded = geocoded;
     }
 
     public ItemBuilder domainBuilder(){

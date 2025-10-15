@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface MongoOrganisationRepository extends MongoRepository<OrganisationEntity, String> {
 
-    @Query("{'Organizations.Organisation: Organisation ID' : ?0 }")
-    List<OrganisationEntity> findByOrganisationId(String organisationId);
+    @Query("{'Organisation ID' : ?0 }")
+    OrganisationEntity findByOrganisationId(String organisationId);
 }

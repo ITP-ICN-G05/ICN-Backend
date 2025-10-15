@@ -29,12 +29,8 @@ public class OrganisationService {
      * @return :searching result from Dao layer, list of organisation Cards
      * */
     public List<Organisation.OrganisationCard> getOrgCards(int locationX, int locationY, int lenX, int lenY, Map<String, String> filterParameters, String searchString, Integer skip, Integer limit) {
-        List<Organisation> result = organisationDao.searchOrganisations(locationX,locationY,lenX,lenY, filterParameters, searchString, skip, limit);
-        ArrayList<Organisation.OrganisationCard> cards = new ArrayList<>();
-        for (Organisation org : result){
-            cards.add(org.toCard());
-        }
-        return cards;
+        return organisationDao.searchOrganisationCards(locationX,locationY,lenX,lenY, filterParameters, searchString, skip, limit);
+
     }
 
     /**

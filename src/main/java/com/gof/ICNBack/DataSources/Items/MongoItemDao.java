@@ -31,7 +31,7 @@ public class MongoItemDao extends ItemDao {
     MongoItemRepository repo;
 
     @Override
-    public List<Organisation> searchItems(
+    public List<Organisation.OrganisationCard> searchOrganisationCardsByItem(
             Map<String, String> filterParameters,
             String searchString,
             Integer skip,
@@ -117,54 +117,7 @@ public class MongoItemDao extends ItemDao {
     @Override
     public Item getItemById(String detailedItemId) {
         ItemEntity item = repo.findByDetailedItemId(detailedItemId);
-
-        Organisation organisation = null;
-        for (String o : items.get(0).getOrganizations()){
-            if (o.getOrganisationId().equals(detailedItemId)){
-                organisation = o.toDomain();
-                Organisation finalOrganisation = organisation;
-                items.forEach(i -> {
-                    finalOrganisation.getItems().add(
-                            i.domainBuilder()
-                                    .setCapabilityType(o.getCapabilityType())
-                                    .setValidationDate(o.getValidationDate())
-                                    .setOrganisationCapability(o.getOrganisationCapability())
-                                    .build());
-                });
-            }
-        }
-        return organisation;
-    }
-
-    @Override
-    public List<Organisation.OrganisationCard> getOrgCardsByIds(List<String> orgIds) {
-        List<Organisation.OrganisationCard> org = new ArrayList<>();
-        for (String id : orgIds){
-            Organisation o = getItemById(id);
-            if (o != null){
-                org.add(o.toCard());
-            }
-        }
-        return org;
-    }
-
-    @Override
-    public List<Organisation> getOrganisationsWithoutGeocode() {
-        Query query = new Query((new Criteria().orOperator(where("Geocoded").exists(false), where("Geocoded").is(false))));
-        return processToOrganisations(template.find(query, ItemEntity.class));
-    }
-
-    @Override
-    public void updateGeocode(List<Organisation> orgs) {
-        List<ItemEntity> entity = processToItemEntity(orgs);
-        entity.forEach(a -> {
-            for (OrganisationEntity o : a.getOrganizations()){
-                if(o.getCoord() == null){
-                    return;
-                }
-            }
-            a.setGeocoded(true);
-        });
-        repo.saveAll(entity);
+        //TODO: organisation related information not inserted as this function only returns item object
+        return item.domainBuilder().build();
     }
 }

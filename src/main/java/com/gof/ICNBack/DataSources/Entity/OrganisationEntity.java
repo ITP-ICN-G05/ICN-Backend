@@ -1,5 +1,6 @@
 package com.gof.ICNBack.DataSources.Entity;
 
+import com.gof.ICNBack.Entity.Item;
 import com.gof.ICNBack.Entity.Organisation;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,20 +11,11 @@ import java.util.List;
 
 @Document(collection = "Organisation")
 public class OrganisationEntity {
-    @Field("Organisation Capability")
-    private String organisationCapability;
-
     @Field("Organisation: Organisation Name")
     private String organisationName;
 
     @Field("Organisation: Organisation ID")
     private String organisationId;
-
-    @Field("Capability Type")
-    private String capabilityType;
-
-    @Field("Validation Date")
-    private String validationDate;
 
     @Field("Organisation: Billing Street")
     private String billingStreet;
@@ -43,31 +35,29 @@ public class OrganisationEntity {
     @Field("Associated Item Count")
     private Integer count;
 
-    @Field("Associated Detailed Item IDs")
-    private List<String> itemIds;
+    @Field("Associated Items")
+    private List<AssociatedItem> items;
 
+    @Field("Geocoded")
+    private boolean geocoded;
 
     public OrganisationEntity() {}
 
-    public OrganisationEntity(String organisationCapability,
-                              String organisationName,
+    public OrganisationEntity(String organisationName,
                               String organisationId,
-                              String capabilityType,
-                              String validationDate,
                               String billingStreet,
                               String billingCity,
                               String billingStateProvince,
                               String billingZipPostalCode,
+                              List<AssociatedItem> items,
                               GeoJsonPoint coord) {
-        this.organisationCapability = organisationCapability;
         this.organisationName = organisationName;
         this.organisationId = organisationId;
-        this.capabilityType = capabilityType;
-        this.validationDate = validationDate;
         this.billingStreet = billingStreet;
         this.billingCity = billingCity;
         this.billingStateProvince = billingStateProvince;
         this.billingZipPostalCode = billingZipPostalCode;
+        this.items = items;
         this.setGeoJsonPoint(coord);
     }
 
@@ -103,14 +93,6 @@ public class OrganisationEntity {
         setGeoJsonPoint(point);
     }
 
-    public String getOrganisationCapability() {
-        return organisationCapability;
-    }
-
-    public void setOrganisationCapability(String organisationCapability) {
-        this.organisationCapability = organisationCapability;
-    }
-
     public String getOrganisationName() {
         return organisationName;
     }
@@ -125,22 +107,6 @@ public class OrganisationEntity {
 
     public void setOrganisationId(String organisationId) {
         this.organisationId = organisationId;
-    }
-
-    public String getCapabilityType() {
-        return capabilityType;
-    }
-
-    public void setCapabilityType(String capabilityType) {
-        this.capabilityType = capabilityType;
-    }
-
-    public String getValidationDate() {
-        return validationDate;
-    }
-
-    public void setValidationDate(String validationDate) {
-        this.validationDate = validationDate;
     }
 
     public String getBillingStreet() {
@@ -175,6 +141,18 @@ public class OrganisationEntity {
         this.billingZipPostalCode = billingZipPostalCode;
     }
 
+    public boolean isGeocoded() {
+        return geocoded;
+    }
+
+    public void setGeocoded(boolean geocoded) {
+        this.geocoded = geocoded;
+    }
+
+    public List<AssociatedItem> getItems() {
+        return items;
+    }
+
     public Organisation toDomain(){
         return new Organisation(
                 this.organisationId,
@@ -188,18 +166,63 @@ public class OrganisationEntity {
         );
     }
 
+    public Organisation toDomain(ArrayList<Item> items){
+        return new Organisation(
+                this.organisationId,
+                this.organisationName,
+                items,
+                this.billingStreet,
+                this.billingCity,
+                this.billingStateProvince,
+                this.billingZipPostalCode,
+                this.getCoord()
+        );
+    }
+
     @Override
     public String toString() {
         return "Organization{" +
-                "organisationCapability='" + organisationCapability + '\'' +
                 ", organisationName='" + organisationName + '\'' +
                 ", organisationId='" + organisationId + '\'' +
-                ", capabilityType='" + capabilityType + '\'' +
-                ", validationDate='" + validationDate + '\'' +
                 ", billingStreet='" + billingStreet + '\'' +
                 ", billingCity='" + billingCity + '\'' +
                 ", billingStateProvince='" + billingStateProvince + '\'' +
                 ", billingZipPostalCode='" + billingZipPostalCode + '\'' +
                 '}';
+    }
+
+    public static class AssociatedItem{
+
+        @Field("Associated Items.Detailed Item ID")
+        private String id;
+        @Field("Associated Items.Organisation Capability")
+        private String capability;
+        @Field("Associated Items.Capability Type")
+        private String capabilityType;
+        @Field("Associated Items.Validation Date")
+        private String validationDate;
+
+        public AssociatedItem(String id, String capability, String capabilityType, String validationDate) {
+            this.id = id;
+            this.capability = capability;
+            this.capabilityType = capabilityType;
+            this.validationDate = validationDate;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getCapability() {
+            return capability;
+        }
+
+        public String getCapabilityType() {
+            return capabilityType;
+        }
+
+        public String getValidationDate() {
+            return validationDate;
+        }
     }
 }

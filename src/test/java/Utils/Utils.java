@@ -38,7 +38,7 @@ public class Utils {
         }
 
         @Override
-        public List<Organisation> searchOrganisations(
+        public List<Organisation.OrganisationCard> searchOrganisationCards(
                 double locationX,
                 double locationY,
                 double endX,
@@ -50,7 +50,7 @@ public class Utils {
 
 
 
-            return super.searchOrganisations(
+            return super.searchOrganisationCards(
                     locationX,
                     locationY,
                     endX,

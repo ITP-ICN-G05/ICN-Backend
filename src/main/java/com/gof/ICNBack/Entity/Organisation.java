@@ -1,11 +1,11 @@
 package com.gof.ICNBack.Entity;
 
-import com.gof.ICNBack.DataSources.Entity.OrganisationEntity;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+
+import com.gof.ICNBack.DataSources.Entity.OrganisationEntity;
 
 public class Organisation {
     private String _id;
@@ -18,9 +18,11 @@ public class Organisation {
     private String zip;
     private GeoJsonPoint coord;
 
-    public Organisation(){}
+    public Organisation() {
+    }
 
-    public Organisation(String _id, String name, ArrayList<Item> items, String street, String city, String state, String zip, GeoJsonPoint coord) {
+    public Organisation(String _id, String name, ArrayList<Item> items, String street, String city, String state,
+            String zip, GeoJsonPoint coord) {
         this._id = _id;
         this.name = name;
         this.items = items;
@@ -31,7 +33,7 @@ public class Organisation {
         this.coord = coord;
     }
 
-    public OrganisationEntityBuilder entityBuilder(){
+    public OrganisationEntityBuilder entityBuilder() {
         return new OrganisationEntityBuilder(
                 name,
                 _id,
@@ -39,41 +41,42 @@ public class Organisation {
                 city,
                 state,
                 zip,
-                coord
-        );
+                coord);
     }
 
-    public OrganisationCard toCard(){
+    public OrganisationCard toCard() {
         return new OrganisationCard(
                 this.name,
                 this.items,
                 this.street,
                 this.city,
                 this.state,
-                this.zip
-                );
+                this.zip,
+                this.coord);
     }
 
     public String getAddress() {
         return street + " " + city + " " + state + " " + zip;
     }
 
-    public static class OrganisationCard{
+    public static class OrganisationCard {
         private String name;
         private ArrayList<Item> items;
         private String street;
         private String city;
         private String state;
         private String zip;
+        private GeoJsonPoint coord;
 
-
-        public OrganisationCard(String name, ArrayList<Item> items, String street, String city, String state, String zip) {
+        public OrganisationCard(String name, ArrayList<Item> items, String street, String city, String state,
+                String zip, GeoJsonPoint coord) {
             this.name = name;
             this.items = items;
             this.street = street;
             this.city = city;
             this.state = state;
             this.zip = zip;
+            this.coord = coord;
         }
 
         public String getName() {
@@ -99,9 +102,13 @@ public class Organisation {
         public String getZip() {
             return zip;
         }
+
+        public GeoJsonPoint getCoord() {
+            return coord;
+        }
     }
 
-    public static class OrganisationEntityBuilder{
+    public static class OrganisationEntityBuilder {
         private String organisationCapability;
         private String organisationName;
         private String organisationId;
@@ -113,7 +120,8 @@ public class Organisation {
         private String billingZipPostalCode;
         private GeoJsonPoint coord;
 
-        public OrganisationEntityBuilder(String organisationName, String organisationId, String billingStreet, String billingCity, String billingStateProvince, String billingZipPostalCode, GeoJsonPoint coord) {
+        public OrganisationEntityBuilder(String organisationName, String organisationId, String billingStreet,
+                String billingCity, String billingStateProvince, String billingZipPostalCode, GeoJsonPoint coord) {
             this.organisationName = organisationName;
             this.organisationId = organisationId;
             this.billingStreet = billingStreet;
@@ -138,7 +146,7 @@ public class Organisation {
             return this;
         }
 
-        public OrganisationEntity build(){
+        public OrganisationEntity build() {
             return new OrganisationEntity(
                     organisationCapability,
                     organisationName,
@@ -149,8 +157,7 @@ public class Organisation {
                     billingCity,
                     billingStateProvince,
                     billingZipPostalCode,
-                    coord
-            );
+                    coord);
         }
     }
 
@@ -177,12 +184,15 @@ public class Organisation {
     public String get_id() {
         return _id;
     }
+
     public List<Item> getItems() {
         return items;
     }
+
     public void setCoord(GeoJsonPoint coord) {
         this.coord = coord;
     }
+
     public GeoJsonPoint getCoord() {
         return coord;
     }

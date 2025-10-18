@@ -1,16 +1,16 @@
 package com.gof.ICNBack.DataSources.User;
 
+import java.util.List;
 
-import com.gof.ICNBack.DataSources.Entity.UserEntity;
-import com.gof.ICNBack.Entity.User;
-import com.gof.ICNBack.Repositories.MongoUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.gof.ICNBack.DataSources.Entity.UserEntity;
+import com.gof.ICNBack.Entity.User;
+import com.gof.ICNBack.Repositories.MongoUserRepository;
 
 @Repository("mongoUserDao")
 public class MongoUserDao extends UserDao {
@@ -29,6 +29,12 @@ public class MongoUserDao extends UserDao {
     @Override
     public User getUserByPair(String email, String password) {
         return repo.findByEmailAndPassword(email, password).toDomain();
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        UserEntity user = repo.findByEmail(email);
+        return user == null ? null : user.toDomain();
     }
 
     @Override

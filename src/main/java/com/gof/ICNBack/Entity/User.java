@@ -1,16 +1,23 @@
 package com.gof.ICNBack.Entity;
 
-import com.gof.ICNBack.DataSources.Entity.UserEntity;
-
 import java.util.List;
+
+import com.gof.ICNBack.DataSources.Entity.UserEntity;
 
 public class User {
 
     private String id;
     private int VIP;
     private String email;
-
+    private String name;
+    private String password;
+    private String phone;
+    private String company;
+    private String role;
+    private String avatar;
+    private List<String> cards;
     private String dueDate;
+    private String createdAt;
 
     public String getId() {
         return id;
@@ -28,33 +35,36 @@ public class User {
         return cards;
     }
 
-    private String name;
-    private String password;
-    private List<String> cards;
+    public User() {
+    }
 
-    public User(){}
-
-    public User(String id, int vip, String email, String name, String password, List<String> cards, String dueDate) {
+    public User(String id, int vip, String email, String name, String password, String phone, String company,
+            String role, String avatar, List<String> cards, String dueDate, String createdAt) {
         this.id = id;
         VIP = vip;
         this.email = email;
         this.name = name;
         this.password = password;
+        this.phone = phone;
+        this.company = company;
+        this.role = role;
+        this.avatar = avatar;
         this.cards = cards;
         this.dueDate = dueDate;
+        this.createdAt = createdAt;
     }
 
     public int getVIP() {
         return VIP;
     }
 
-    public UserFull getFullUser(List<Organisation.OrganisationCard> cards){
+    public UserFull getFullUser(List<Organisation.OrganisationCard> cards) {
         String endDate = this.getVIP() <= 0 ? "N/A" : dueDate;
-        return new UserFull(id, cards, name, VIP, endDate);
+        return new UserFull(id, cards, name, email, phone, company, role, avatar, VIP, endDate, createdAt);
     }
 
-    public InitialUser getInitialUser(String code){
-        return new InitialUser(email, name, password, code);
+    public InitialUser getInitialUser(String code) {
+        return new InitialUser(email, name, password, phone, code);
     }
 
     public String getEmail() {
@@ -64,39 +74,53 @@ public class User {
     public static class UserFull {
         public final String id;
         public final String name;
+        public final String email;
+        public final String phone;
+        public final String company;
+        public final String role;
+        public final String avatar;
         public final List<Organisation.OrganisationCard> cards;
         public final int VIP;
         public final String endDate;
+        public final String createdAt;
 
-        public UserFull(String id, List<Organisation.OrganisationCard> cards, String name, int vip, String endDate) {
+        public UserFull(String id, List<Organisation.OrganisationCard> cards, String name, String email, String phone,
+                String company, String role, String avatar, int vip, String endDate, String createdAt) {
             this.id = id;
             this.name = name;
+            this.email = email;
+            this.phone = phone;
+            this.company = company;
+            this.role = role;
+            this.avatar = avatar;
             this.cards = cards;
             VIP = vip;
             this.endDate = endDate;
+            this.createdAt = createdAt;
         }
     }
 
-    public static class InitialUser{
+    public static class InitialUser {
         private String email;
         private String name;
         private String password;
-
+        private String phone;
         private String code;
 
-        public InitialUser(){}
+        public InitialUser() {
+        }
 
-        public InitialUser(String email, String name, String password, String code) {
+        public InitialUser(String email, String name, String password, String phone, String code) {
             this.email = email;
             this.name = name;
             this.password = password;
+            this.phone = phone;
             this.code = code;
         }
 
-        public User toUser(){
+        public User toUser() {
             return new User(
-                    null, 0, email, name, password, List.of(), null
-            );
+                    null, 0, email, name, password, phone, "", "User", null, List.of(), null, null);
         }
 
         public String getEmail() {
@@ -114,10 +138,14 @@ public class User {
         public String getPassword() {
             return password;
         }
+
+        public String getPhone() {
+            return phone;
+        }
     }
 
-    public UserEntity toEntity(){
-        return new UserEntity(id, VIP, email, name, password, cards);
+    public UserEntity toEntity() {
+        return new UserEntity(id, VIP, email, name, password, phone, company, role, avatar, cards);
     }
 
     public void setId(String id) {
@@ -142,5 +170,45 @@ public class User {
 
     public void setCards(List<String> cards) {
         this.cards = cards;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }

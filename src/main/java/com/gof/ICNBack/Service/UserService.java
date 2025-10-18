@@ -1,11 +1,11 @@
 package com.gof.ICNBack.Service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.gof.ICNBack.DataSources.Entity.UserEntity;
 import com.gof.ICNBack.DataSources.User.UserDao;
 import com.gof.ICNBack.Entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class UserService {
@@ -22,5 +22,9 @@ public class UserService {
 
     public boolean createUser(UserEntity user) {
         return userDao.create(user);
+    }
+
+    public User getUserByEmail(String email) {
+        return userDao.getUserByEmail(email);
     }
 }

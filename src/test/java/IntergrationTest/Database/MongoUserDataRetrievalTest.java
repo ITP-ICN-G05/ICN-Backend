@@ -37,15 +37,18 @@ public class MongoUserDataRetrievalTest {
         // testing data
         List<UserEntity> testUsers = Arrays.asList(
                 new UserEntity(null, 0, "steve@example.com", "Steve", "pass", "", "", "User", null,
-                        List.of("id_1", "id2")),
-                new UserEntity(null, 1, "qie@example.com", "QiE", "pasdassw", "", "", "User", null, List.of()),
+                        List.of("id_1", "id2"), List.of()),
+                new UserEntity(null, 1, "qie@example.com", "QiE", "pasdassw", "", "", "User", null, List.of(),
+                        List.of()),
 
                 new UserEntity(null, 2, "zhou@example.com", "LaoZhou", "pass_shDSvas1", "", "", "User", null,
-                        List.of("id_1")),
+                        List.of("id_1"), List.of()),
 
-                new UserEntity(null, -1, "lucien@example.com", "Lucien", "pass", "", "", "User", null, List.of()),
+                new UserEntity(null, -1, "lucien@example.com", "Lucien", "pass", "", "", "User", null, List.of(),
+                        List.of()),
 
-                new UserEntity(null, 0, "tyrone@example.com", "Tyrone", "pass", "", "", "User", null, List.of()));
+                new UserEntity(null, 0, "tyrone@example.com", "Tyrone", "pass", "", "", "User", null, List.of(),
+                        List.of()));
         for (UserEntity u : testUsers) {
             userDao.create(u);
         }
@@ -80,7 +83,7 @@ public class MongoUserDataRetrievalTest {
         User userBefore = userDao.getUserByPair("qie@example.com", "pasdassw");
 
         UserEntity newUser = new UserEntity(userBefore.getId(), 2, "qie@example.com", "Qie", "pasdassw", "", "", "User",
-                null, List.of("id_1", "id2"));
+                null, List.of("id_1", "id2"), List.of());
         userDao.update(newUser);
 
         // validate updated

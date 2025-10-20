@@ -33,6 +33,36 @@ public class Validator {
         return isValidEmail(user.getEmail());
     }
 
+    /**
+     * Validates user data for profile updates (password not required)
+     * 
+     * @param user User object to validate
+     * @return true if valid for profile update, false otherwise
+     */
+    public static boolean isValidUserProfileUpdate(User user) {
+        if (user == null)
+            return false;
+
+        // Email is required to identify the user
+        if (!isValidEmail(user.getEmail()))
+            return false;
+
+        // Name is optional, but if provided must be valid
+        if (user.getName() != null && !user.getName().isEmpty() &&
+                !NAME_PATTERN.matcher(user.getName()).matches()) {
+            return false;
+        }
+
+        // Phone is optional, but if provided must be valid
+        if (user.getPhone() != null && !user.getPhone().isEmpty() &&
+                !isValidPhone(user.getPhone())) {
+            return false;
+        }
+
+        // Password is not validated for profile updates
+        return true;
+    }
+
     public static boolean isValidInitialUser(User.InitialUser initialUser, int codeLen) {
         if (initialUser == null)
             return false;

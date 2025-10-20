@@ -16,6 +16,7 @@ public class User {
     private String role;
     private String avatar;
     private List<String> cards;
+    private List<String> bookmarkedCompanies;
     private String dueDate;
     private String createdAt;
 
@@ -39,7 +40,8 @@ public class User {
     }
 
     public User(String id, int vip, String email, String name, String password, String phone, String company,
-            String role, String avatar, List<String> cards, String dueDate, String createdAt) {
+            String role, String avatar, List<String> cards, List<String> bookmarkedCompanies, String dueDate,
+            String createdAt) {
         this.id = id;
         VIP = vip;
         this.email = email;
@@ -50,6 +52,7 @@ public class User {
         this.role = role;
         this.avatar = avatar;
         this.cards = cards;
+        this.bookmarkedCompanies = bookmarkedCompanies;
         this.dueDate = dueDate;
         this.createdAt = createdAt;
     }
@@ -60,7 +63,8 @@ public class User {
 
     public UserFull getFullUser(List<Organisation.OrganisationCard> cards) {
         String endDate = this.getVIP() <= 0 ? "N/A" : dueDate;
-        return new UserFull(id, cards, name, email, phone, company, role, avatar, VIP, endDate, createdAt);
+        return new UserFull(id, cards, name, email, phone, company, role, avatar, VIP, endDate, createdAt,
+                bookmarkedCompanies);
     }
 
     public InitialUser getInitialUser(String code) {
@@ -83,9 +87,13 @@ public class User {
         public final int VIP;
         public final String endDate;
         public final String createdAt;
+        public final String token;
+        public final String refreshToken;
+        public final List<String> bookmarkedCompanies;
 
         public UserFull(String id, List<Organisation.OrganisationCard> cards, String name, String email, String phone,
-                String company, String role, String avatar, int vip, String endDate, String createdAt) {
+                String company, String role, String avatar, int vip, String endDate, String createdAt,
+                List<String> bookmarkedCompanies) {
             this.id = id;
             this.name = name;
             this.email = email;
@@ -97,6 +105,28 @@ public class User {
             VIP = vip;
             this.endDate = endDate;
             this.createdAt = createdAt;
+            this.token = null;
+            this.refreshToken = null;
+            this.bookmarkedCompanies = bookmarkedCompanies;
+        }
+
+        public UserFull(String id, List<Organisation.OrganisationCard> cards, String name, String email, String phone,
+                String company, String role, String avatar, int vip, String endDate, String createdAt,
+                String token, String refreshToken) {
+            this.id = id;
+            this.name = name;
+            this.email = email;
+            this.phone = phone;
+            this.company = company;
+            this.role = role;
+            this.avatar = avatar;
+            this.cards = cards;
+            VIP = vip;
+            this.endDate = endDate;
+            this.createdAt = createdAt;
+            this.token = token;
+            this.refreshToken = refreshToken;
+            this.bookmarkedCompanies = null;
         }
     }
 
@@ -120,7 +150,7 @@ public class User {
 
         public User toUser() {
             return new User(
-                    null, 0, email, name, password, phone, "", "User", null, List.of(), null, null);
+                    null, 0, email, name, password, phone, "", "User", null, List.of(), List.of(), null, null);
         }
 
         public String getEmail() {
@@ -145,7 +175,7 @@ public class User {
     }
 
     public UserEntity toEntity() {
-        return new UserEntity(id, VIP, email, name, password, phone, company, role, avatar, cards);
+        return new UserEntity(id, VIP, email, name, password, phone, company, role, avatar, cards, bookmarkedCompanies);
     }
 
     public void setId(String id) {
@@ -210,5 +240,13 @@ public class User {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<String> getBookmarkedCompanies() {
+        return bookmarkedCompanies;
+    }
+
+    public void setBookmarkedCompanies(List<String> bookmarkedCompanies) {
+        this.bookmarkedCompanies = bookmarkedCompanies;
     }
 }

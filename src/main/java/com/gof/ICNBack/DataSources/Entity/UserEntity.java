@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.gof.ICNBack.Entity.User;
@@ -13,6 +14,7 @@ public class UserEntity {
     @Id
     private String _id;
     private int VIP;
+    @Indexed(unique = true)
     private String email;
     private String name;
     private String password;
@@ -21,6 +23,7 @@ public class UserEntity {
     private String role;
     private String avatar;
     private List<String> cards;
+    private List<String> bookmarkedCompanies;
     private Date endDate;
     private Date createdAt;
 
@@ -29,7 +32,7 @@ public class UserEntity {
 
     public UserEntity(String id, int vip, String email, String name, String password,
             String phone, String company, String role, String avatar,
-            List<String> cards) {
+            List<String> cards, List<String> bookmarkedCompanies) {
         _id = id;
         VIP = vip;
         this.email = email;
@@ -40,6 +43,7 @@ public class UserEntity {
         this.role = role;
         this.avatar = avatar;
         this.cards = cards;
+        this.bookmarkedCompanies = bookmarkedCompanies;
         this.createdAt = new Date();
     }
 
@@ -55,6 +59,7 @@ public class UserEntity {
                 getRole(),
                 getAvatar(),
                 getCards(),
+                getBookmarkedCompanies(),
                 this.endDate == null ? null : getEndDate().toString(),
                 this.createdAt == null ? null : getCreatedAt().toString());
     }
@@ -153,5 +158,13 @@ public class UserEntity {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<String> getBookmarkedCompanies() {
+        return bookmarkedCompanies;
+    }
+
+    public void setBookmarkedCompanies(List<String> bookmarkedCompanies) {
+        this.bookmarkedCompanies = bookmarkedCompanies;
     }
 }

@@ -6,9 +6,12 @@ pebble:
 spring:
   application:
     name: ICN_Back
+  freemarker:
+    template-loader-path: classpath:/templates
+    suffix: .ftl
   data:
     mongodb:
-      uri: mongodb://localhost:27017/ICN_Navigator
+      uri: mongodb+srv://gangyiz_db_user:hp4u5W4v23p25esX@icn-cluster.0okqngk.mongodb.net/icn_dev?retryWrites=true&w=majority&appName=ICN-Backend
 
   ## email settings
   mail:
@@ -35,7 +38,7 @@ spring:
 
 app:
   google-map-geocode:
-    enable: 1
+    enable: 0
     api-key: ${GOOGLE_MAPS_API_KEY}
     geocoding-url: https://maps.googleapis.com/maps/api/geocode/json
     batch-size: 10
@@ -48,7 +51,7 @@ app:
     name: ICN navigator
     website: ICN.au
     timeout: 300
-    ftl-path: templates/email.ftl
+    ftl-path: email.ftl
 
 
 server:

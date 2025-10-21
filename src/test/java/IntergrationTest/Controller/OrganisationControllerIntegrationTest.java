@@ -61,6 +61,7 @@ public class OrganisationControllerIntegrationTest {
                 "Sydney",
                 "NSW",
                 "2000",
+                new ArrayList<>(),
                 0.0,
                 0.0
         );
@@ -71,6 +72,7 @@ public class OrganisationControllerIntegrationTest {
                 "Melbourne",
                 "VIC",
                 "3000",
+                new ArrayList<>(),
                 0.0,
                 0.0
         );

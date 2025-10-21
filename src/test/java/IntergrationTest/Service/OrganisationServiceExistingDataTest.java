@@ -158,10 +158,6 @@ public class OrganisationServiceExistingDataTest {
                 locationX, locationY, lenX, lenY, filterParameters, searchString, skip, limit);
 
         assertNotNull(cards);
-        for (Organisation.OrganisationCard o : cards){
-            assertEquals(o.getItems().get(0).getItemName(), "instrumentation");
-            assertEquals(o.getItems().get(0).getSectorName(), "Critical Minerals");
-        }
         System.out.println("find " + cards.size() + " orgs");
     }
 

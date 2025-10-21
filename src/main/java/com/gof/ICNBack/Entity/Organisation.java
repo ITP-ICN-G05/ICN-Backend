@@ -5,11 +5,9 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Organisation {
     private String _id;
-
     private String name;
     private ArrayList<Item> items;
     private String street;
@@ -46,42 +44,51 @@ public class Organisation {
     public OrganisationCard toCard(){
         return new OrganisationCard(
                 this.name,
-                this.items,
                 this.street,
                 this.city,
                 this.state,
-                this.zip
+                this.zip,
+                this.coord.getCoordinates().get(0),
+                this.coord.getCoordinates().get(1)
                 );
     }
 
-    public String getAddress() {
+    public String buildAddress() {
         return street + " " + city + " " + state + " " + zip;
     }
 
+    public double getLatitude(){
+        return coord.getY();
+    }
+    public double getLongitude(){
+        return coord.getX();
+    }
+
+
     public static class OrganisationCard{
         private String name;
-        private ArrayList<Item> items;
         private String street;
         private String city;
         private String state;
         private String zip;
 
+        private Double lontitude;
 
-        public OrganisationCard(String name, ArrayList<Item> items, String street, String city, String state, String zip) {
+        private Double latitude;
+
+
+        public OrganisationCard(String name, String street, String city, String state, String zip, Double lontitude, Double latitude) {
             this.name = name;
-            this.items = items;
             this.street = street;
             this.city = city;
             this.state = state;
             this.zip = zip;
+            this.lontitude = lontitude;
+            this.latitude = latitude;
         }
 
         public String getName() {
             return name;
-        }
-
-        public ArrayList<Item> getItems() {
-            return items;
         }
 
         public String getStreet() {
@@ -183,7 +190,7 @@ public class Organisation {
     public void setCoord(GeoJsonPoint coord) {
         this.coord = coord;
     }
-    public GeoJsonPoint getCoord() {
+    public GeoJsonPoint buildCoord() {
         return coord;
     }
 }

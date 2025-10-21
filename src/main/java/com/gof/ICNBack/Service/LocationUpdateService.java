@@ -3,17 +3,12 @@ package com.gof.ICNBack.Service;
 import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
 import com.gof.ICNBack.Entity.Organisation;
 import com.gof.ICNBack.Utils.Properties;
-import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,15 +53,15 @@ public class LocationUpdateService {
 
         for (Organisation org : organisations) {
             try {
-                if (org.getCoord() != null) {
-                    if (debug) logger.info("skip org with geocoding {}", org.getCoord());
+                if (org.buildCoord() != null) {
+                    if (debug) logger.info("skip org with geocoding {}", org.buildCoord());
                     continue;
                 }
                 processedCount++;
 
                 // get geocode
                 GoogleMapsGeocodingService.GeocodingResult result =
-                        geocodingService.geocodeAddress(org.getAddress())
+                        geocodingService.geocodeAddress(org.buildAddress())
                                 .orElse(null);
 
                 if (result != null) {
@@ -74,9 +69,9 @@ public class LocationUpdateService {
 
                     successCount++;
 
-                    if (debug) logger.info("Successfully updated location: {}", org.getAddress());
+                    if (debug) logger.info("Successfully updated location: {}", org.buildAddress());
                 } else {
-                    if (debug) logger.warn("Failed to geocode address: {}", org.getAddress());
+                    if (debug) logger.warn("Failed to geocode address: {}", org.buildAddress());
                 }
 
                 if (processedCount < organisations.size()) {
@@ -88,7 +83,7 @@ public class LocationUpdateService {
                 }
 
             } catch (Exception e) {
-                logger.error("Error processing location: {}", org.getAddress(), e);
+                logger.error("Error processing location: {}", org.buildAddress(), e);
             }
         }
 

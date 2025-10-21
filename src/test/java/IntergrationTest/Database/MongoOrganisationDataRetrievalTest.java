@@ -42,7 +42,7 @@ public class MongoOrganisationDataRetrievalTest {
 
         assertNotNull(org, "org should not be null");
 
-        assertNotNull(org.getAddress(), "addr should not be null");
+        assertNotNull(org.buildAddress(), "addr should not be null");
         assertNotNull(org.getItems(), "items should not be null");
 
         System.out.println("find org: " + org);
@@ -55,7 +55,7 @@ public class MongoOrganisationDataRetrievalTest {
 
         assertNotNull(org, "org should not be null");
 
-        assertNull(org.get(0).getCoord(), "Coord should be null");
+        assertNull(org.get(0).buildCoord(), "Coord should be null");
 
         System.out.println("find  orgs: " + org.size());
     }

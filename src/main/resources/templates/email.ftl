@@ -66,7 +66,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>Dear customer，</h1>
+    <h1>Dear customer</h1>
 
     <p>you have recived a email from <a href="${companyWebsite! 'ICN.Navigator.au'}" class="company-link">${companyName! 'ICN Navigator'}</a>
         , for the validation of your email address.</p>

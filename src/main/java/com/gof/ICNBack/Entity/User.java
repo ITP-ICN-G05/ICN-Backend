@@ -64,16 +64,16 @@ public class User {
     public static class UserFull {
         public final String id;
         public final String name;
-        public final List<Organisation.OrganisationCard> cards;
-        public final int VIP;
-        public final String endDate;
+        public final List<Organisation.OrganisationCard> organisationCards;
+        public final int premium;
+        public final String subscribeDueDate;
 
-        public UserFull(String id, List<Organisation.OrganisationCard> cards, String name, int vip, String endDate) {
+        public UserFull(String id, List<Organisation.OrganisationCard> organisationCards, String name, int vip, String subscribeDueDate) {
             this.id = id;
             this.name = name;
-            this.cards = cards;
-            VIP = vip;
-            this.endDate = endDate;
+            this.organisationCards = organisationCards;
+            premium = vip;
+            this.subscribeDueDate = subscribeDueDate;
         }
     }
 

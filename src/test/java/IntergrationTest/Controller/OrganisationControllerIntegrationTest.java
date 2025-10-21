@@ -57,20 +57,22 @@ public class OrganisationControllerIntegrationTest {
         // 创建OrganisationCard测试数据
         orgCard1 = new Organisation.OrganisationCard(
                 "Company A",
-                new ArrayList<>(sampleItems),
                 "123 Main St",
                 "Sydney",
                 "NSW",
-                "2000"
+                "2000",
+                0.0,
+                0.0
         );
 
         orgCard2 = new Organisation.OrganisationCard(
                 "Company B",
-                new ArrayList<>(sampleItems),
                 "456 Oak Ave",
                 "Melbourne",
                 "VIC",
-                "3000"
+                "3000",
+                0.0,
+                0.0
         );
 
         // 创建完整Organisation测试数据

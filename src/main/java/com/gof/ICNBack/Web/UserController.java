@@ -79,7 +79,7 @@ public class UserController {
         if(code != null){
             result = this.email.sendCode(code, email);
         }
-        return result ?
+        return !result ?
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .header("X-Error", "something wrong with the server")
                         .build()

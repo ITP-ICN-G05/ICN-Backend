@@ -111,6 +111,14 @@ public class Organisation {
         public ArrayList<Item> getItems() {
             return items;
         }
+
+        public Double getLontitude() {
+            return lontitude;
+        }
+
+        public Double getLatitude() {
+            return latitude;
+        }
     }
 
     public static class OrganisationEntityBuilder{

@@ -49,8 +49,8 @@ public class Organisation {
                 this.state,
                 this.zip,
                 this.items,
-                this.coord.getCoordinates().get(0),
-                this.coord.getCoordinates().get(1)
+                this.coord.getX(),
+                this.coord.getY()
                 );
     }
 
@@ -73,18 +73,18 @@ public class Organisation {
         private String state;
         private String zip;
         private ArrayList<Item> items;
-        private Double lontitude;
+        private Double longitude;
         private Double latitude;
 
 
-        public OrganisationCard(String name, String street, String city, String state, String zip, ArrayList<Item> items, Double lontitude, Double latitude) {
+        public OrganisationCard(String name, String street, String city, String state, String zip, ArrayList<Item> items, Double longitude, Double latitude) {
             this.name = name;
             this.street = street;
             this.city = city;
             this.state = state;
             this.zip = zip;
             this.items = items;
-            this.lontitude = lontitude;
+            this.longitude = longitude;
             this.latitude = latitude;
         }
 
@@ -112,8 +112,8 @@ public class Organisation {
             return items;
         }
 
-        public Double getLontitude() {
-            return lontitude;
+        public Double getLongitude() {
+            return longitude;
         }
 
         public Double getLatitude() {

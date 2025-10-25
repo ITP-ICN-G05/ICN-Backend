@@ -65,7 +65,7 @@ public class LocationUpdateService {
                                 .orElse(null);
 
                 if (result != null) {
-                    org.setCoord(new GeoJsonPoint(result.getLatitude(), result.getLongitude()));
+                    org.setCoord(new GeoJsonPoint(result.getLongitude(), result.getLatitude()));
 
                     successCount++;
 

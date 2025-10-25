@@ -121,10 +121,10 @@ public class OrganisationServiceExistingDataTest {
     @Test
     void testSearchWithLocation_UsingExistingData() {
         // testing location search
-        int locationY = 100;
-        int locationX = -47;
-        int lenY = 144;
-        int lenX = -17;
+        int locationY = -47;
+        int locationX = 100;
+        int lenY = -17;
+        int lenX = 144;
 
         Map<String, String> filterParameters = new HashMap<>();
         String searchString = null;
@@ -155,7 +155,7 @@ public class OrganisationServiceExistingDataTest {
         Integer limit = 10;
 
         List<Organisation.OrganisationCard> cards = organisationService.getOrgCards(
-                locationX, locationY, lenX, lenY, filterParameters, searchString, skip, limit);
+                locationX, locationY, lenX, lenY, null, searchString, skip, limit);
 
         assertNotNull(cards);
         System.out.println("find " + cards.size() + " orgs");

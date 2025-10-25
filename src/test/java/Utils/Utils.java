@@ -32,7 +32,7 @@ public class Utils {
         public TestOrganisationDao(MongoTemplate template, MongoOrganisationRepository repo){
             super();
             this.mongoTemplate = Mockito.spy(template);
-            setField(this, "templates", mongoTemplate);
+            setField(this, "template", mongoTemplate);
             setField(this, "repo", repo);
             when(mongoTemplate.getCollectionName(ItemEntity.class)).thenReturn(TEST_COLLECTION);
         }

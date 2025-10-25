@@ -14,6 +14,11 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.gof.ICNBack.DataSources.Utils.MongoUtils.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -76,15 +81,19 @@ public class MongoOrgDao extends OrganisationDao {
             combinedCriteria = new Criteria().andOperator(criteriaList.toArray(new Criteria[0]));
         }
 
-        // 2. reorder box
-        double lowerLeftX = Math.min(locationX, endX);
-        double lowerLeftY = Math.min(locationY, endY);
-        double upperRightX = Math.max(locationX, endX);
-        double upperRightY = Math.max(locationY, endY);
-
-        // 3. geo match +match(Criteria) -> sort/skip/limit
+        // 2. geo match +match(Criteria) -> sort/skip/limit
         List<AggregationOperation> ops = new ArrayList<>();
-        ops.add(geoWithinBoxMatch("Organizations.Organisation: Coord.coordinates", lowerLeftX, lowerLeftY, upperRightX, upperRightY));
+
+        boolean usingPosition = true;
+        // 3. reorder box
+        if(!(locationX == 0 || locationY == 0 || endX==0 || endY==0)){
+            double lowerLeftX = Math.min(locationX, endX);
+            double lowerLeftY = Math.min(locationY, endY);
+            double upperRightX = Math.max(locationX, endX);
+            double upperRightY = Math.max(locationY, endY);
+            ops.add(geoWithinBoxMatch("Organizations.Organisation: Coord.coordinates", lowerLeftX, lowerLeftY, upperRightX, upperRightY));
+            usingPosition = false;
+        }
 
         if (combinedCriteria != null) {
             ops.add(Aggregation.match(combinedCriteria));
@@ -109,7 +118,82 @@ public class MongoOrgDao extends OrganisationDao {
         List<ItemEntity> items = aggResults.getMappedResults();
 
         // 5. return organisation
-        return processToOrganisations(items);
+        List<Organisation> result = processToOrganisations(items);
+
+        return applySecondaryFiltering(result, filterParameters, searchString, locationX, locationY, endX, endY);
+    }
+
+    /**
+     * secondary filtering to Organisation
+     */
+    private List<Organisation> applySecondaryFiltering(List<Organisation> organisations,
+                                                       Map<String, String> filterParameters,
+                                                       String searchString,
+                                                       double locationX, double locationY,
+                                                       double endX, double endY) {
+        if (organisations == null || organisations.isEmpty()) {
+            return organisations;
+        }
+
+        Stream<Organisation> stream = organisations.stream();
+
+        //location
+        if (!(locationX == 0 || locationY == 0 || endX == 0 || endY == 0)) {
+            double minLat = Math.min(locationY, endY);
+            double maxLat = Math.max(locationY, endY);
+            double minLng = Math.min(locationX, endX);
+            double maxLng = Math.max(locationX, endX);
+
+            stream = stream.filter(org -> isWithinBoundingBox(org, minLat, maxLat, minLng, maxLng));
+        }
+
+
+        //searchString
+        if (searchString != null && !searchString.trim().isEmpty()) {
+            final String finalSearchString = searchString.toLowerCase().trim();
+            stream = stream.filter(org ->
+                    matchesOrganisationSearch(org, finalSearchString)
+            );
+        }
+
+        //distinct
+        stream = stream.filter(distinctByKey(org ->
+                org.get_id() != null ? org.get_id() : org.getName()
+        ));
+
+        return stream.collect(Collectors.toList());
+    }
+
+    private boolean isWithinBoundingBox(Organisation org, double minLat, double maxLat, double minLng, double maxLng) {
+        if (org == null || org.buildCoord() == null) {
+            return false;
+        }
+
+        double latitude = org.getLatitude();
+        double longitude = org.getLongitude();
+
+        boolean withinLat = latitude >= minLat && latitude <= maxLat;
+        boolean withinLng = longitude >= minLng && longitude <= maxLng;
+
+        return withinLat && withinLng;
+    }
+
+
+    private boolean matchesOrganisationSearch(Organisation org, String searchString) {
+        if (searchString == null || searchString.isEmpty()) {
+            return true;
+        }
+
+        return (org.getName() != null && org.getName().toLowerCase().contains(searchString));
+    }
+
+
+    /**
+     * distinction
+     */
+    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
     }
 
     private boolean isNumericField(String fieldName) {

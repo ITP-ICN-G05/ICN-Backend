@@ -9,8 +9,10 @@ public class User {
     private String id;
     private int VIP;
     private String email;
-
     private String dueDate;
+    private String name;
+    private String password;
+    private List<String> cards;
 
     public String getId() {
         return id;
@@ -28,9 +30,7 @@ public class User {
         return cards;
     }
 
-    private String name;
-    private String password;
-    private List<String> cards;
+
 
     public User(){}
 

@@ -42,6 +42,8 @@ public class Organisation {
     }
 
     public OrganisationCard toCard(){
+        double x = this.coord == null? 0: this.coord.getX();
+        double y = this.coord == null? 0: this.coord.getY();
         return new OrganisationCard(
                 this.name,
                 this.street,
@@ -49,8 +51,8 @@ public class Organisation {
                 this.state,
                 this.zip,
                 this.items,
-                this.coord.getX(),
-                this.coord.getY()
+                x,
+                y
                 );
     }
 
@@ -59,10 +61,10 @@ public class Organisation {
     }
 
     public double getLatitude(){
-        return coord.getY();
+        return this.coord == null? 0: this.coord.getY();
     }
     public double getLongitude(){
-        return coord.getX();
+        return this.coord == null? 0: this.coord.getX();
     }
 
 

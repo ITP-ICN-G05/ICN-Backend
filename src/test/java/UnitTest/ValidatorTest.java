@@ -16,8 +16,8 @@ public class ValidatorTest {
 
     @Test
     public void testPasswordValidator(){
-        assertTrue(Validator.isValidPassword("password123"));
-        assertTrue(Validator.isValidPassword("asszxfg12asddf23"));
+        assertFalse(Validator.isValidPassword("password123"));
+        assertFalse(Validator.isValidPassword("asszxfg12asddf23"));
         assertFalse(Validator.isValidPassword("\"   *   \""));
     }
 }

@@ -45,6 +45,7 @@ public class Organisation {
         double x = this.coord == null? 0: this.coord.getX();
         double y = this.coord == null? 0: this.coord.getY();
         return new OrganisationCard(
+                this._id,
                 this.name,
                 this.street,
                 this.city,
@@ -69,6 +70,8 @@ public class Organisation {
 
 
     public static class OrganisationCard{
+
+        private String id;
         private String name;
         private String street;
         private String city;
@@ -78,8 +81,8 @@ public class Organisation {
         private Double longitude;
         private Double latitude;
 
-
-        public OrganisationCard(String name, String street, String city, String state, String zip, ArrayList<Item> items, Double longitude, Double latitude) {
+        public OrganisationCard(String id, String name, String street, String city, String state, String zip, ArrayList<Item> items, Double longitude, Double latitude) {
+            this.id = id;
             this.name = name;
             this.street = street;
             this.city = city;
@@ -88,6 +91,10 @@ public class Organisation {
             this.items = items;
             this.longitude = longitude;
             this.latitude = latitude;
+        }
+
+        public String getId() {
+            return id;
         }
 
         public String getName() {

@@ -6,7 +6,6 @@ import com.gof.ICNBack.Entity.Organisation;
 import com.gof.ICNBack.Entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +44,9 @@ public class OrganisationService {
      * &#064;TODO:  complete the switch section basing on feature list.  */
     public Organisation getOrg(String organisationId, String user){
         User user1 = userDao.getUserById(user);
+        if (user1 == null) return null;
         Organisation org = organisationDao.getOrganisationById(organisationId);
-        switch (user1.getVIP()){
+        switch (user1.getPremium()){
             case -1:
             case 0:
                 return null; // free users/visitors are unable to access detailed information

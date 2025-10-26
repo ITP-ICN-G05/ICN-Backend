@@ -18,8 +18,13 @@ public class Validator {
         return password != null && PASSWORD_PATTERN.matcher(password).matches();
     }
 
+    public static boolean isValidUserId(String uid){
+        return uid != null && NAME_PATTERN.matcher(uid).matches();
+    }
+
     public static boolean isValidUserData(User user) {
         if (user == null) return false;
+        if (!isValidUserId(user.getId())) return false;
         if (user.getName() == null || !NAME_PATTERN.matcher(user.getName()).matches()) return false;
         if (!isValidPassword(user.getPassword())) return false;
         return isValidEmail(user.getEmail());

@@ -44,7 +44,7 @@ public class UserController {
         if (user == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).header("X-Error", "invalid user account").build();
         }
-        User.UserFull userF = user.getFullUser(orgRepo.getOrgCardsByIds(user.getCards()));
+        User.UserFull userF = user.getFullUser(orgRepo.getOrgCardsByIds(user.getOrganisationIds()));
         return ResponseEntity.status(HttpStatus.OK).body(userF);
     }
 

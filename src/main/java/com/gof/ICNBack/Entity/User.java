@@ -7,12 +7,12 @@ import java.util.List;
 public class User {
 
     private String id;
-    private int VIP;
+    private int premium;
     private String email;
-    private String dueDate;
+    private String subscribeDueDate;
     private String name;
     private String password;
-    private List<String> cards;
+    private List<String> organisationIds;
 
     public String getId() {
         return id;
@@ -26,31 +26,31 @@ public class User {
         return password;
     }
 
-    public List<String> getCards() {
-        return cards;
+    public List<String> getOrganisationIds() {
+        return organisationIds;
     }
 
 
 
     public User(){}
 
-    public User(String id, int vip, String email, String name, String password, List<String> cards, String dueDate) {
+    public User(String id, int vip, String email, String name, String password, List<String> organisationIds, String subscribeDueDate) {
         this.id = id;
-        VIP = vip;
+        premium = vip;
         this.email = email;
         this.name = name;
         this.password = password;
-        this.cards = cards;
-        this.dueDate = dueDate;
+        this.organisationIds = organisationIds;
+        this.subscribeDueDate = subscribeDueDate;
     }
 
-    public int getVIP() {
-        return VIP;
+    public int getPremium() {
+        return premium;
     }
 
     public UserFull getFullUser(List<Organisation.OrganisationCard> cards){
-        String endDate = this.getVIP() <= 0 ? "N/A" : dueDate;
-        return new UserFull(id, cards, name, VIP, endDate);
+        String endDate = this.getPremium() <= 0 ? "N/A" : subscribeDueDate;
+        return new UserFull(id, cards, name, premium, endDate);
     }
 
     public InitialUser getInitialUser(String code){
@@ -117,15 +117,15 @@ public class User {
     }
 
     public UserEntity toEntity(){
-        return new UserEntity(id, VIP, email, name, password, cards);
+        return new UserEntity(id, premium, email, name, password, organisationIds);
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setVIP(int VIP) {
-        this.VIP = VIP;
+    public void setPremium(int premium) {
+        this.premium = premium;
     }
 
     public void setEmail(String email) {
@@ -140,7 +140,7 @@ public class User {
         this.password = password;
     }
 
-    public void setCards(List<String> cards) {
-        this.cards = cards;
+    public void setOrganisationIds(List<String> organisationIds) {
+        this.organisationIds = organisationIds;
     }
 }

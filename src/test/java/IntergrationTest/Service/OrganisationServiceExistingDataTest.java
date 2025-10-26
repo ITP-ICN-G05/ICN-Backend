@@ -11,7 +11,6 @@ import com.gof.ICNBack.Entity.User;
 import com.gof.ICNBack.Repositories.MongoOrganisationRepository;
 import com.gof.ICNBack.Repositories.MongoUserRepository;
 import com.gof.ICNBack.Service.OrganisationService;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -249,7 +248,7 @@ public class OrganisationServiceExistingDataTest {
         User testUser = new User();
         testUser.setId(testUserId);
         testUser.setName("Test User for Existing Data");
-        testUser.setVIP(2);
+        testUser.setPremium(2);
         testUser.setEmail("test_existing_data@example.com");
 
         repository.save(testUser.toEntity());
@@ -260,7 +259,7 @@ public class OrganisationServiceExistingDataTest {
         User user = new User();
         user.setId(id);
         user.setName(name);
-        user.setVIP(vipLevel);
+        user.setPremium(vipLevel);
         user.setEmail(name.toLowerCase().replace(" ", "") + "@test.com");
 
         if (userDao.getUserById(id) == null) {

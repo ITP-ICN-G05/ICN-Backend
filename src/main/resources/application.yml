@@ -1,4 +1,5 @@
 
+
 pebble:
   # default ".peb" to "":
   suffix:
@@ -37,6 +38,8 @@ spring:
 
 
 app:
+  dao:
+    debug: false
   google-map-geocode:
     enable: 0
     api-key: ${GOOGLE_MAPS_API_KEY}

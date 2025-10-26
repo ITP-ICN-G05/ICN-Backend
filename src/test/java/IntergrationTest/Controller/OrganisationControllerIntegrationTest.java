@@ -56,6 +56,7 @@ public class OrganisationControllerIntegrationTest {
 
         // 创建OrganisationCard测试数据
         orgCard1 = new Organisation.OrganisationCard(
+                "uid001",
                 "Company A",
                 "123 Main St",
                 "Sydney",
@@ -67,6 +68,7 @@ public class OrganisationControllerIntegrationTest {
         );
 
         orgCard2 = new Organisation.OrganisationCard(
+                "uid002",
                 "Company B",
                 "456 Oak Ave",
                 "Melbourne",

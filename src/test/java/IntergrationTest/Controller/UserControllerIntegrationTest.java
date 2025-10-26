@@ -7,13 +7,10 @@ import com.gof.ICNBack.Entity.UserPayment;
 import com.gof.ICNBack.Service.EmailService;
 import com.gof.ICNBack.Service.OrganisationService;
 import com.gof.ICNBack.Service.UserService;
-import com.gof.ICNBack.Web.UserController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -60,7 +57,7 @@ public class UserControllerIntegrationTest {
         testUser.setId("user123");
         testUser.setEmail("test@example.com");
         testUser.setName("Test User");
-        testUser.setCards(Arrays.asList("card1", "card2"));
+        testUser.setOrganisationIds(Arrays.asList("card1", "card2"));
 
         testInitialUser = new User.InitialUser(
                 "newuser@example.com",

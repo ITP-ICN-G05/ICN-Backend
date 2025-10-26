@@ -231,6 +231,7 @@ public class MongoOrgDao extends OrganisationDao {
     @Override
     public List<Organisation.OrganisationCard> getOrgCardsByIds(List<String> orgIds) {
         List<Organisation.OrganisationCard> org = new ArrayList<>();
+        if(orgIds == null) return org;
         for (String id : orgIds){
             Organisation o = getOrganisationById(id);
             if (o != null){

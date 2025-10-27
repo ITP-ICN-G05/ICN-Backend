@@ -53,10 +53,6 @@ public class User {
         return new UserFull(id, cards, name, premium, endDate);
     }
 
-    public InitialUser getInitialUser(String code){
-        return new InitialUser(email, name, password, code);
-    }
-
     public String getEmail() {
         return email;
     }
@@ -74,45 +70,6 @@ public class User {
             this.organisationCards = organisationCards;
             premium = vip;
             this.subscribeDueDate = subscribeDueDate;
-        }
-    }
-
-    public static class InitialUser{
-        private String email;
-        private String name;
-        private String password;
-
-        private String code;
-
-        public InitialUser(){}
-
-        public InitialUser(String email, String name, String password, String code) {
-            this.email = email;
-            this.name = name;
-            this.password = password;
-            this.code = code;
-        }
-
-        public User toUser(){
-            return new User(
-                    null, 0, email, name, password, List.of(), null
-            );
-        }
-
-        public String getEmail() {
-            return this.email;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getPassword() {
-            return password;
         }
     }
 

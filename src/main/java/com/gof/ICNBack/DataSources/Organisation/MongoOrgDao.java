@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.gof.ICNBack.DataSources.Utils.MongoUtils.*;
+import static java.lang.Math.min;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 public class MongoOrgDao extends OrganisationDao {
@@ -84,15 +85,13 @@ public class MongoOrgDao extends OrganisationDao {
         // 2. geo match +match(Criteria) -> sort/skip/limit
         List<AggregationOperation> ops = new ArrayList<>();
 
-        boolean usingPosition = true;
         // 3. reorder box
         if(!(locationX == 0 || locationY == 0 || endX==0 || endY==0)){
-            double lowerLeftX = Math.min(locationX, endX);
-            double lowerLeftY = Math.min(locationY, endY);
+            double lowerLeftX = min(locationX, endX);
+            double lowerLeftY = min(locationY, endY);
             double upperRightX = Math.max(locationX, endX);
             double upperRightY = Math.max(locationY, endY);
             ops.add(geoWithinBoxMatch("Organizations.Organisation: Coord.coordinates", lowerLeftX, lowerLeftY, upperRightX, upperRightY));
-            usingPosition = false;
         }
 
         if (combinedCriteria != null) {
@@ -102,13 +101,17 @@ public class MongoOrgDao extends OrganisationDao {
         // sorting
         ops.add(Aggregation.sort(Sort.by(Sort.Direction.ASC, "Item Name")));
 
+        /* invalid paging system
+
         // paging
         if (skip != null && skip > 0) {
             ops.add(Aggregation.skip(skip.longValue()));
         }
         if (limit != null && limit > 0) {
             ops.add(Aggregation.limit(limit.longValue()));
-        }
+        }*/
+        //TODO: this needs to be optimized, but required large scope of refactor. Just abandon and use sql!
+        ops.add(Aggregation.limit(3000));
 
         Aggregation agg = Aggregation.newAggregation(ops);
 
@@ -120,7 +123,7 @@ public class MongoOrgDao extends OrganisationDao {
         // 5. return organisation
         List<Organisation> result = processToOrganisations(items);
 
-        return applySecondaryFiltering(result, filterParameters, searchString, locationX, locationY, endX, endY);
+        return applySecondaryFiltering(result, filterParameters, searchString, locationX, locationY, endX, endY, skip, limit);
     }
 
     /**
@@ -130,7 +133,7 @@ public class MongoOrgDao extends OrganisationDao {
                                                        Map<String, String> filterParameters,
                                                        String searchString,
                                                        double locationX, double locationY,
-                                                       double endX, double endY) {
+                                                       double endX, double endY, int skip, int limit) {
         if (organisations == null || organisations.isEmpty()) {
             return organisations;
         }
@@ -139,9 +142,9 @@ public class MongoOrgDao extends OrganisationDao {
 
         //location
         if (!(locationX == 0 || locationY == 0 || endX == 0 || endY == 0)) {
-            double minLat = Math.min(locationY, endY);
+            double minLat = min(locationY, endY);
             double maxLat = Math.max(locationY, endY);
-            double minLng = Math.min(locationX, endX);
+            double minLng = min(locationX, endX);
             double maxLng = Math.max(locationX, endX);
 
             stream = stream.filter(org -> isWithinBoundingBox(org, minLat, maxLat, minLng, maxLng));
@@ -161,7 +164,10 @@ public class MongoOrgDao extends OrganisationDao {
                 org.get_id() != null ? org.get_id() : org.getName()
         ));
 
-        return stream.collect(Collectors.toList());
+        List<Organisation> result = stream.toList();
+
+        int end = min(skip + limit, result.size());
+        return result.subList(skip, end);
     }
 
     private boolean isWithinBoundingBox(Organisation org, double minLat, double maxLat, double minLng, double maxLng) {

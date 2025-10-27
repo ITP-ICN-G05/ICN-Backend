@@ -5,6 +5,7 @@ import com.gof.ICNBack.Entity.Organisation;
 import com.gof.ICNBack.Entity.Item; // 假设Item类存在
 import com.gof.ICNBack.Service.OrganisationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gof.ICNBack.Web.Entity.SearchOrganisationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,8 +99,7 @@ public class OrganisationControllerIntegrationTest {
         List<Organisation.OrganisationCard> mockCards = Arrays.asList(orgCard1, orgCard2);
 
         // 模拟服务层行为
-        when(organisationService.getOrgCards(anyInt(), anyInt(), anyInt(), anyInt(),
-                anyMap(), anyString(), anyInt(), anyInt()))
+        when(organisationService.getOrgCards(any()))
                 .thenReturn(mockCards);
 
         // 执行请求并验证
@@ -130,8 +130,7 @@ public class OrganisationControllerIntegrationTest {
         List<Organisation.OrganisationCard> mockCards = Arrays.asList(orgCard1);
 
         // 模拟服务层行为
-        when(organisationService.getOrgCards(anyInt(), anyInt(), anyInt(), anyInt(),
-                anyMap(), any(), any(), any()))
+        when(organisationService.getOrgCards(any()))
                 .thenReturn(mockCards);
 
         // 执行请求并验证
@@ -162,8 +161,7 @@ public class OrganisationControllerIntegrationTest {
     @Test
     public void testSearchOrganisation_EmptyResult() throws Exception {
         // 模拟空结果
-        when(organisationService.getOrgCards(anyInt(), anyInt(), anyInt(), anyInt(),
-                anyMap(), anyString(), anyInt(), anyInt()))
+        when(organisationService.getOrgCards(any()))
                 .thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/organisation/general")
@@ -314,8 +312,10 @@ public class OrganisationControllerIntegrationTest {
         // 测试分页参数
         List<Organisation.OrganisationCard> mockCards = Arrays.asList(orgCard1);
 
-        when(organisationService.getOrgCards(eq(151), eq(-33), eq(10), eq(10),
-                anyMap(), eq("test"), eq(5), eq(10)))
+        SearchOrganisationRequest request = new SearchOrganisationRequest(eq(151), eq(-33), eq(10), eq(10),
+                "{}", eq("test"), eq(5), eq(10));
+
+        when(organisationService.getOrgCards(request))
                 .thenReturn(mockCards);
 
         mockMvc.perform(get("/organisation/general")
@@ -335,8 +335,7 @@ public class OrganisationControllerIntegrationTest {
     public void testOrganisationCardStructure() throws Exception {
         List<Organisation.OrganisationCard> mockCards = Collections.singletonList(orgCard1);
 
-        when(organisationService.getOrgCards(anyInt(), anyInt(), anyInt(), anyInt(),
-                anyMap(), any(), any(), any()))
+        when(organisationService.getOrgCards(any()))
                 .thenReturn(mockCards);
 
         mockMvc.perform(get("/organisation/general")

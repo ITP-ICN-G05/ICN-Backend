@@ -1,9 +1,9 @@
 
-
 pebble:
   # default ".peb" to "":
   suffix:
   cache: false
+
 spring:
   application:
     name: ICN_Back
@@ -36,10 +36,11 @@ spring:
         debug: false
 
 
+logger:
+  level:
+    root: INFO
 
 app:
-  dao:
-    debug: false
   google-map-geocode:
     enable: 0
     api-key: ${GOOGLE_MAPS_API_KEY}

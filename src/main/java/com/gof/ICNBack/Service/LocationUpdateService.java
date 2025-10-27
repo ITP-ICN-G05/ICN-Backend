@@ -42,8 +42,6 @@ public class LocationUpdateService {
     public void updateLocationsWithGeocoding() {
         logger.info("Starting geocoding process...");
 
-        boolean debug = env.getProperty(Properties.GEOCODING_DEBUG, Boolean.class, false);
-
         int processedCount = 0;
         int successCount = 0;
 
@@ -54,7 +52,7 @@ public class LocationUpdateService {
         for (Organisation org : organisations) {
             try {
                 if (org.buildCoord() != null) {
-                    if (debug) logger.info("skip org with geocoding {}", org.buildCoord());
+                    logger.debug("skip org with geocoding {}", org.buildCoord());
                     continue;
                 }
                 processedCount++;
@@ -69,9 +67,9 @@ public class LocationUpdateService {
 
                     successCount++;
 
-                    if (debug) logger.info("Successfully updated location: {}", org.buildAddress());
+                    logger.debug("Successfully updated location: {}", org.buildAddress());
                 } else {
-                    if (debug) logger.warn("Failed to geocode address: {}", org.buildAddress());
+                    logger.warn("Failed to geocode address: {}", org.buildAddress());
                 }
 
                 if (processedCount < organisations.size()) {

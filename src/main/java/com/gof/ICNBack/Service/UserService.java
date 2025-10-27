@@ -3,6 +3,7 @@ package com.gof.ICNBack.Service;
 import com.gof.ICNBack.DataSources.Entity.UserEntity;
 import com.gof.ICNBack.DataSources.User.UserDao;
 import com.gof.ICNBack.Entity.User;
+import com.gof.ICNBack.Web.Entity.UpdateUserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +17,8 @@ public class UserService {
         return userDao.getUserByPair(email, password);
     }
 
-    public boolean updateUser(User user) {
-        return userDao.update(user.toEntity());
+    public boolean updateUser(UpdateUserRequest request) {
+        return userDao.update(request.toUser().toEntity());
     }
 
     public boolean createUser(UserEntity user) {

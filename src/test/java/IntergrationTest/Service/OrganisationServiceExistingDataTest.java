@@ -1,6 +1,7 @@
 package IntergrationTest.Service;
 
 import Utils.Utils;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gof.ICNBack.Application;
 import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
 import com.gof.ICNBack.DataSources.User.UserDao;
@@ -11,6 +12,7 @@ import com.gof.ICNBack.Entity.User;
 import com.gof.ICNBack.Repositories.MongoOrganisationRepository;
 import com.gof.ICNBack.Repositories.MongoUserRepository;
 import com.gof.ICNBack.Service.OrganisationService;
+import com.gof.ICNBack.Web.Entity.SearchOrganisationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,26 @@ public class OrganisationServiceExistingDataTest {
     @Autowired
     private MongoOrganisationRepository orgRepo;
 
+    private SearchOrganisationRequest exampleRequest =
+            new SearchOrganisationRequest(
+                    100,
+                    -47,
+                    144,
+                    -17,
+                    "{}",
+                    null,
+                    0, 5);
+
+    private SearchOrganisationRequest emptyRequest =
+            new SearchOrganisationRequest(
+                    0,
+                    0,
+                    0,
+                    0,
+                    "{}",
+                    null,
+                    0, 2);
+
     // 使用您提供的真实组织ID
     private static final List<String> EXISTING_ORGANISATION_IDS = Arrays.asList(
             "0017F00001ueJZy", "0019s000003x15k", "0019s000005Cl7e",
@@ -61,7 +83,7 @@ public class OrganisationServiceExistingDataTest {
     }
 
     @Test
-    void testGetOrgCards() {
+    void testGetOrgCards() throws JsonProcessingException {
         // setup parameters
         Map<String, String> filterParameters = new HashMap<>();
         String searchString = "instrumentation";
@@ -69,7 +91,7 @@ public class OrganisationServiceExistingDataTest {
         Integer limit = 10;
 
         List<Organisation.OrganisationCard> cards = organisationService.getOrgCards(
-                -30, 0, 0, 130, filterParameters, searchString, skip, limit);
+                exampleRequest);
 
         assertNotNull(cards, "result should not be null");
 
@@ -118,48 +140,26 @@ public class OrganisationServiceExistingDataTest {
     }
 
     @Test
-    void testSearchWithLocation_UsingExistingData() {
-        // testing location search
-        int locationY = -47;
-        int locationX = 100;
-        int lenY = -17;
-        int lenX = 144;
+    void testSearchWithLocation_UsingExistingData() throws JsonProcessingException {
 
-        Map<String, String> filterParameters = new HashMap<>();
-        String searchString = null;
-        Integer skip = 0;
-        Integer limit = 5;
-
-        List<Organisation.OrganisationCard> cards = organisationService.getOrgCards(
-                locationX, locationY, lenX, lenY, filterParameters, searchString, skip, limit);
+        List<Organisation.OrganisationCard> cards = organisationService.getOrgCards(exampleRequest);
 
         assertNotNull(cards);
         System.out.println("find " + cards.size() + " orgs");
     }
 
     @Test
-    void testGetOrgCards_WithFilterParameters() {
-        int locationY = 100;
-        int locationX = -47;
-        int lenY = 144;
-        int lenX = -17;
+    void testGetOrgCards_WithFilterParameters() throws JsonProcessingException {
 
         // Using filter parameters
-        Map<String, String> filterParameters = new HashMap<>();
-        filterParameters.put("Sector Name", "Critical Minerals");
-        filterParameters.put("Item Name", "instrumentation");
+        SearchOrganisationRequest req = exampleRequest.copy();
+        req.setFilterParameters("{\"Sector Name\": \"Critical Minerals\",\"Item Name\": \"instrumentation\"}");
 
-        String searchString = null;
-        Integer skip = 0;
-        Integer limit = 10;
-
-        List<Organisation.OrganisationCard> cards = organisationService.getOrgCards(
-                locationX, locationY, lenX, lenY, null, searchString, skip, limit);
+        List<Organisation.OrganisationCard> cards = organisationService.getOrgCards(req);
 
         assertNotNull(cards);
         System.out.println("find " + cards.size() + " orgs");
     }
-
     @Test
     void testGetOrg_VIPLevelAccessControl() {
         // check primitive right
@@ -210,18 +210,20 @@ public class OrganisationServiceExistingDataTest {
     }
 
     @Test
-    void testPaginationWithExistingData() {
+    void testPaginationWithExistingData() throws JsonProcessingException {
         // page function
         Map<String, String> filterParameters = new HashMap<>();
         String searchString = null;
 
         // p1
         List<Organisation.OrganisationCard> page1 = organisationService.getOrgCards(
-                0, 0, 0, 0, filterParameters, searchString, 0, 2);
+                exampleRequest);
 
+        SearchOrganisationRequest req = emptyRequest.copy();
+        req.setSkip(2);
         // p2
         List<Organisation.OrganisationCard> page2 = organisationService.getOrgCards(
-                0, 0, 0, 0, filterParameters, searchString, 2, 2);
+                req);
 
         assertNotNull(page1);
         assertNotNull(page2);
@@ -234,6 +236,9 @@ public class OrganisationServiceExistingDataTest {
                 assertNotEquals(page1.get(0).getName(), page2.get(0).getName());
             }
         }
+        //else{
+        //    assertNotNull(null, "incorrect page size");
+        //}
     }
 
     private User createTestUserIfNeeded() {

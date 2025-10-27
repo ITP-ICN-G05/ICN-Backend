@@ -9,6 +9,7 @@ import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -33,6 +34,7 @@ public class EmailService {
     @Autowired
     Environment env;
     @Autowired
+    @Qualifier("applicationTaskExecutor")
     TaskExecutor ioIntensiveExecutor;
     @Autowired
     JavaMailSender sender;

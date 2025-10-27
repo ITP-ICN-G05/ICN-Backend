@@ -7,6 +7,8 @@ import com.gof.ICNBack.Entity.UserPayment;
 import com.gof.ICNBack.Service.EmailService;
 import com.gof.ICNBack.Service.OrganisationService;
 import com.gof.ICNBack.Service.UserService;
+import com.gof.ICNBack.Web.Entity.CreateUserRequest;
+import com.gof.ICNBack.Web.Entity.UpdateUserRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,7 @@ public class UserControllerIntegrationTest {
     private OrganisationService organisationService;
 
     private User testUser;
-    private User.InitialUser testInitialUser;
+    private CreateUserRequest testCreateUserRequest;
     private UserPayment testPayment;
 
     @BeforeEach
@@ -59,7 +61,7 @@ public class UserControllerIntegrationTest {
         testUser.setName("Test User");
         testUser.setOrganisationIds(Arrays.asList("card1", "card2"));
 
-        testInitialUser = new User.InitialUser(
+        testCreateUserRequest = new CreateUserRequest(
                 "newuser@example.com",
                 "New User",
                 "pass123",
@@ -137,19 +139,19 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testUpdateUserInformation_Success() throws Exception {
-        when(userService.updateUser(any(User.class))).thenReturn(true);
+        when(userService.updateUser(any(UpdateUserRequest.class))).thenReturn(true);
 
         mockMvc.perform(put("/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testUser)))
                 .andExpect(status().isOk());
 
-        verify(userService).updateUser(any(User.class));
+        verify(userService).updateUser(any(UpdateUserRequest.class));
     }
 
     @Test
     void testUpdateUserInformation_Failure() throws Exception {
-        when(userService.updateUser(any(User.class))).thenReturn(false);
+        when(userService.updateUser(any(UpdateUserRequest.class))).thenReturn(false);
 
         mockMvc.perform(put("/user")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -157,7 +159,7 @@ public class UserControllerIntegrationTest {
                 .andExpect(status().isNotFound())
                 .andExpect(header().exists("X-Error"));
 
-        verify(userService).updateUser(any(User.class));
+        verify(userService).updateUser(any(UpdateUserRequest.class));
     }
 
     @Test
@@ -172,7 +174,7 @@ public class UserControllerIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(header().exists("X-Error"));
 
-        verify(userService, never()).updateUser(any(User.class));
+        verify(userService, never()).updateUser(any(UpdateUserRequest.class));
     }
 
     @Test
@@ -215,7 +217,7 @@ public class UserControllerIntegrationTest {
 
         mockMvc.perform(post("/user/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testInitialUser)))
+                        .content(objectMapper.writeValueAsString(testCreateUserRequest)))
                 .andExpect(status().isCreated());
 
         verify(emailService).getValidationCode("newuser@example.com");
@@ -229,7 +231,7 @@ public class UserControllerIntegrationTest {
 
         mockMvc.perform(post("/user/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testInitialUser)))
+                        .content(objectMapper.writeValueAsString(testCreateUserRequest)))
                 .andExpect(status().isConflict())
                 .andExpect(header().exists("X-Error"));
 
@@ -244,7 +246,7 @@ public class UserControllerIntegrationTest {
 
         mockMvc.perform(post("/user/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testInitialUser)))
+                        .content(objectMapper.writeValueAsString(testCreateUserRequest)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(header().exists("X-Error"));
 
@@ -259,7 +261,7 @@ public class UserControllerIntegrationTest {
 
         mockMvc.perform(post("/user/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testInitialUser)))
+                        .content(objectMapper.writeValueAsString(testCreateUserRequest)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(header().exists("X-Error"));
 

@@ -1,9 +1,11 @@
 package com.gof.ICNBack.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
 import com.gof.ICNBack.DataSources.User.UserDao;
 import com.gof.ICNBack.Entity.Organisation;
 import com.gof.ICNBack.Entity.User;
+import com.gof.ICNBack.Web.Entity.SearchOrganisationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,14 +24,19 @@ public class OrganisationService {
 
     /**
      * locations: map scale for searching
-     * @param filterParameters: optional parameters for further restriction.
-     * @param searchString: optional keywords
-     * @param limit: result length
-     * @param skip: default 0, number of result skipped
      * @return :searching result from Dao layer, list of organisation Cards
      * */
-    public List<Organisation.OrganisationCard> getOrgCards(int locationX, int locationY, int lenX, int lenY, Map<String, String> filterParameters, String searchString, Integer skip, Integer limit) {
-        List<Organisation> result = organisationDao.searchOrganisations(locationX,locationY,lenX,lenY, filterParameters, searchString, skip, limit);
+    public List<Organisation.OrganisationCard> getOrgCards(SearchOrganisationRequest request) throws JsonProcessingException {
+        List<Organisation> result =
+                organisationDao.searchOrganisations(
+                        request.getStartLongitude(),
+                        request.getStartLatitude(),
+                        request.getEndLongitude(),
+                        request.getEndLatitude(),
+                        request.getFilter(),
+                        request.getSearchString(),
+                        request.getSkip(),
+                        request.getLimit());
         ArrayList<Organisation.OrganisationCard> cards = new ArrayList<>();
         for (Organisation org : result){
             cards.add(org.toCard());

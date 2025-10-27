@@ -39,9 +39,7 @@ public class MongoUserDao extends UserDao {
     @Override
     public User getUserByPair(String email, String password) {
         UserEntity user = repo.findByEmailAndPassword(email, password);
-        if (Boolean.TRUE.equals(env.getProperty(Properties.DAO_DEBUG, boolean.class))){
-            logger.info("Login event with email:{}, pass:{}", email, password);
-        }
+        logger.debug("Login event with email:{}, pass:{}", email, password);
         return user == null ? null: user.toDomain();
     }
 

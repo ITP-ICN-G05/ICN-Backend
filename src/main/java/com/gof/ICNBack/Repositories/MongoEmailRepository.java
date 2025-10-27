@@ -5,8 +5,10 @@ import com.gof.ICNBack.DataSources.Entity.ItemEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
+import java.util.Date;
 import java.util.List;
 
 public interface MongoEmailRepository extends MongoRepository<EmailRecordEntity, String> {
-    List<EmailRecordEntity> findByEmail(String email);
+    @Query("{ 'email' : ?0, 'createdDate' : { $gte: ?1 } }")
+    List<EmailRecordEntity> findByEmailAndCreatedDateAfter(String email, Date latestTime);
 }

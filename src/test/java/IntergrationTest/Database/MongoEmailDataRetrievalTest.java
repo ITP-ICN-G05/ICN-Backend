@@ -1,7 +1,9 @@
 package IntergrationTest.Database;
 
 import com.gof.ICNBack.Application;
+import com.gof.ICNBack.DataSources.Entity.EmailRecordEntity;
 import com.gof.ICNBack.DataSources.Service.MongoEmailCleanService;
+import com.gof.ICNBack.Service.EmailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,25 +14,42 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
-public class MongoEmailDataCleanTest {
+public class MongoEmailDataRetrievalTest {
     @Autowired
     private MongoEmailCleanService mongoEmailCleanService;
 
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    private static final String COLLECTION_NAME = "Email";
+    @Autowired
+    private EmailService service;
 
+    private static final String COLLECTION_NAME = "Email";
+    EmailRecordEntity recentRecord;
+    EmailRecordEntity oldRecord;
+    LocalDateTime testTime = LocalDateTime.now().minusMinutes(5);
     @BeforeEach
     void setUp() {
         mongoTemplate.dropCollection(COLLECTION_NAME);
         mongoTemplate.createCollection(COLLECTION_NAME);
+        
+    }
+
+    @Test
+    void getCodeByEmail_ShouldReturnEmptyListWhenNoRecordsFound() {
+        insertValidEmail();
+        String email = "test@example.com";
+
+        List<String> result = service.getValidationCode(email);
+
+        assertThat(result.size()).isEqualTo(1);
     }
 
     @Test
@@ -130,6 +149,22 @@ public class MongoEmailDataCleanTest {
         mongoEmailCleanService.scheduledCleanup();
 
         assertThat(true).isTrue();
+    }
+
+    private void insertValidEmail(){
+        EmailRecordEntity recentRecord = new EmailRecordEntity(
+                null,"123456","test@example.com",new Date()
+        );
+
+        EmailRecordEntity oldRecord = new EmailRecordEntity(
+                null,
+                "654321",
+                "test@example.com",
+                Date.from(testTime.minusMinutes(10).atZone(java.time.ZoneId.systemDefault()).toInstant())
+        );
+        mongoTemplate.insert(recentRecord, COLLECTION_NAME);
+        mongoTemplate.insert(oldRecord, COLLECTION_NAME);
+
     }
 
     private void insertTestEmail(String email, LocalDateTime createdDate) {

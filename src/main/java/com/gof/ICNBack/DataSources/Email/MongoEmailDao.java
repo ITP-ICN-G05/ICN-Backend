@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +27,8 @@ public class MongoEmailDao extends EmailDao{
     }
 
     @Override
-    public List<String> getCodeByEmail(String email) {
-        return repo.findByEmail(email).stream().map(EmailRecordEntity::getCode).toList();
+    public List<String> getCodeByEmail(String email, LocalDateTime latestTime) {
+        Date date = Date.from(latestTime.atZone(ZoneId.systemDefault()).toInstant());
+        return repo.findByEmailAndCreatedDateAfter(email, date).stream().map(EmailRecordEntity::getCode).toList();
     }
 }

@@ -18,6 +18,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.StringWriter;
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -47,7 +50,7 @@ public class EmailService {
     }
 
     public List<String> getValidationCode(String email) {
-        return emailDao.getCodeByEmail(email);
+        return emailDao.getCodeByEmail(email, LocalDateTime.now().minusSeconds(env.getProperty(Properties.EMAIL_TIMEOUT, int.class, 300)));
     }
 
     public void cacheValidationCode(String email, String code){

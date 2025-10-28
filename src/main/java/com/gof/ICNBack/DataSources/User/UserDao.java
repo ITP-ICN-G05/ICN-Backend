@@ -12,8 +12,9 @@ public abstract class UserDao {
     public abstract User getUserById(String user);
 
     public abstract User getUserByPair(String email, String password);
-
+    public abstract User getUserByEmail(String email);
     public abstract List<String> getOrgIdByUser(String email);
+
 
     public abstract boolean update(UserEntity user);
 

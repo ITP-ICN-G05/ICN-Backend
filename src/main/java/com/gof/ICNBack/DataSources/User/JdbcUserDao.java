@@ -17,6 +17,11 @@ public class JdbcUserDao extends UserDao {
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        return null;
+    }
+
+    @Override
     public List<String> getOrgIdByUser(String email) {
         return null;
     }

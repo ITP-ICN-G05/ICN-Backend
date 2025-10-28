@@ -24,7 +24,9 @@ public class UserService {
     }
 
     public boolean updateUser(UpdateUserRequest request) {
-        User user = userDao.getUserById(request.getId());
+        User user = null;
+        if (request.getEmail() != null) user = userDao.getUserByEmail(request.getEmail());
+        if (user == null && request.getId() != null) user = userDao.getUserById(request.getId());
         if (user == null) return false;
         fillInUpdatedInfo(request, user);
         return userDao.update(user.toEntity());

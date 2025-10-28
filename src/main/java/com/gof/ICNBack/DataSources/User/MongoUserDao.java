@@ -41,6 +41,12 @@ public class MongoUserDao extends UserDao {
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        UserEntity user = repo.findByEmail(email);
+        return user == null ? null : user.toDomain();
+    }
+
+    @Override
     public List<String> getOrgIdByUser(String email) {
         Query query = new Query(Criteria.where("email").is(email));
         query.fields().include("cards").exclude("_id");
@@ -61,7 +67,7 @@ public class MongoUserDao extends UserDao {
 
     @Override
     public boolean create(UserEntity user) {
-        if (repo.findByEmailAndPassword(user.getEmail(), user.getPassword()) == null) {
+        if (repo.findByEmail(user.getEmail()) == null) {
             repo.save(user);
             return true;
         }

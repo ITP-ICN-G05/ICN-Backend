@@ -27,9 +27,9 @@ public class Validator {
     public static boolean isValidUserData(UpdateUserRequest user) {
         if (user == null) return false;
         if (!isValidUserId(user.getId())) return false;
-        if (user.getName() == null || !NAME_PATTERN.matcher(user.getName()).matches()) return false;
-        if (!isValidPassword(user.getPassword())) return false;
-        return isValidEmail(user.getEmail());
+        if (user.getName() != null && !NAME_PATTERN.matcher(user.getName()).matches()) return false;
+        if (user.getPassword() != null && !isValidPassword(user.getPassword())) return false;
+        return user.getEmail() == null || isValidEmail(user.getEmail());
     }
 
     public static boolean isValidInitialUser(CreateUserRequest createUserRequest, int codeLen) {

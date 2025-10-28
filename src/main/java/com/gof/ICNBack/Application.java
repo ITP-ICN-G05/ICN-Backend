@@ -30,13 +30,13 @@ public class Application {
 
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**") // 对所有路径生效
-                        .allowedOriginPatterns("*") // 允许所有源，生产环境建议指定具体域名
+                registry.addMapping("/**")
+                        .allowedOriginPatterns("*")
                         .allowedMethods("GET", "POST", "PUT")
                         .allowedHeaders("*")
-                        .exposedHeaders("X-Error", "X-Total-Count", "X-Auth-Token") // 暴露自定义头信息
-                        .allowCredentials(true) // 允许携带认证信息
-                        .maxAge(3600); // 预检请求缓存时间（秒）
+                        .exposedHeaders("X-Error", "X-Total-Count", "X-Auth-Token")
+                        .allowCredentials(true)
+                        .maxAge(3600);
 
             }
         };

@@ -61,6 +61,12 @@ app:
 
 
 server:
-  port: 8082
+  port: 8082 # set to 443 to enable https
+  ##ssl: ## keytool -genkey -alias uublog -dname "CN=Gof,OU=Unimelb,O=Unimelb,L=CD,ST=Melbourne,C=AU" -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 365
+    ##key-store: classpath:keystore.p12
+    ##key-store-password: unsafeK
+    ##keyStoreType: PKCS12
+    ##keyAlias: uublog
   servlet:
     context-path: /api
+

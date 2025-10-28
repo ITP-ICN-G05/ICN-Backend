@@ -22,9 +22,6 @@ public class MongoUserDao extends UserDao {
     @Autowired
     MongoUserRepository repo;
 
-    @Autowired
-    Environment env;
-
     private static final Logger logger = LoggerFactory.getLogger(GoogleMapsGeocodingService.class);
 
     @Autowired
@@ -53,7 +50,7 @@ public class MongoUserDao extends UserDao {
 
     @Override
     public boolean update(UserEntity user) {
-        UserEntity user1 = repo.findByEmailAndPassword(user.getEmail(), user.getPassword());
+        UserEntity user1 = repo.findById(user.getID()).orElse(null);
         if (user1 != null) {
             user.setVIP(user1.getVIP()); // block VIP level
             repo.save(user);

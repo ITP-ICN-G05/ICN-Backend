@@ -4,21 +4,25 @@ import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
 import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(name = "server.port", havingValue = "443")
+@ConditionalOnProperty(name = "app.https", havingValue = "true")
 public class SSLUtils {
+
+    @Value("${app.http_port:19504}")
+    int httpPort;
+
     @Bean
     public Connector connector() {
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setScheme("http");
         connector.setSecure(false);
-        connector.setPort(8082);
-        connector.setRedirectPort(443);
+        connector.setPort(httpPort);
         return connector;
     }
 

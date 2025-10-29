@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import static com.gof.ICNBack.Web.Utils.Validator.*;
 
 
-/// @TODO: error handling
 @RestController
 @RequestMapping("/user")
 public class UserController {

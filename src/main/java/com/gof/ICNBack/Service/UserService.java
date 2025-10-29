@@ -36,9 +36,8 @@ public class UserService {
         if (request.getCode() != null && service.getValidationCode(user.getEmail()).contains(request.getCode())){
             Optional.ofNullable(request.getEmail()).ifPresent(user::setEmail);
             Optional.ofNullable(request.getPassword()).ifPresent(user::setPassword);
-            Optional.ofNullable(request.getName()).ifPresent(user::setName);
         }
-
+        Optional.ofNullable(request.getName()).ifPresent(user::setName);
         Optional.ofNullable(request.getOrganisationIds()).ifPresent(user::setOrganisationIds);
     }
 

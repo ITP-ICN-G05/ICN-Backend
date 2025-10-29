@@ -5,6 +5,9 @@ import com.gof.ICNBack.Entity.UserPayment;
 import com.gof.ICNBack.Service.EmailService;
 import com.gof.ICNBack.Service.OrganisationService;
 import com.gof.ICNBack.Service.UserService;
+import com.gof.ICNBack.Web.Entity.UpdateUserRequest;
+import com.gof.ICNBack.Web.Entity.CreateUserRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -14,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import static com.gof.ICNBack.Web.Utils.Validator.*;
 
 
-/// @TODO: error handling
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -30,7 +32,7 @@ public class UserController {
     @Autowired
     Environment env;
 
-    @GetMapping
+    @PostMapping
     public ResponseEntity<User.UserFull> UserLogin(
             @RequestParam(required = true) String email,
             @RequestParam(required = true) String password
@@ -44,28 +46,28 @@ public class UserController {
         if (user == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).header("X-Error", "invalid user account").build();
         }
-        User.UserFull userF = user.getFullUser(orgRepo.getOrgCardsByIds(user.getCards()));
+        User.UserFull userF = user.getFullUser(orgRepo.getOrgCardsByIds(user.getOrganisationIds()));
         return ResponseEntity.status(HttpStatus.OK).body(userF);
     }
 
     @PutMapping
     public ResponseEntity<Void> updateUserInformation(
-            @RequestBody User user
+            @RequestBody UpdateUserRequest request
     ) {
-        if (!isValidUserData(user)) {
+        if (!isValidUserData(request)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .header("X-Error", "invalid input")
                     .build();
         }
 
-        if (repo.updateUser(user)) {
+        if (repo.updateUser(request)) {
             return ResponseEntity.status(HttpStatus.OK).build();
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).header("X-Error", "item update failed").build();
     }
 
-    @GetMapping("/getCode")
-    public ResponseEntity<User.UserFull> validateEmail(
+    @PostMapping("/getCode")
+    public ResponseEntity<Void> validateEmail(
             @RequestParam(required = true) String email
     ) {
         if (!isValidEmail(email)) {
@@ -75,7 +77,11 @@ public class UserController {
         }
 
         String code = this.email.generateValidationCode(email);
-        return code == null ?
+        Boolean result = false;
+        if(code != null){
+            result = this.email.sendCode(code, email);
+        }
+        return !result ?
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .header("X-Error", "something wrong with the server")
                         .build()
@@ -86,17 +92,17 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<Void> addUserAccount(
-            @RequestBody User.InitialUser initialUser
+            @Valid @RequestBody CreateUserRequest request
     ) {
-        if (!isValidInitialUser(initialUser, env.getProperty("app.service.email.codeLength", Integer.class, 4))) {
+        if (!isValidInitialUser(request, env.getProperty("app.service.email.codeLength", Integer.class, 4))) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .header("X-Error", "invalid input")
                     .build();
         }
 
         try {
-            if (email.getValidationCode(initialUser.getEmail()).equals(initialUser.getCode())) {
-                if (repo.createUser(initialUser.toUser().toEntity())){
+            if (email.getValidationCode(request.getEmail()).contains(request.getCode())) {
+                if (repo.createUser(request.toUser().toEntity())){
                     return ResponseEntity.status(HttpStatus.CREATED).build();
                 }
                 //TODO: handle errors in creating user, might related to database layer

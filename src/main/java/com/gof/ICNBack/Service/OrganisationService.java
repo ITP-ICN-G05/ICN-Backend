@@ -1,12 +1,13 @@
 package com.gof.ICNBack.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
 import com.gof.ICNBack.DataSources.User.UserDao;
 import com.gof.ICNBack.Entity.Organisation;
 import com.gof.ICNBack.Entity.User;
+import com.gof.ICNBack.Web.Entity.SearchOrganisationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +24,19 @@ public class OrganisationService {
 
     /**
      * locations: map scale for searching
-     * @param filterParameters: optional parameters for further restriction.
-     * @param searchString: optional keywords
-     * @param limit: result length
-     * @param skip: default 0, number of result skipped
      * @return :searching result from Dao layer, list of organisation Cards
      * */
-    public List<Organisation.OrganisationCard> getOrgCards(int locationX, int locationY, int lenX, int lenY, Map<String, String> filterParameters, String searchString, Integer skip, Integer limit) {
-        List<Organisation> result = organisationDao.searchOrganisations(locationX,locationY,lenX,lenY, filterParameters, searchString, skip, limit);
+    public List<Organisation.OrganisationCard> getOrgCards(SearchOrganisationRequest request) throws JsonProcessingException {
+        List<Organisation> result =
+                organisationDao.searchOrganisations(
+                        request.getStartLongitude(),
+                        request.getStartLatitude(),
+                        request.getEndLongitude(),
+                        request.getEndLatitude(),
+                        request.getFilter(),
+                        request.getSearchString(),
+                        request.getSkip(),
+                        request.getLimit());
         ArrayList<Organisation.OrganisationCard> cards = new ArrayList<>();
         for (Organisation org : result){
             cards.add(org.toCard());
@@ -45,8 +51,9 @@ public class OrganisationService {
      * &#064;TODO:  complete the switch section basing on feature list.  */
     public Organisation getOrg(String organisationId, String user){
         User user1 = userDao.getUserById(user);
+        if (user1 == null) return null;
         Organisation org = organisationDao.getOrganisationById(organisationId);
-        switch (user1.getVIP()){
+        switch (user1.getPremium()){
             case -1:
             case 0:
                 return null; // free users/visitors are unable to access detailed information

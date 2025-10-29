@@ -5,11 +5,9 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Organisation {
     private String _id;
-
     private String name;
     private ArrayList<Item> items;
     private String street;
@@ -44,44 +42,63 @@ public class Organisation {
     }
 
     public OrganisationCard toCard(){
+        double x = this.coord == null? 0: this.coord.getX();
+        double y = this.coord == null? 0: this.coord.getY();
         return new OrganisationCard(
+                this._id,
                 this.name,
-                this.items,
                 this.street,
                 this.city,
                 this.state,
-                this.zip
+                this.zip,
+                this.items,
+                x,
+                y
                 );
     }
 
-    public String getAddress() {
+    public String buildAddress() {
         return street + " " + city + " " + state + " " + zip;
     }
 
+    public double getLatitude(){
+        return this.coord == null? 0: this.coord.getY();
+    }
+    public double getLongitude(){
+        return this.coord == null? 0: this.coord.getX();
+    }
+
+
     public static class OrganisationCard{
+
+        private String id;
         private String name;
-        private ArrayList<Item> items;
         private String street;
         private String city;
         private String state;
         private String zip;
+        private ArrayList<Item> items;
+        private Double longitude;
+        private Double latitude;
 
-
-        public OrganisationCard(String name, ArrayList<Item> items, String street, String city, String state, String zip) {
+        public OrganisationCard(String id, String name, String street, String city, String state, String zip, ArrayList<Item> items, Double longitude, Double latitude) {
+            this.id = id;
             this.name = name;
-            this.items = items;
             this.street = street;
             this.city = city;
             this.state = state;
             this.zip = zip;
+            this.items = items;
+            this.longitude = longitude;
+            this.latitude = latitude;
+        }
+
+        public String getId() {
+            return id;
         }
 
         public String getName() {
             return name;
-        }
-
-        public ArrayList<Item> getItems() {
-            return items;
         }
 
         public String getStreet() {
@@ -98,6 +115,18 @@ public class Organisation {
 
         public String getZip() {
             return zip;
+        }
+
+        public ArrayList<Item> getItems() {
+            return items;
+        }
+
+        public Double getLongitude() {
+            return longitude;
+        }
+
+        public Double getLatitude() {
+            return latitude;
         }
     }
 
@@ -183,7 +212,7 @@ public class Organisation {
     public void setCoord(GeoJsonPoint coord) {
         this.coord = coord;
     }
-    public GeoJsonPoint getCoord() {
+    public GeoJsonPoint buildCoord() {
         return coord;
     }
 }

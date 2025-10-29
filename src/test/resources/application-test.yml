@@ -1,42 +1,64 @@
+
 pebble:
   # default ".peb" to "":
   suffix:
   cache: false
+
 spring:
   application:
     name: ICN_Back
+  freemarker:
+    template-loader-path: classpath:/templates
+    suffix: .ftl
   data:
     mongodb:
-      uri: mongodb://localhost:27017/ICN_Navigator_Test
-  main:
-    allow-bean-definition-overriding: true
-  mvc:
-    throw-exception-if-no-handler-found: true
-  web:
-    resources:
-      add-mappings: false
+      uri:   mongodb://localhost:27017/ICN_Navigator_Test
 
-# 日志配置
-logging:
+  ## email settings
+  mail:
+    ## address
+    host: smtp.gmail.com
+    ## email server port（465||587）
+    port: 465
+    ## email account
+    username: ${EMAIL}
+    ## pass
+    password: ${EMAIL_PASS}
+    # encoding
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            ## SSL connection
+            class: javax.net.ssl.SSLSocketFactory
+        ## enable debug
+        debug: false
+
+
+logger:
   level:
-    com.gof.ICNBack.Controller: DEBUG
-    org.springframework.web: INFO
-    org.springframework.security: INFO
-    org.springframework.data.mongodb.core: DEBUG
-    com.gof.ICNBack.Repositories: DEBUG
-
-
-test:
-  security:
-    enabled: false
+    root: INFO
 
 app:
+  database:
+    type: mongo
   google-map-geocode:
     enable: 0
-    api-key: N/A
+    api-key: ${GOOGLE_MAPS_API_KEY}
     geocoding-url: https://maps.googleapis.com/maps/api/geocode/json
     batch-size: 10
     delay-between-requests: 100
+    debug: false
+  mail:
+    code:
+      length: 4
+    mail: email@example.com
+    name: ICN navigator
+    website: ICN.au
+    timeout: 300
+    ftl-path: email.ftl
+
 
 server:
   port: 8082

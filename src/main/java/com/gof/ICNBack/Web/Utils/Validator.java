@@ -2,12 +2,14 @@ package com.gof.ICNBack.Web.Utils;
 
 import com.gof.ICNBack.Entity.User;
 import com.gof.ICNBack.Entity.UserPayment;
+import com.gof.ICNBack.Web.Entity.CreateUserRequest;
+import com.gof.ICNBack.Web.Entity.UpdateUserRequest;
 
 import java.util.regex.Pattern;
 
 public class Validator {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
-    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{6,20}$");
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{64}$"); // fixed length for hashed password
     private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9\\s]{1,50}$");
 
     public static boolean isValidEmail(String email) {
@@ -18,20 +20,25 @@ public class Validator {
         return password != null && PASSWORD_PATTERN.matcher(password).matches();
     }
 
-    public static boolean isValidUserData(User user) {
-        if (user == null) return false;
-        if (user.getName() == null || !NAME_PATTERN.matcher(user.getName()).matches()) return false;
-        if (!isValidPassword(user.getPassword())) return false;
-        return isValidEmail(user.getEmail());
+    public static boolean isValidUserId(String uid){
+        return uid != null && NAME_PATTERN.matcher(uid).matches();
     }
 
-    public static boolean isValidInitialUser(User.InitialUser initialUser, int codeLen) {
-        if (initialUser == null) return false;
-        if (initialUser.getName() == null || !NAME_PATTERN.matcher(initialUser.getName()).matches()) return false;
-        if (!isValidEmail(initialUser.getEmail())) return false;
-        if (!isValidPassword(initialUser.toUser().getPassword())) return false;
+    public static boolean isValidUserData(UpdateUserRequest user) {
+        if (user == null) return false;
+        if (user.getId() != null && !isValidUserId(user.getId())) return false;
+        if (user.getName() != null && !NAME_PATTERN.matcher(user.getName()).matches()) return false;
+        if (user.getPassword() != null && !isValidPassword(user.getPassword())) return false;
+        return user.getEmail() == null || isValidEmail(user.getEmail());
+    }
 
-        return initialUser.getCode() != null && initialUser.getCode().length() == codeLen;
+    public static boolean isValidInitialUser(CreateUserRequest createUserRequest, int codeLen) {
+        if (createUserRequest == null) return false;
+        if (createUserRequest.getName() == null || !NAME_PATTERN.matcher(createUserRequest.getName()).matches()) return false;
+        if (!isValidEmail(createUserRequest.getEmail())) return false;
+        if (!isValidPassword(createUserRequest.toUser().getPassword())) return false;
+
+        return createUserRequest.getCode() != null && createUserRequest.getCode().length() == codeLen;
     }
 
     public static boolean isValidPayment(UserPayment payment) {

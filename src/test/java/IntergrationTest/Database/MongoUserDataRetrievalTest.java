@@ -82,7 +82,7 @@ public class MongoUserDataRetrievalTest {
         // validate updated
         User userAfter = userDao.getUserByPair("qie@example.com", "pasdassw");
 
-        assertEquals(userAfter.getVIP(), 2);
+        assertEquals(userAfter.getPremium(), 2);
 
         // validate exist
         assertNotNull(userAfter, "should find the user");

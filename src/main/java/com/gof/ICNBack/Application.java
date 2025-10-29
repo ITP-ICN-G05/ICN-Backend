@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -25,6 +27,18 @@ public class Application {
                 registry.addResourceHandler("/static/**")
                         .addResourceLocations("classpath:/static/");
             }
+
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOriginPatterns("*")
+                        .allowedMethods("GET", "POST", "PUT")
+                        .allowedHeaders("*")
+                        .exposedHeaders("X-Error", "X-Total-Count", "X-Auth-Token")
+                        .allowCredentials(true)
+                        .maxAge(3600);
+
+            }
         };
     }
 
@@ -37,4 +51,5 @@ public class Application {
     ObjectMapper createObjectMapper(){
         return new ObjectMapper();
     }
+
 }

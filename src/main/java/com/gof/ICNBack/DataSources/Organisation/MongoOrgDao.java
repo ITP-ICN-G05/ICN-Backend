@@ -14,8 +14,14 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.gof.ICNBack.DataSources.Utils.MongoUtils.*;
+import static java.lang.Math.min;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 public class MongoOrgDao extends OrganisationDao {
@@ -76,15 +82,17 @@ public class MongoOrgDao extends OrganisationDao {
             combinedCriteria = new Criteria().andOperator(criteriaList.toArray(new Criteria[0]));
         }
 
-        // 2. reorder box
-        double lowerLeftX = Math.min(locationX, endX);
-        double lowerLeftY = Math.min(locationY, endY);
-        double upperRightX = Math.max(locationX, endX);
-        double upperRightY = Math.max(locationY, endY);
-
-        // 3. geo match +match(Criteria) -> sort/skip/limit
+        // 2. geo match +match(Criteria) -> sort/skip/limit
         List<AggregationOperation> ops = new ArrayList<>();
-        ops.add(geoWithinBoxMatch("Organizations.Organisation: Coord.coordinates", lowerLeftX, lowerLeftY, upperRightX, upperRightY));
+
+        // 3. reorder box
+        if(!(locationX == 0 || locationY == 0 || endX==0 || endY==0)){
+            double lowerLeftX = min(locationX, endX);
+            double lowerLeftY = min(locationY, endY);
+            double upperRightX = Math.max(locationX, endX);
+            double upperRightY = Math.max(locationY, endY);
+            ops.add(geoWithinBoxMatch("Organizations.Organisation: Coord.coordinates", lowerLeftX, lowerLeftY, upperRightX, upperRightY));
+        }
 
         if (combinedCriteria != null) {
             ops.add(Aggregation.match(combinedCriteria));
@@ -93,13 +101,17 @@ public class MongoOrgDao extends OrganisationDao {
         // sorting
         ops.add(Aggregation.sort(Sort.by(Sort.Direction.ASC, "Item Name")));
 
+        /* invalid paging system
+
         // paging
         if (skip != null && skip > 0) {
             ops.add(Aggregation.skip(skip.longValue()));
         }
         if (limit != null && limit > 0) {
             ops.add(Aggregation.limit(limit.longValue()));
-        }
+        }*/
+        //TODO: this needs to be optimized, but required large scope of refactor. Just abandon and use sql!
+        ops.add(Aggregation.limit(3000));
 
         Aggregation agg = Aggregation.newAggregation(ops);
 
@@ -109,7 +121,85 @@ public class MongoOrgDao extends OrganisationDao {
         List<ItemEntity> items = aggResults.getMappedResults();
 
         // 5. return organisation
-        return processToOrganisations(items);
+        List<Organisation> result = processToOrganisations(items);
+
+        return applySecondaryFiltering(result, filterParameters, searchString, locationX, locationY, endX, endY, skip, limit);
+    }
+
+    /**
+     * secondary filtering to Organisation
+     */
+    private List<Organisation> applySecondaryFiltering(List<Organisation> organisations,
+                                                       Map<String, String> filterParameters,
+                                                       String searchString,
+                                                       double locationX, double locationY,
+                                                       double endX, double endY, int skip, int limit) {
+        if (organisations == null || organisations.isEmpty()) {
+            return organisations;
+        }
+
+        Stream<Organisation> stream = organisations.stream();
+
+        //location
+        if (!(locationX == 0 || locationY == 0 || endX == 0 || endY == 0)) {
+            double minLat = min(locationY, endY);
+            double maxLat = Math.max(locationY, endY);
+            double minLng = min(locationX, endX);
+            double maxLng = Math.max(locationX, endX);
+
+            stream = stream.filter(org -> isWithinBoundingBox(org, minLat, maxLat, minLng, maxLng));
+        }
+
+
+        //searchString
+        if (searchString != null && !searchString.trim().isEmpty()) {
+            final String finalSearchString = searchString.toLowerCase().trim();
+            stream = stream.filter(org ->
+                    matchesOrganisationSearch(org, finalSearchString)
+            );
+        }
+
+        //distinct
+        stream = stream.filter(distinctByKey(org ->
+                org.get_id() != null ? org.get_id() : org.getName()
+        ));
+
+        List<Organisation> result = stream.toList();
+
+        int end = min(skip + limit, result.size());
+        return result.subList(skip, end);
+    }
+
+    private boolean isWithinBoundingBox(Organisation org, double minLat, double maxLat, double minLng, double maxLng) {
+        if (org == null || org.buildCoord() == null) {
+            return false;
+        }
+
+        double latitude = org.getLatitude();
+        double longitude = org.getLongitude();
+
+        boolean withinLat = latitude >= minLat && latitude <= maxLat;
+        boolean withinLng = longitude >= minLng && longitude <= maxLng;
+
+        return withinLat && withinLng;
+    }
+
+
+    private boolean matchesOrganisationSearch(Organisation org, String searchString) {
+        if (searchString == null || searchString.isEmpty()) {
+            return true;
+        }
+
+        return (org.getName() != null && org.getName().toLowerCase().contains(searchString));
+    }
+
+
+    /**
+     * distinction
+     */
+    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
     }
 
     private boolean isNumericField(String fieldName) {
@@ -147,6 +237,7 @@ public class MongoOrgDao extends OrganisationDao {
     @Override
     public List<Organisation.OrganisationCard> getOrgCardsByIds(List<String> orgIds) {
         List<Organisation.OrganisationCard> org = new ArrayList<>();
+        if(orgIds == null) return org;
         for (String id : orgIds){
             Organisation o = getOrganisationById(id);
             if (o != null){
@@ -165,7 +256,14 @@ public class MongoOrgDao extends OrganisationDao {
     @Override
     public void updateGeocode(List<Organisation> orgs) {
         List<ItemEntity> entity = processToItemEntity(orgs);
+        entity.forEach(a -> {
+            for (OrganisationEntity o : a.getOrganizations()){
+                if(o.getCoord() == null){
+                    return;
+                }
+            }
+            a.setGeocoded(true);
+        });
         repo.saveAll(entity);
     }
-
 }

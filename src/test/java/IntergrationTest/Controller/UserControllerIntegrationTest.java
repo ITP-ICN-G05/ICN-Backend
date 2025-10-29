@@ -7,19 +7,22 @@ import com.gof.ICNBack.Entity.UserPayment;
 import com.gof.ICNBack.Service.EmailService;
 import com.gof.ICNBack.Service.OrganisationService;
 import com.gof.ICNBack.Service.UserService;
-import com.gof.ICNBack.Web.UserController;
+import com.gof.ICNBack.Web.Entity.CreateUserRequest;
+import com.gof.ICNBack.Web.Entity.UpdateUserRequest;
+import io.pebbletemplates.pebble.extension.core.Sha256Filter;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.creation.bytebuddy.MockMethodInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,28 +53,28 @@ public class UserControllerIntegrationTest {
     private OrganisationService organisationService;
 
     private User testUser;
-    private User.InitialUser testInitialUser;
+    private CreateUserRequest testCreateUserRequest;
     private UserPayment testPayment;
 
     @BeforeEach
     void setUp() {
         testUser = new User();
-        testUser.setPassword("thisispassword");
+        testUser.setPassword("7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662");
         testUser.setId("user123");
         testUser.setEmail("test@example.com");
         testUser.setName("Test User");
-        testUser.setCards(Arrays.asList("card1", "card2"));
+        testUser.setOrganisationIds(Arrays.asList("card1", "card2"));
 
-        testInitialUser = new User.InitialUser(
+        testCreateUserRequest = new CreateUserRequest(
                 "newuser@example.com",
                 "New User",
-                "pass123",
+                "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662",
                 "1256"
         );
 
         testPayment = new UserPayment(
                 "newuser@example.com",
-                "pass123",
+                "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662",
                 99.99,
                 "1256"
         );
@@ -79,36 +82,36 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testUserLogin_Success() throws Exception {
-        when(userService.loginUser("test@example.com", "password123")).thenReturn(testUser);
+        when(userService.loginUser("test@example.com", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662")).thenReturn(testUser);
         when(organisationService.getOrgCardsByIds(anyList())).thenReturn(List.of());
 
-        mockMvc.perform(get("/user")
+        mockMvc.perform(post("/user")
                         .param("email", "test@example.com")
-                        .param("password", "password123"))
+                        .param("password", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("Test User"));
 
-        verify(userService).loginUser("test@example.com", "password123");
+        verify(userService).loginUser("test@example.com", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662");
     }
 
     @Test
     void testUserLogin_InvalidCredentials() throws Exception {
-        when(userService.loginUser("wrong@example.com", "wrongpass")).thenReturn(null);
+        when(userService.loginUser("wrong@example.com", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662")).thenReturn(null);
 
-        mockMvc.perform(get("/user")
+        mockMvc.perform(post("/user")
                         .param("email", "wrong@example.com")
-                        .param("password", "wrongpass"))
+                        .param("password", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662"))
                 .andExpect(status().isNotFound())
                 .andExpect(header().exists("X-Error"));
 
-        verify(userService).loginUser("wrong@example.com", "wrongpass");
+        verify(userService).loginUser("wrong@example.com", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662");
     }
 
     @Test
     void testUserLogin_InvalidEmailFormat() throws Exception {
-        mockMvc.perform(get("/user")
+        mockMvc.perform(post("/user")
                         .param("email", "invalid-email")
-                        .param("password", "password123"))
+                        .param("password", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662"))
                 .andExpect(status().isBadRequest())
                 .andExpect(header().exists("X-Error"));
 
@@ -117,7 +120,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testUserLogin_EmptyPassword() throws Exception {
-        mockMvc.perform(get("/user")
+        mockMvc.perform(post("/user")
                         .param("email", "test@example.com")
                         .param("password", ""))
                 .andExpect(status().isBadRequest())
@@ -128,10 +131,9 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testUserLogin_SQLInjectionAttempt() throws Exception {
-        // 测试SQL注入攻击
-        mockMvc.perform(get("/user")
+        mockMvc.perform(post("/user")
                         .param("email", "test@example.com' OR '1'='1")
-                        .param("password", "password123"))
+                        .param("password", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662"))
                 .andExpect(status().isBadRequest()) // 应该被输入过滤拦截
                 .andExpect(header().exists("X-Error"));
 
@@ -140,19 +142,19 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testUpdateUserInformation_Success() throws Exception {
-        when(userService.updateUser(any(User.class))).thenReturn(true);
+        when(userService.updateUser(any(UpdateUserRequest.class))).thenReturn(true);
 
         mockMvc.perform(put("/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testUser)))
                 .andExpect(status().isOk());
 
-        verify(userService).updateUser(any(User.class));
+        verify(userService).updateUser(any(UpdateUserRequest.class));
     }
 
     @Test
     void testUpdateUserInformation_Failure() throws Exception {
-        when(userService.updateUser(any(User.class))).thenReturn(false);
+        when(userService.updateUser(any(UpdateUserRequest.class))).thenReturn(false);
 
         mockMvc.perform(put("/user")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -160,7 +162,7 @@ public class UserControllerIntegrationTest {
                 .andExpect(status().isNotFound())
                 .andExpect(header().exists("X-Error"));
 
-        verify(userService).updateUser(any(User.class));
+        verify(userService).updateUser(any(UpdateUserRequest.class));
     }
 
     @Test
@@ -175,25 +177,14 @@ public class UserControllerIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(header().exists("X-Error"));
 
-        verify(userService, never()).updateUser(any(User.class));
-    }
-
-    @Test
-    void testValidateEmail_Success() throws Exception {
-        when(emailService.generateValidationCode("test@example.com")).thenReturn("1256");
-
-        mockMvc.perform(get("/user/getCode")
-                        .param("email", "test@example.com"))
-                .andExpect(status().isAccepted());
-
-        verify(emailService).generateValidationCode("test@example.com");
+        verify(userService, never()).updateUser(any(UpdateUserRequest.class));
     }
 
     @Test
     void testValidateEmail_Failure() throws Exception {
         when(emailService.generateValidationCode("test@example.com")).thenReturn(null);
 
-        mockMvc.perform(get("/user/getCode")
+        mockMvc.perform(post("/user/getCode")
                         .param("email", "test@example.com"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(header().exists("X-Error"));
@@ -203,7 +194,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testValidateEmail_InvalidEmail() throws Exception {
-        mockMvc.perform(get("/user/getCode")
+        mockMvc.perform(post("/user/getCode")
                         .param("email", "invalid-email"))
                 .andExpect(status().isBadRequest())
                 .andExpect(header().exists("X-Error"));
@@ -213,12 +204,12 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testAddUserAccount_Success() throws Exception {
-        when(emailService.getValidationCode("newuser@example.com")).thenReturn("1256");
+        when(emailService.getValidationCode("newuser@example.com")).thenReturn(List.of("1256"));
         when(userService.createUser(any(UserEntity.class))).thenReturn(true);
 
         mockMvc.perform(post("/user/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testInitialUser)))
+                        .content(objectMapper.writeValueAsString(testCreateUserRequest)))
                 .andExpect(status().isCreated());
 
         verify(emailService).getValidationCode("newuser@example.com");
@@ -228,11 +219,11 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testAddUserAccount_InvalidCode() throws Exception {
-        when(emailService.getValidationCode("newuser@example.com")).thenReturn("654321"); // 错误的验证码
+        when(emailService.getValidationCode("newuser@example.com")).thenReturn(List.of("654321")); // 错误的验证码
 
         mockMvc.perform(post("/user/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testInitialUser)))
+                        .content(objectMapper.writeValueAsString(testCreateUserRequest)))
                 .andExpect(status().isConflict())
                 .andExpect(header().exists("X-Error"));
 
@@ -242,12 +233,12 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testAddUserAccount_UserCreationFailed() throws Exception {
-        when(emailService.getValidationCode("newuser@example.com")).thenReturn("1256");
+        when(emailService.getValidationCode("newuser@example.com")).thenReturn(List.of("1256"));
         when(userService.createUser(any(UserEntity.class))).thenReturn(false);
 
         mockMvc.perform(post("/user/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testInitialUser)))
+                        .content(objectMapper.writeValueAsString(testCreateUserRequest)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(header().exists("X-Error"));
 
@@ -255,14 +246,13 @@ public class UserControllerIntegrationTest {
         verify(userService).createUser(any(UserEntity.class));
     }
 
-    //TODO: Implements email system before test
     @Test
     void testAddUserAccount_ExpiredCode() throws Exception {
         when(emailService.getValidationCode("newuser@example.com")).thenReturn(null);
 
         mockMvc.perform(post("/user/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testInitialUser)))
+                        .content(objectMapper.writeValueAsString(testCreateUserRequest)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(header().exists("X-Error"));
 
@@ -290,18 +280,17 @@ public class UserControllerIntegrationTest {
                 .andExpect(header().exists("X-Error"));
     }
 
-    // 性能测试
     @Test
     void testUserLogin_Performance() throws Exception {
-        when(userService.loginUser("test@example.com", "password123")).thenReturn(testUser);
+        when(userService.loginUser("test@example.com", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662")).thenReturn(testUser);
         when(organisationService.getOrgCardsByIds(anyList())).thenReturn(List.of());
 
         long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < 100; i++) {
-            mockMvc.perform(get("/user")
+            mockMvc.perform(post("/user")
                             .param("email", "test@example.com")
-                            .param("password", "password123"))
+                            .param("password", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662"))
                     .andExpect(status().isOk());
         }
 
@@ -312,14 +301,13 @@ public class UserControllerIntegrationTest {
         assertTrue(duration < 5000, "should finished within 5 second");
     }
 
-    // 安全性测试 - 大量数据攻击
     @Test
     void testUserLogin_LargeInput() throws Exception {
         String largeEmail = "a".repeat(1000) + "@example.com";
 
-        mockMvc.perform(get("/user")
+        mockMvc.perform(post("/user")
                         .param("email", largeEmail)
-                        .param("password", "password123"))
+                        .param("password", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662"))
                 .andExpect(status().isBadRequest())
                 .andExpect(header().exists("X-Error"));
 

@@ -2,16 +2,13 @@ package com.gof.ICNBack.Service;
 
 import com.gof.ICNBack.DataSources.Organisation.OrganisationDao;
 import com.gof.ICNBack.Entity.Organisation;
-import jakarta.annotation.PostConstruct;
+import com.gof.ICNBack.Utils.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +26,9 @@ public class LocationUpdateService {
 
     private final GoogleMapsGeocodingService geocodingService;
     private final OrganisationDao organisationDao;
+
+    @Autowired
+    private Environment env;
 
     @Autowired
     public LocationUpdateService(GoogleMapsGeocodingService geocodingService, OrganisationDao organisationDao) {
@@ -51,24 +51,25 @@ public class LocationUpdateService {
 
         for (Organisation org : organisations) {
             try {
-                if (org.getCoord() != null) {
-                    logger.info("skip org with geocoding {}", org.getCoord());
+                if (org.buildCoord() != null) {
+                    logger.debug("skip org with geocoding {}", org.buildCoord());
                     continue;
                 }
                 processedCount++;
 
                 // get geocode
                 GoogleMapsGeocodingService.GeocodingResult result =
-                        geocodingService.geocodeAddress(org.getAddress())
+                        geocodingService.geocodeAddress(org.buildAddress())
                                 .orElse(null);
 
                 if (result != null) {
-                    org.setCoord(new GeoJsonPoint(result.getLatitude(), result.getLongitude()));
+                    org.setCoord(new GeoJsonPoint(result.getLongitude(), result.getLatitude()));
 
                     successCount++;
-                    logger.info("Successfully updated location: {}", org.getAddress());
+
+                    logger.debug("Successfully updated location: {}", org.buildAddress());
                 } else {
-                    logger.warn("Failed to geocode address: {}", org.getAddress());
+                    logger.warn("Failed to geocode address: {}", org.buildAddress());
                 }
 
                 if (processedCount < organisations.size()) {
@@ -80,7 +81,7 @@ public class LocationUpdateService {
                 }
 
             } catch (Exception e) {
-                logger.error("Error processing location: {}", org.getAddress(), e);
+                logger.error("Error processing location: {}", org.buildAddress(), e);
             }
         }
 

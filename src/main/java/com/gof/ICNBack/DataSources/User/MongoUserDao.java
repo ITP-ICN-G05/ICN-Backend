@@ -58,7 +58,6 @@ public class MongoUserDao extends UserDao {
     public boolean update(UserEntity user) {
         UserEntity user1 = repo.findById(user.getID()).orElse(null);
         if (user1 != null) {
-            user.setVIP(user1.getVIP()); // block VIP level
             repo.save(user);
             return true;
         }

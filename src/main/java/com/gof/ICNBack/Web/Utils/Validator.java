@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class Validator {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
-    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{64}$");
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{64}$"); // fixed length for hashed password
     private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9\\s]{1,50}$");
 
     public static boolean isValidEmail(String email) {

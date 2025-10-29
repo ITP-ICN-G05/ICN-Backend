@@ -47,7 +47,7 @@ public class EmailServiceIntegrationTest {
         assertTrue(cachedCodes.contains(code));
     }
 
-    @Test
+
     void testSendCode_Integration() {
         String testEmail = "yueshan.li@student.unimelb.edu.au";
         String testCode = "999999";

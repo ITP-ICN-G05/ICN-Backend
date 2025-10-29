@@ -1,0 +1,76 @@
+
+pebble:
+  # default ".peb" to "":
+  suffix:
+  cache: false
+
+spring:
+  application:
+    name: ICN_Back
+  freemarker:
+    template-loader-path: classpath:/templates
+    suffix: .ftl
+  data:
+    mongodb:
+      uri: mongodb+srv://gangyiz_db_user:hp4u5W4v23p25esX@icn-cluster.0okqngk.mongodb.net/icn_dev?retryWrites=true&w=majority&appName=ICN-Backend
+
+  ## email settings
+  mail:
+    ## address
+    host: smtp.gmail.com
+    ## email server port（465||587）
+    port: 465
+    ## email account
+    username: ${EMAIL}
+    ## pass
+    password: ${EMAIL_PASS}
+    # encoding
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            ## SSL connection
+            class: javax.net.ssl.SSLSocketFactory
+        ## enable debug
+        debug: false
+
+
+logger:
+  level:
+    root: INFO
+
+app:
+  https: true
+  http_port: 19505
+
+  database:
+    type: mongo
+  google-map-geocode:
+    enable: 0
+    api-key: ${GOOGLE_MAPS_API_KEY}
+    geocoding-url: https://maps.googleapis.com/maps/api/geocode/json
+    batch-size: 10
+    delay-between-requests: 100
+    debug: false
+  mail:
+    code:
+      length: 4
+    mail: email@example.com
+    name: ICN navigator
+    website: ICN.au
+    timeout: 300
+    ftl-path: email.ftl
+
+
+server:
+  port: 443
+    # set to 443 to enable https
+  ssl: ## keytool -genkey -alias uublog -dname "CN=Gof,OU=Unimelb,O=Unimelb,L=CD,ST=Melbourne,C=AU" -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 365
+    key-store: classpath:ssl.p12
+    key-store-password: safekey
+    keyStoreType: PKCS12
+    keyAlias: icn-back
+  servlet:
+    context-path: /api
+

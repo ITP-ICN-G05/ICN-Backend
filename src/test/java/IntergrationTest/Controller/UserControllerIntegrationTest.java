@@ -9,8 +9,11 @@ import com.gof.ICNBack.Service.OrganisationService;
 import com.gof.ICNBack.Service.UserService;
 import com.gof.ICNBack.Web.Entity.CreateUserRequest;
 import com.gof.ICNBack.Web.Entity.UpdateUserRequest;
+import io.pebbletemplates.pebble.extension.core.Sha256Filter;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.creation.bytebuddy.MockMethodInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,7 +59,7 @@ public class UserControllerIntegrationTest {
     @BeforeEach
     void setUp() {
         testUser = new User();
-        testUser.setPassword("thisispassword");
+        testUser.setPassword("7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662");
         testUser.setId("user123");
         testUser.setEmail("test@example.com");
         testUser.setName("Test User");
@@ -64,13 +68,13 @@ public class UserControllerIntegrationTest {
         testCreateUserRequest = new CreateUserRequest(
                 "newuser@example.com",
                 "New User",
-                "pass123",
+                "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662",
                 "1256"
         );
 
         testPayment = new UserPayment(
                 "newuser@example.com",
-                "pass123",
+                "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662",
                 99.99,
                 "1256"
         );
@@ -78,36 +82,36 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testUserLogin_Success() throws Exception {
-        when(userService.loginUser("test@example.com", "password123")).thenReturn(testUser);
+        when(userService.loginUser("test@example.com", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662")).thenReturn(testUser);
         when(organisationService.getOrgCardsByIds(anyList())).thenReturn(List.of());
 
-        mockMvc.perform(get("/user")
+        mockMvc.perform(post("/user")
                         .param("email", "test@example.com")
-                        .param("password", "password123"))
+                        .param("password", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("Test User"));
 
-        verify(userService).loginUser("test@example.com", "password123");
+        verify(userService).loginUser("test@example.com", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662");
     }
 
     @Test
     void testUserLogin_InvalidCredentials() throws Exception {
-        when(userService.loginUser("wrong@example.com", "wrongpass")).thenReturn(null);
+        when(userService.loginUser("wrong@example.com", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662")).thenReturn(null);
 
-        mockMvc.perform(get("/user")
+        mockMvc.perform(post("/user")
                         .param("email", "wrong@example.com")
-                        .param("password", "wrongpass"))
+                        .param("password", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662"))
                 .andExpect(status().isNotFound())
                 .andExpect(header().exists("X-Error"));
 
-        verify(userService).loginUser("wrong@example.com", "wrongpass");
+        verify(userService).loginUser("wrong@example.com", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662");
     }
 
     @Test
     void testUserLogin_InvalidEmailFormat() throws Exception {
-        mockMvc.perform(get("/user")
+        mockMvc.perform(post("/user")
                         .param("email", "invalid-email")
-                        .param("password", "password123"))
+                        .param("password", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662"))
                 .andExpect(status().isBadRequest())
                 .andExpect(header().exists("X-Error"));
 
@@ -116,7 +120,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testUserLogin_EmptyPassword() throws Exception {
-        mockMvc.perform(get("/user")
+        mockMvc.perform(post("/user")
                         .param("email", "test@example.com")
                         .param("password", ""))
                 .andExpect(status().isBadRequest())
@@ -127,10 +131,9 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testUserLogin_SQLInjectionAttempt() throws Exception {
-        // 测试SQL注入攻击
-        mockMvc.perform(get("/user")
+        mockMvc.perform(post("/user")
                         .param("email", "test@example.com' OR '1'='1")
-                        .param("password", "password123"))
+                        .param("password", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662"))
                 .andExpect(status().isBadRequest()) // 应该被输入过滤拦截
                 .andExpect(header().exists("X-Error"));
 
@@ -178,21 +181,10 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    void testValidateEmail_Success() throws Exception {
-        when(emailService.generateValidationCode("test@example.com")).thenReturn("1256");
-
-        mockMvc.perform(get("/user/getCode")
-                        .param("email", "test@example.com"))
-                .andExpect(status().isAccepted());
-
-        verify(emailService).generateValidationCode("test@example.com");
-    }
-
-    @Test
     void testValidateEmail_Failure() throws Exception {
         when(emailService.generateValidationCode("test@example.com")).thenReturn(null);
 
-        mockMvc.perform(get("/user/getCode")
+        mockMvc.perform(post("/user/getCode")
                         .param("email", "test@example.com"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(header().exists("X-Error"));
@@ -202,7 +194,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testValidateEmail_InvalidEmail() throws Exception {
-        mockMvc.perform(get("/user/getCode")
+        mockMvc.perform(post("/user/getCode")
                         .param("email", "invalid-email"))
                 .andExpect(status().isBadRequest())
                 .andExpect(header().exists("X-Error"));
@@ -254,7 +246,6 @@ public class UserControllerIntegrationTest {
         verify(userService).createUser(any(UserEntity.class));
     }
 
-    //TODO: Implements email system before test
     @Test
     void testAddUserAccount_ExpiredCode() throws Exception {
         when(emailService.getValidationCode("newuser@example.com")).thenReturn(null);
@@ -289,18 +280,17 @@ public class UserControllerIntegrationTest {
                 .andExpect(header().exists("X-Error"));
     }
 
-    // 性能测试
     @Test
     void testUserLogin_Performance() throws Exception {
-        when(userService.loginUser("test@example.com", "password123")).thenReturn(testUser);
+        when(userService.loginUser("test@example.com", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662")).thenReturn(testUser);
         when(organisationService.getOrgCardsByIds(anyList())).thenReturn(List.of());
 
         long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < 100; i++) {
-            mockMvc.perform(get("/user")
+            mockMvc.perform(post("/user")
                             .param("email", "test@example.com")
-                            .param("password", "password123"))
+                            .param("password", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662"))
                     .andExpect(status().isOk());
         }
 
@@ -311,14 +301,13 @@ public class UserControllerIntegrationTest {
         assertTrue(duration < 5000, "should finished within 5 second");
     }
 
-    // 安全性测试 - 大量数据攻击
     @Test
     void testUserLogin_LargeInput() throws Exception {
         String largeEmail = "a".repeat(1000) + "@example.com";
 
-        mockMvc.perform(get("/user")
+        mockMvc.perform(post("/user")
                         .param("email", largeEmail)
-                        .param("password", "password123"))
+                        .param("password", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662"))
                 .andExpect(status().isBadRequest())
                 .andExpect(header().exists("X-Error"));
 

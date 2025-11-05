@@ -45,13 +45,10 @@ public class OrganisationControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        // 创建示例Item列表
         sampleItems = new ArrayList<>();
-        // 假设Item类有默认构造方法，根据您的实际Item类调整
-        sampleItems.add(new Item()); // 添加示例item
-        sampleItems.add(new Item()); // 添加另一个示例item
+        sampleItems.add(new Item());
+        sampleItems.add(new Item());
 
-        // 创建OrganisationCard测试数据
         orgCard1 = new Organisation.OrganisationCard(
                 "Company A",
                 new ArrayList<>(sampleItems),
@@ -70,7 +67,6 @@ public class OrganisationControllerIntegrationTest {
                 "3000"
         );
 
-        // 创建完整Organisation测试数据
         organisation = new Organisation(
                 "org-123",
                 "Company A",
@@ -85,15 +81,12 @@ public class OrganisationControllerIntegrationTest {
 
     @Test
     public void testSearchOrganisation_Success() throws Exception {
-        // 准备模拟数据
         List<Organisation.OrganisationCard> mockCards = Arrays.asList(orgCard1, orgCard2);
 
-        // 模拟服务层行为
         when(organisationService.getOrgCards(anyInt(), anyInt(), anyInt(), anyInt(),
                 anyMap(), anyString(), anyInt(), anyInt()))
                 .thenReturn(mockCards);
 
-        // 执行请求并验证
         mockMvc.perform(get("/organisation/general")
                         .param("locationX", "151")
                         .param("locationY", "-33")
@@ -117,15 +110,12 @@ public class OrganisationControllerIntegrationTest {
 
     @Test
     public void testSearchOrganisation_WithFilterParameters() throws Exception {
-        // 准备模拟数据
         List<Organisation.OrganisationCard> mockCards = Arrays.asList(orgCard1);
 
-        // 模拟服务层行为
         when(organisationService.getOrgCards(anyInt(), anyInt(), anyInt(), anyInt(),
                 anyMap(), any(), any(), any()))
                 .thenReturn(mockCards);
 
-        // 执行请求并验证
         mockMvc.perform(get("/organisation/general")
                         .param("locationX", "150")
                         .param("locationY", "-35")
@@ -141,9 +131,8 @@ public class OrganisationControllerIntegrationTest {
 
     @Test
     public void testSearchOrganisation_MissingRequiredParams() throws Exception {
-        // 测试缺少必需参数的情况
         mockMvc.perform(get("/organisation/general")
-                        .param("locationY", "-33")  // 缺少locationX
+                        .param("locationY", "-33")
                         .param("lenX", "10")
                         .param("lenY", "10")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -152,7 +141,6 @@ public class OrganisationControllerIntegrationTest {
 
     @Test
     public void testSearchOrganisation_EmptyResult() throws Exception {
-        // 模拟空结果
         when(organisationService.getOrgCards(anyInt(), anyInt(), anyInt(), anyInt(),
                 anyMap(), anyString(), anyInt(), anyInt()))
                 .thenReturn(Collections.emptyList());
@@ -170,7 +158,6 @@ public class OrganisationControllerIntegrationTest {
 
     @Test
     public void testSearchOrgByIds_Success() throws Exception {
-        // 准备模拟数据
         List<Organisation.OrganisationCard> mockCards = Arrays.asList(orgCard1, orgCard2);
 
         when(organisationService.getOrgCardsByIds(anyList()))
@@ -188,7 +175,6 @@ public class OrganisationControllerIntegrationTest {
 
     @Test
     public void testSearchOrgByIds_SingleId() throws Exception {
-        // 准备模拟数据
         List<Organisation.OrganisationCard> mockCards = Collections.singletonList(orgCard1);
 
         when(organisationService.getOrgCardsByIds(anyList()))
@@ -205,12 +191,11 @@ public class OrganisationControllerIntegrationTest {
 
     @Test
     public void testSearchOrgByIds_EmptyList() throws Exception {
-        // 测试空ID列表
         when(organisationService.getOrgCardsByIds(anyList()))
                 .thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/organisation/generalByIds")
-                        .param("ids", "")  // 空ID列表
+                        .param("ids", "")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
@@ -219,7 +204,6 @@ public class OrganisationControllerIntegrationTest {
 
     @Test
     public void testSearchOrgByIds_MissingIdsParam() throws Exception {
-        // 测试缺少必需参数
         mockMvc.perform(get("/organisation/generalByIds")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -227,7 +211,6 @@ public class OrganisationControllerIntegrationTest {
 
     @Test
     public void testSearchOrganisationDetail_Success() throws Exception {
-        // 模拟找到组织详情
         when(organisationService.getOrg(eq("org-123"), eq("testUser")))
                 .thenReturn(organisation);
 
@@ -247,7 +230,6 @@ public class OrganisationControllerIntegrationTest {
 
     @Test
     public void testSearchOrganisationDetail_NotFound() throws Exception {
-        // 模拟未找到组织
         when(organisationService.getOrg(eq("non-existent-id"), eq("testUser")))
                 .thenReturn(null);
 
@@ -261,13 +243,11 @@ public class OrganisationControllerIntegrationTest {
 
     @Test
     public void testSearchOrganisationDetail_MissingParams() throws Exception {
-        // 测试缺少organisationId
         mockMvc.perform(get("/organisation/specific")
                         .param("user", "testUser")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        // 测试缺少user
         mockMvc.perform(get("/organisation/specific")
                         .param("organisationId", "org-123")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -276,7 +256,6 @@ public class OrganisationControllerIntegrationTest {
 
     @Test
     public void testSearchOrganisationDetail_WithItems() throws Exception {
-        // 创建一个包含items的组织
         Organisation orgWithItems = new Organisation(
                 "org-123",
                 "Company with Items",
@@ -297,12 +276,11 @@ public class OrganisationControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items").isArray())
-                .andExpect(jsonPath("$.items.length()").value(2)); // 假设有2个items
+                .andExpect(jsonPath("$.items.length()").value(2));
     }
 
     @Test
     public void testPaginationParameters() throws Exception {
-        // 测试分页参数
         List<Organisation.OrganisationCard> mockCards = Arrays.asList(orgCard1);
 
         when(organisationService.getOrgCards(eq(151), eq(-33), eq(10), eq(10),

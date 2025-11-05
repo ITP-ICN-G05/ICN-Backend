@@ -35,7 +35,6 @@ spring:
             required: true
         debug: true
 
-# 日志配置
 logging:
   level:
     com.gof.ICNBack.Controller: DEBUG

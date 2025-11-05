@@ -45,7 +45,6 @@ public class OrganisationServiceExistingDataTest {
     @Autowired
     private MongoItemRepository orgRepo;
 
-    // 使用您提供的真实组织ID
     private static final List<String> EXISTING_ORGANISATION_IDS = Arrays.asList(
             "0017F00001ueJZy", "0019s000003x15k", "0019s000005Cl7e",
             "001On00000De6f9", "001On00000JfaSS", "001On00000OCsrr"

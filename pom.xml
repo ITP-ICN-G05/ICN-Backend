@@ -24,7 +24,6 @@
         </dependency>
 
 
-        <!-- 集成Pebble View -->
         <dependency>
             <groupId>io.pebbletemplates</groupId>
             <artifactId>pebble-spring-boot-starter</artifactId>

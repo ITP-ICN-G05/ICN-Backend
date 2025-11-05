@@ -22,12 +22,10 @@ public class GoogleMapsGeocodingServiceTest {
 
     @Test
     public void testGeocodingService() {
-        // 准备几个地址
         String address1 = "4 Kings Road, New Lambton, NSW, 2305";
         String address2 = "Bapaume Road, MooreBank, NSW, 2170";
         String address3 = "41 Kings Road, New Lambton, NSW, 2305";
 
-        // 测试地理编码服务
         assertNotNull(geocodingService.geocodeAddress(address1));
         assertNotNull(geocodingService.geocodeAddress(address2));
         assertNotNull(geocodingService.geocodeAddress(address3));

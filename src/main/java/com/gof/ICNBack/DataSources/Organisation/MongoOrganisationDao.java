@@ -39,11 +39,9 @@ public class MongoOrganisationDao extends OrganisationDao {
             Integer limit) {
         List<AggregationOperation> ops = new ArrayList<>();
 
-        // 1. 首先从商品集合开始，处理商品相关的筛选条件
         Criteria itemCriteria = new Criteria();
         List<Criteria> itemCriteriaList = new ArrayList<>();
 
-        // 处理商品搜索字符串
         if (searchString != null && !searchString.trim().isEmpty()) {
             Criteria textSearchCriteria = new Criteria().orOperator(
                     Criteria.where("Item Name").regex(searchString, "i"),
@@ -53,7 +51,6 @@ public class MongoOrganisationDao extends OrganisationDao {
             itemCriteriaList.add(textSearchCriteria);
         }
 
-        // 处理商品过滤参数
         if (filterParameters != null && !filterParameters.isEmpty()) {
             for (Map.Entry<String, String> entry : filterParameters.entrySet()) {
                 String key = entry.getKey();
@@ -75,27 +72,22 @@ public class MongoOrganisationDao extends OrganisationDao {
             }
         }
 
-        // 如果有商品筛选条件，添加到聚合管道
         if (!itemCriteriaList.isEmpty()) {
             itemCriteria = new Criteria().andOperator(itemCriteriaList.toArray(new Criteria[0]));
             ops.add(Aggregation.match(itemCriteria));
         }
 
-        // 2. 关联公司集合
         LookupOperation lookupOperation = LookupOperation.newLookup()
-                .from("organisation") // 公司集合名称，根据实际情况调整
-                .localField("Organisation IDs") // 商品中关联公司的字段
-                .foreignField("Organisation ID") // 公司的主键字段
+                .from("organisation")
+                .localField("Organisation IDs")
+                .foreignField("Organisation ID")
                 .as("orgInfo");
         ops.add(lookupOperation);
 
-        // 3. 展开公司信息
         ops.add(Aggregation.unwind("orgInfo"));
 
-        // 4. 处理公司相关的筛选条件和地理位置
         List<Criteria> orgCriteriaList = new ArrayList<>();
 
-        // 处理公司过滤参数（非商品相关的参数）
         if (filterParameters != null && !filterParameters.isEmpty()) {
             for (Map.Entry<String, String> entry : filterParameters.entrySet()) {
                 String key = entry.getKey();
@@ -117,24 +109,20 @@ public class MongoOrganisationDao extends OrganisationDao {
             }
         }
 
-        // 处理地理位置筛选
         if (locationX != 0 && locationY != 0 && endX != 0 && endY != 0) {
             double lowerLeftX = Math.min(locationX, endX);
             double lowerLeftY = Math.min(locationY, endY);
             double upperRightX = Math.max(locationX, endX);
             double upperRightY = Math.max(locationY, endY);
 
-            // 对公司位置进行筛选
             ops.add(geoWithinBoxMatch("orgInfo.Coord.coordinates", lowerLeftX, lowerLeftY, upperRightX, upperRightY));
         }
 
-        // 合并公司筛选条件
         if (!orgCriteriaList.isEmpty()) {
             Criteria combinedCriteria = new Criteria().andOperator(orgCriteriaList.toArray(new Criteria[0]));
             ops.add(Aggregation.match(combinedCriteria));
         }
 
-        // 5. 投影字段，只返回需要的公司信息
         ProjectionOperation projectOperation = Aggregation.project()
                 .and("orgInfo.Organisation ID").as("Organisation ID")
                 .and("orgInfo.Organisation Name").as("Organisation Name")
@@ -145,7 +133,6 @@ public class MongoOrganisationDao extends OrganisationDao {
                 .and("orgInfo.Coord").as("Coord");
         ops.add(projectOperation);
 
-        // 6. 分页处理
         if (skip != null && skip > 0) {
             ops.add(Aggregation.skip(skip.longValue()));
         }
@@ -153,11 +140,9 @@ public class MongoOrganisationDao extends OrganisationDao {
             ops.add(Aggregation.limit(limit.longValue()));
         }
 
-        // 7. 执行聚合查询
         Aggregation agg = Aggregation.newAggregation(ops);
 
-        // 注意：这里从商品集合开始查询
-        String collectionName = template.getCollectionName(ItemEntity.class); // 假设有 ProductEntity
+        String collectionName = template.getCollectionName(ItemEntity.class);
         AggregationResults<OrganisationEntity> aggResults = template.aggregate(agg, collectionName, OrganisationEntity.class);
         List<OrganisationEntity> orgs = aggResults.getMappedResults();
 

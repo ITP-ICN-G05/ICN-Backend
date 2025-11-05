@@ -128,11 +128,10 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testUserLogin_SQLInjectionAttempt() throws Exception {
-        // 测试SQL注入攻击
         mockMvc.perform(get("/user")
                         .param("email", "test@example.com' OR '1'='1")
                         .param("password", "password123"))
-                .andExpect(status().isBadRequest()) // 应该被输入过滤拦截
+                .andExpect(status().isBadRequest())
                 .andExpect(header().exists("X-Error"));
 
         verify(userService, never()).loginUser(anyString(), anyString());
@@ -228,7 +227,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testAddUserAccount_InvalidCode() throws Exception {
-        when(emailService.getValidationCode("newuser@example.com")).thenReturn(List.of("654321")); // 错误的验证码
+        when(emailService.getValidationCode("newuser@example.com")).thenReturn(List.of("654321"));
 
         mockMvc.perform(post("/user/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -281,7 +280,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testUserPayment_InvalidData() throws Exception {
-        UserPayment invalidPayment = new UserPayment(); // 缺少必要字段
+        UserPayment invalidPayment = new UserPayment();
 
         mockMvc.perform(post("/user/payment")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -290,7 +289,6 @@ public class UserControllerIntegrationTest {
                 .andExpect(header().exists("X-Error"));
     }
 
-    // 性能测试
     @Test
     void testUserLogin_Performance() throws Exception {
         when(userService.loginUser("test@example.com", "password123")).thenReturn(testUser);
@@ -312,7 +310,6 @@ public class UserControllerIntegrationTest {
         assertTrue(duration < 5000, "should finished within 5 second");
     }
 
-    // 安全性测试 - 大量数据攻击
     @Test
     void testUserLogin_LargeInput() throws Exception {
         String largeEmail = "a".repeat(1000) + "@example.com";

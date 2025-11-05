@@ -21,7 +21,6 @@ public class Application {
         return new WebMvcConfigurer() {
             @Override
             public void addResourceHandlers(ResourceHandlerRegistry registry) {
-                // 映射路径`/static/`到classpath路径:
                 registry.addResourceHandler("/static/**")
                         .addResourceLocations("classpath:/static/");
             }

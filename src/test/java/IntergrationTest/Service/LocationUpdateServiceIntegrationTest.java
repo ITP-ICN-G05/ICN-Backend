@@ -51,7 +51,6 @@ public class LocationUpdateServiceIntegrationTest {
     @Autowired
     private GoogleMapsGeocodingService geocodingService;
 
-    // 配置源集合和测试集合的名称
     private static final String SOURCE_COLLECTION = "Organisation";
     private static final String TEST_COLLECTION = "Organisation_Test";
 

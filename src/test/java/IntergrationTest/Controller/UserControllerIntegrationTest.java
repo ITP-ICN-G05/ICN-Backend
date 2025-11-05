@@ -134,7 +134,7 @@ public class UserControllerIntegrationTest {
         mockMvc.perform(post("/user")
                         .param("email", "test@example.com' OR '1'='1")
                         .param("password", "7636f2ca97568363a757b6e4c255fcf55410fa2e84b277ada79951f425e3b662"))
-                .andExpect(status().isBadRequest()) // 应该被输入过滤拦截
+                .andExpect(status().isBadRequest())
                 .andExpect(header().exists("X-Error"));
 
         verify(userService, never()).loginUser(anyString(), anyString());
@@ -219,7 +219,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testAddUserAccount_InvalidCode() throws Exception {
-        when(emailService.getValidationCode("newuser@example.com")).thenReturn(List.of("654321")); // 错误的验证码
+        when(emailService.getValidationCode("newuser@example.com")).thenReturn(List.of("654321"));
 
         mockMvc.perform(post("/user/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -271,7 +271,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testUserPayment_InvalidData() throws Exception {
-        UserPayment invalidPayment = new UserPayment(); // 缺少必要字段
+        UserPayment invalidPayment = new UserPayment();
 
         mockMvc.perform(post("/user/payment")
                         .contentType(MediaType.APPLICATION_JSON)

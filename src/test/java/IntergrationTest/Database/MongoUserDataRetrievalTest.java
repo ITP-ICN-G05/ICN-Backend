@@ -53,13 +53,13 @@ public class MongoUserDataRetrievalTest {
         // get record
         User user = userDao.getUserByPair("qie@example.com", "pasdassw");
 
-        assertNotNull(user, "用户列表不应为null");
+        assertNotNull(user, "user list should not be null");
 
         // validate record
-        assertNotNull(user.getId(), "用户ID不应为null");
-        assertNotNull(user.getName(), "用户名不应为null");
-        assertNotNull(user.getEmail(), "邮箱不应为null");
-        assertTrue(user.getEmail().contains("@"), "邮箱格式应正确");
+        assertNotNull(user.getId(), "ID should not be null");
+        assertNotNull(user.getName(), "username should not be null");
+        assertNotNull(user.getEmail(), "email should not be null");
+        assertTrue(user.getEmail().contains("@"), "email should be valid");
     }
 
     @Test
